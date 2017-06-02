@@ -572,11 +572,11 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
+      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
     
       <category term="Networking" scheme="http://www.tricksofthetrades.net/tags/Networking/"/>
     
-      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
+      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
     
   </entry>
   
@@ -980,9 +980,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
+    
+      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
   </entry>
   
@@ -1301,9 +1301,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
+    
+      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
   </entry>
   
@@ -1802,9 +1802,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
+    
+      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
   </entry>
   
@@ -2033,9 +2033,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
+    
+      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
   </entry>
   
@@ -2251,9 +2251,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
+    
+      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
   </entry>
   
@@ -2458,9 +2458,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
-    
       <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
+    
+      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-06-02T18:36:41.581Z</updated>
+  <updated>2017-06-02T18:46:55.671Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -17,10 +17,10 @@
   
   <entry>
     <title>How to Install and Get Started with Vagrant</title>
-    <link href="http://www.tricksofthetrades.net/2017/05/01/vagrant-started/"/>
-    <id>http://www.tricksofthetrades.net/2017/05/01/vagrant-started/</id>
-    <published>2017-04-30T23:00:00.000Z</published>
-    <updated>2017-06-02T18:36:41.581Z</updated>
+    <link href="http://www.tricksofthetrades.net/2017/05/17/vagrant-started/"/>
+    <id>http://www.tricksofthetrades.net/2017/05/17/vagrant-started/</id>
+    <published>2017-05-16T23:00:00.000Z</published>
+    <updated>2017-06-02T18:46:55.671Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/mw4s7ic.png" alt="Vagrant Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Despite its age and familiarity to most nowadays I couldn’t find a straight forward post on how to install and get started using Vagrant. So here’s my notes on doing so in blog post format. Be aware that this is well trodden ground and the Vagrant documentation on their website has a similar set of steps and content. The official site, if not this will get you where you need to be when it comes to getting started with Vagrant. </p>
@@ -572,11 +572,11 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
+      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
     
       <category term="Networking" scheme="http://www.tricksofthetrades.net/tags/Networking/"/>
     
-      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
+      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
     
   </entry>
   
@@ -980,9 +980,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
+    
+      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
     
   </entry>
   
@@ -1301,9 +1301,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
+    
+      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
     
   </entry>
   
@@ -1802,9 +1802,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
+    
+      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
     
   </entry>
   
@@ -2033,9 +2033,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
+    
+      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
     
   </entry>
   
@@ -2251,9 +2251,9 @@
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
     
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
+    
+      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
     
   </entry>
   
@@ -2458,9 +2458,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
-    
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
+    
+      <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
     
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     

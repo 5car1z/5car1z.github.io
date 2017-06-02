@@ -1,0 +1,262 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>IP - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2017-02-14T00:00:00.000Z" class="post__time">February 14, 2017</time><h1 class="post__title"><a href="/2017/02/14/installing-using-ufw/">Installing and Using UFW (Uncomplicated Firewall)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/000yMhS.png" alt="Firewall Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>UFW is a popular and convenient firewall configuration tool originating from Ubuntu distributions. It’s a more accessible way of using the <code>iptables</code> program. Which with some of its complexities can be more cumbersome or confusing for newcomers to learn. In reality UFW works as a wrapper for iptables, so is not a firewall in its own right but the iptables firewall in a simpler form. It serves both IPv4 and IPv6 host-based traffic.</p>
+<p>In this post are commands containing options/arguments that contain two words and look like this: <code>comment ssh</code>. These extra parts add a comment to the firewall rules generated. If you are using a version of UFW priot to <code>0.35</code> you may have to remove these two extra pieces to avoid errors. Please bear this in mind when you come to using these types of commands later on should you receive errors.  </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Install-UFW"><a href="#1-–-Install-UFW" class="headerlink" title="1 – Install UFW"></a>1 – Install UFW</h1><p>Using your systems package manager is a straight forward and easy way of obtaining UFW. Here are two examples for Arch Linux and Debian/Ubuntu. </p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>On Arch with Pacman it’s simply:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S ufw</span><br></pre></td></tr></table></figure>
+<p>Then enable it on boot through systemd using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl <span class="built_in">enable</span> ufw</span><br><span class="line">$ sudo systemctl start ufw</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://wiki.archlinux.org/index.php/Uncomplicated_Firewall" target="_blank" rel="external">Arch Wiki - Uncomplicated Firewall</a></p>
+</blockquote>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>UFW comes as part of most Ubuntu based distributions so you might already have it on your system, but to download the package on either Debian or Ubuntu use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ufw</span><br></pre></td></tr></table></figure>
+<p>To check the status of the program and confirm installation.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw status verbose</span><br></pre></td></tr></table></figure>
+<p>The output returned if installed successfully should be:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Status: inactive</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Enable-Default-Rules"><a href="#2-–-Enable-Default-Rules" class="headerlink" title="2 – Enable Default Rules"></a>2 – Enable Default Rules</h1><p>As with several other firewall solutions, the standard practice is to block every possible incoming connection and allow any possible outgoing connections. Then open/block individual services and ports where necessary afterwards. </p>
+<p>So deny all incoming connections. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default deny incoming</span><br></pre></td></tr></table></figure>
+<p>And allow all outgoing connections. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default allow outgoing</span><br></pre></td></tr></table></figure>
+<p>Remember that the firewall itself is still not active yet. All we have done so far is add these two overall base rules.  </p>
+<hr>
+<h1 id="3-–-Adding-Rules"><a href="#3-–-Adding-Rules" class="headerlink" title="3 – Adding Rules"></a>3 – Adding Rules</h1><p>There are two primary styles available for adding rules - standard rule inputs and alias style inputs. </p>
+<p>Here’s how to enable SSH connections to the server, using one of the built-in alias style inputs UFW provides.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow ssh comment ssh</span><br></pre></td></tr></table></figure>
+<p>This opens the default SSH TCP port - port number <code>22</code>.  Without this port open, SSH connections to your server would be blocked. Potentially making it inaccessible remotely.  </p>
+<p>Here’s the same rule again that opens the default SSH port, but using the standard rule input syntax.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow 22/tcp comment ssh</span><br></pre></td></tr></table></figure>
+<p>Anyone who does not use the default port number <code>22</code> for SSH and has altered it manually on their server, must use this standard rule syntax, and change the number in the command <code>22</code> to their chosen custom SSH port number. </p>
+<p>Usually there is no need to restart UFW for newly added/removed rules to take effect. The effect of an action is applied immediately. </p>
+<h2 id="Further-Methods"><a href="#Further-Methods" class="headerlink" title="Further Methods"></a>Further Methods</h2><p>Specific IP addresses may be utilised in rules too. The next example (as suggested by the syntax) allows all traffic incoming access from the provided address. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow from 192.168.255.255</span><br></pre></td></tr></table></figure>
+<p>Port ranges are opened using a colon <code>:</code> and the number ranges you wish to use. The port type is given as <code>/tcp</code> or <code>/udp</code> appearing in the same manner as before. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow 3452:3478/tcp</span><br><span class="line">$ sudo ufw allow 3452:3478/udp</span><br></pre></td></tr></table></figure>
+<p>Although the default rules we applied in step two automatically block every network connection, you can still block individual items with the firewall if you wish. Such as with a different blanket rule setup. </p>
+<p>The <code>deny</code> command is what blocks specific port numbers, IP addresses, or port ranges when passed. </p>
+<p>This would block the default SSH port if in some scenario it was required. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw deny ssh comment ssh</span><br></pre></td></tr></table></figure>
+<p>To deny FTP traffic using the standard rule input syntax you can use:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw deny 21/tcp comment ssh</span><br></pre></td></tr></table></figure>
+<p>Blocking a target IP address(s) is the same as allowing but again uses the <code>deny</code> option instead. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw deny from 192.168.254.254</span><br></pre></td></tr></table></figure>
+<p>Lastly blocking entire ranges with <code>deny</code> is just as possible:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw deny 3278:3282/tcp</span><br><span class="line">$ sudo ufw deny 3278:3282/udp</span><br></pre></td></tr></table></figure>
+<p>Blocking/denying entire subnets is also possible by using the IP address and mask (CIDR notation).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw deny 15.15.15.0/26</span><br></pre></td></tr></table></figure>
+<p>Lastly here, blocking via the host machines network interface/hardware is possible e.g. <code>eth0</code> or whatever it is registered as. No examples for this will be shown here however. Simply note that it is possible. </p>
+<hr>
+<h1 id="4-–-Commonly-Applied-Rules"><a href="#4-–-Commonly-Applied-Rules" class="headerlink" title="4 – Commonly Applied Rules"></a>4 – Commonly Applied Rules</h1><p>Continuing on with the primary styles available for adding rules, the standard rule inputs and alias style inputs. Here are some common rules you might want to add to the firewall either now, or at some point in the future. </p>
+<p>These two allow traffic on port <code>80</code> - the standard web server port. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow http comment http</span><br><span class="line">$ sudo ufw allow 80/tcp comment http</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Remember only one of the commands is required from these code blocks. Either the alias version (first line) or the standard input version (second line).</p>
+</blockquote>
+<p>The same goes for the port assigned to encrypted traffic on web servers, port <code>443</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow https comment https</span><br><span class="line">$ sudo ufw allow 443/tcp comment https</span><br></pre></td></tr></table></figure>
+<p>Always use <code>sftp</code> instead of <code>ftp</code> when transferring files on the command line. The choice of commands to allow traffic on the default <code>sftp</code> port is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow sftp comment sftp</span><br><span class="line">$ sudo ufw allow 115/tcp comment sftp</span><br></pre></td></tr></table></figure>
+<p>When working with LDAP (Lightweight Directory Access Protocol) the alias command is best suited as it saves you having to open up both the TCP <strong>and</strong> UDP ports with two commands, so open up port <code>389</code> on both using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow ldap comment ldap</span><br></pre></td></tr></table></figure>
+<p>For SMTP traffic there’s:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow smtp comment smtp</span><br><span class="line">$ sudo ufw allow 25 comment smtp</span><br></pre></td></tr></table></figure>
+<p>And for IMAP you’d enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow imap comment imap</span><br><span class="line">$ sudo ufw allow 143 comment imap</span><br></pre></td></tr></table></figure>
+<p>Since UFW reads from the <code>/etc/services</code> file you can add any of the service names listed in there.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo less /etc/services</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Ping or ICMP reply should be enabled already by UFW. Meaning the server can be pinged even when the firewall is active. See <a href="http://askubuntu.com/a/10314" target="_blank" rel="external">http://askubuntu.com/a/10314</a></p>
+</blockquote>
+<p>Check this <a href="https://www.digitalocean.com/community/tutorials/ufw-essentials-common-firewall-rules-and-commands" target="_blank" rel="external">Digital Ocean article</a> for even more specific rules to add to your servers UFW config. </p>
+<hr>
+<h1 id="5-–-Enabling-and-Disabling-UFW"><a href="#5-–-Enabling-and-Disabling-UFW" class="headerlink" title="5 – Enabling and Disabling UFW"></a>5 – Enabling and Disabling UFW</h1><p>Once the rules are all added and ready for use, the final step is to activate the firewall. </p>
+<p>This is easily done by issuing the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+<p>After entering the <code>sudo</code> password and confirming any prompts, you receive the message:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Firewall is active and enabled on system startup</span><br></pre></td></tr></table></figure>
+<p>From here onward the rules are applied and working as entered. </p>
+<p>To see the entire rules and status of the firewall now it’s running enter the command from the start again.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw status verbose</span><br></pre></td></tr></table></figure>
+<p>Should you ever need to reload the firewall, use the <code>reload</code> option. Although this will probably be a rare occasion as remember rules are applied instantly upon entering.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw reload</span><br></pre></td></tr></table></figure>
+<p>More commonly the entire firewall can be <code>disabled</code> with one command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw <span class="built_in">disable</span></span><br></pre></td></tr></table></figure>
+<p>Your rules and configuration is not list when the firewall is disabled, only inactive until you <code>enable</code> them again. To delete and remove rules see the next section. </p>
+<hr>
+<h1 id="6-–-Deleting-Rules"><a href="#6-–-Deleting-Rules" class="headerlink" title="6 – Deleting Rules"></a>6 – Deleting Rules</h1><p>Removing rules using the syntax you’re now likely familiar with. All you need to do is use the <code>delete</code> option as part of your command structure. </p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw delete allow ssh</span><br><span class="line">$ sudo ufw delete allow 22/tcp</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Once again remember only one of the commands is required from the above code block. Either the alias version (first line) or the standard input version (second line).</p>
+</blockquote>
+<p>A smart way to remove rules uses the <code>numbered</code> output command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw status numbered</span><br></pre></td></tr></table></figure>
+<p>Here’s some example output:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Status: active</span><br><span class="line"></span><br><span class="line">     To                         Action      From</span><br><span class="line">     --                         ------      ----</span><br><span class="line">[ 1] 22                         ALLOW IN    Anywhere                  </span><br><span class="line">[ 2] 21/tcp                     ALLOW IN    Anywhere                  </span><br><span class="line">[ 3] 80                         ALLOW IN    Anywhere                  </span><br><span class="line">[ 4] 443                        ALLOW IN    Anywhere                  </span><br><span class="line">[ 5] 22 (v6)                    ALLOW IN    Anywhere (v6)             </span><br><span class="line">[ 6] 21/tcp (v6)                ALLOW IN    Anywhere (v6)             </span><br><span class="line">[ 7] 80 (v6)                    ALLOW IN    Anywhere (v6)             </span><br><span class="line">[ 8] 443 (v6)                   ALLOW IN    Anywhere (v6)</span><br></pre></td></tr></table></figure>
+<p>The number featured in the resultant output (on the left column) can be referenced to delete rules. </p>
+<p>As in this next example, which deletes rule <code>4</code> from the firewall. </p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw delete 4</span><br></pre></td></tr></table></figure>
+<p>Be aware that if you have IPv6 enabled - which is the case on many distributions now by default after installation - there is always an equivalent rule added for IPv6; whenever you add a rule. So you need to delete that corresponding rule also when using this method. In my example it would have been rule <code>8</code> which you can see in the output(s).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ 8] 443 (v6)                   ALLOW IN    Anywhere (v6)</span><br></pre></td></tr></table></figure>
+<p>If for some reason you want to redo the entire rule-set of the firewall. You can <code>reset</code> the whole of your current configuration with one command. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw reset</span><br></pre></td></tr></table></figure>
+<p>Be careful using this of course. </p>
+<hr>
+<h1 id="7-–-Enabling-and-Disabling-Logging"><a href="#7-–-Enabling-and-Disabling-Logging" class="headerlink" title="7 – Enabling and Disabling Logging"></a>7 – Enabling and Disabling Logging</h1><p>If you want to use logging for the firewall you must enable it to do so. </p>
+<p>To enable logging use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw logging on</span><br></pre></td></tr></table></figure>
+<p>The location of the log file may differ but in general here’s the place to start looking.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ls /var/<span class="built_in">log</span>/ufw</span><br></pre></td></tr></table></figure>
+<p>For information on how to interpret log entries in UFW, read through this section <a href="https://help.ubuntu.com/community/UFW#Interpreting_Log_Entries" target="_blank" rel="external">here</a>. </p>
+<p>To disable logging if needed you can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw logging off</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Miscellaneous"><a href="#8-–-Miscellaneous" class="headerlink" title="8 – Miscellaneous"></a>8 – Miscellaneous</h1><p>Rule comments were introduced as of February 2016 but you will require at least version <code>0.35</code> of UFW to be able to use them. </p>
+<p>To use IPv6 with UFW you need to ensure you have it enabled in the configuration file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/default/ufw</span><br></pre></td></tr></table></figure>
+<p>Change the the value of <code>IPV6</code> to equal <code>yes</code> in this file if it is set to “no”. </p>
+<figure class="highlight bash"><figcaption><span>/etc/default/ufw excerpt</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">IPV6=yes</span><br></pre></td></tr></table></figure>
+<p>Save and leave the file. </p>
+<p>Reloading the firewall here might be a wise step if you already had it running before doing this (the command for reloading is given in an earlier step). After this the IPv6 rules alongside the regular IPv4 rules should be active and added to the firewall. </p>
+<p>Lastly here’s several aliases you might want to incorporate into your <code>.bashrc</code> or <code>.alias</code> file to make things slightly quicker. </p>
+<figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ufw</span></span><br><span class="line"><span class="built_in">alias</span> ufw=<span class="string">'sudo ufw'</span></span><br><span class="line"><span class="built_in">alias</span> ufwstatver=<span class="string">'sudo ufw status verbose'</span></span><br><span class="line"><span class="built_in">alias</span> ufwstatnum=<span class="string">'sudo ufw status numbered'</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>This post in its entirety covers most of the information required when it comes to getting to know UFW. Some of the external links also provide a vast amount of information should it be needed. </p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-with-ufw-on-ubuntu-16-04" target="_blank" rel="external">Digital Ocean - How To Set Up a Firewall with UFW on Ubuntu 16.04</a> – There are several of these articles on DO and this is one I found the most useful for this post. </li>
+<li><a href="https://wiki.ubuntu.com/UncomplicatedFirewall" target="_blank" rel="external">Ubuntu Wiki - UncomplicatedFirewall</a> – This page contains all the feature release and their versions. Alongside links to many different server guides.  </li>
+<li><a href="https://launchpad.net/ufw" target="_blank" rel="external">Launchpad - UFW</a> – The project is hosted here with all development details included. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Firewall/" class="post__tag__link">Firewall</a></li><li class="post__tag__item"><a href="/tags/Networking/" class="post__tag__link">Networking</a></li><li class="post__tag__item"><a href="/tags/IP/" class="post__tag__link">IP</a></li></ul><a href="/2017/02/14/installing-using-ufw/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-05-17T23:00:00.000Z" class="post__time">May 18, 2015</time><h1 class="post__title"><a href="/2015/05/18/iptables-ipv4/">iptables (IPv4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/000yMhS.png" alt="Firewall Logo"></p>
+<p>Notes on <code>iptables</code>  including the most used command types and an example of some basic filter table rules. </p>
+<blockquote>
+<p><strong>Note:</strong> Only IP version 4 examples are covered in this post. </p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Tables"><a href="#Tables" class="headerlink" title="Tables"></a>Tables</h1><p>The tables that are present in the system depends on the kernel configuration options and which modules are enabled. </p>
+<p>The default table used is the filter table. <code>-t</code> specifies the table to be used when available and needed.</p>
+<h2 id="Filter-Table"><a href="#Filter-Table" class="headerlink" title="Filter Table"></a>Filter Table</h2><p>This is the first table and most commonly configured table. </p>
+<p>It’s comprised of the following chains:</p>
+<ul>
+<li><strong>Input</strong> – Intended for incoming packets accessing local sockets.</li>
+<li><strong>Forward</strong> – For packets that get routed through the server. </li>
+<li><strong>Output</strong> – Is for locally-generated out-going packets. </li>
+</ul>
+<h2 id="NAT-Table"><a href="#NAT-Table" class="headerlink" title="NAT Table"></a>NAT Table</h2><p>When a packet forms a new connection this is the table that is consulted. </p>
+<ul>
+<li><strong>Prerouting</strong> – Alters a packet as soon as it comes in. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Postrouting</strong> – Alters packets as they are about to be sent out. </li>
+</ul>
+<h2 id="Mangle-Table"><a href="#Mangle-Table" class="headerlink" title="Mangle Table"></a>Mangle Table</h2><p>This table is made use of for specialised packet alteration. </p>
+<ul>
+<li><strong>Prerouting</strong> – Alters a packet as soon as it comes in. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Input</strong> – Packets entering the host itself. </li>
+<li><strong>Forward</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Postrouting</strong> – Alters packets as they are about to be sent out. </li>
+</ul>
+<h2 id="Raw-Table"><a href="#Raw-Table" class="headerlink" title="Raw Table"></a>Raw Table</h2><p>Used for setting up exemptions from connection tracking in combination with the <em>NOTRACK</em> target.</p>
+<ul>
+<li><strong>Prerouting</strong> – Deals with packets arriving via any network interface. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+</ul>
+<h2 id="Security-Table"><a href="#Security-Table" class="headerlink" title="Security Table"></a>Security Table</h2><p>This table is used for Mandatory Access Control (MAC) networking rules, such as those enabled by the <em>SECMARK</em> and <em>CONNSECMARK</em> targets. It is called after the “Filter Table”. </p>
+<ul>
+<li><strong>Input</strong> – Intended for incoming packets accessing local sockets.</li>
+<li><strong>Output</strong> – Is for locally-generated out-going packets. </li>
+<li><strong>Forward</strong> – For packets that get routed through the server. </li>
+</ul>
+<hr>
+<h1 id="Viewing-Rules"><a href="#Viewing-Rules" class="headerlink" title="Viewing Rules"></a>Viewing Rules</h1><p>You can view the current rules in their respective tables with the <code>-L</code> parameter.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -L</span><br></pre></td></tr></table></figure>
+<p>Adding the <code>-v</code> parameter (verbose) provides additional information for each rule.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -L -v</span><br></pre></td></tr></table></figure>
+<p>Prints line numbers for each rule and <code>-n</code> prints IP addresses and ports where possible. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -vnL --line-numbers</span><br></pre></td></tr></table></figure>
+<p>Prints all rules in the selected chain (<code>INPUT</code>), all chain’s rules are printed if none are passed. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -S INPUT</span><br></pre></td></tr></table></figure>
+<p>Check whether a rule matching the provided details exists or not with <code>-C</code> .</p>
+<p><code>-C</code> uses the same logic as the delete parameter to find matching entries, except it does not write or alter any rules. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -C INPUT -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Adding-Rules"><a href="#Adding-Rules" class="headerlink" title="Adding Rules"></a>Adding Rules</h1><p>To <em>append</em> a rule to the end of a set of rules, use the <code>-A</code> parameter followed by the chain name and port details.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To instead <em>insert</em> a rule anywhere amongst a set of rules use the <code>-I</code> parameter with the chain name and port details.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To <em>match</em> or add a comment alongside a rule append the following to the end of a rule entry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-m comment --comment <span class="string">"this is an example comment - comment goes here"</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Removing-Rules"><a href="#Removing-Rules" class="headerlink" title="Removing Rules"></a>Removing Rules</h1><p>Delete a rule by line number with the <code>-D</code> parameter, then chain name, then number that you wish to delete. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -D INPUT 10</span><br></pre></td></tr></table></figure>
+<p>Deleting based off of what a rule is doing is also possible, again with <code>-D</code> and then the pre-existing port and rule details. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -D INPUT <span class="_">-s</span> 127.0.0.1 -p tcp --dport 111 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To remove the entire active configuration you can use the <code>-F</code> parameter, which <em>flushes</em> all rules and tables. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -F</span><br></pre></td></tr></table></figure>
+<p>Adding a chain name deletes that chain, like so:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -F OUTPUT</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Saving-Rules"><a href="#Saving-Rules" class="headerlink" title="Saving Rules"></a>Saving Rules</h1><p>Rules created and inserted are lost upon shutting down the system. There a few different ways of saving the rules and loading them back in again.</p>
+<p>Here’s one of them.</p>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The package <code>iptables-persistent</code> once installed automatically loads rules saved in the <code>/etc/iptables.rules.v4</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install iptables-persistent</span><br><span class="line">$ sudo service iptables-persistent start</span><br></pre></td></tr></table></figure>
+<p>To save your rules in the above file run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-save &gt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<p>You can confirm their entry after with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo less /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<p>These can also be loaded directly into your iptables firewall at any time using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-restore &lt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Standard-Filter-Table-Rules"><a href="#Standard-Filter-Table-Rules" class="headerlink" title="Standard Filter Table Rules"></a>Standard Filter Table Rules</h1><p><strong>Local-Host / Loop-back Address Example</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 1 -i lo -j ACCEPT -m comment --comment <span class="string">"allow input on localhost"</span> </span><br><span class="line">$ sudo iptables -I OUTPUT 1 -o lo -j ACCEPT -m comment --comment <span class="string">"allow output on localhost"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Maintain Current Connections</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment <span class="string">"maintain all current connections"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Drop All Remaining Incoming Packets</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -j DROP -m comment --comment <span class="string">"Drop All Remaining Packets"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Other Standard Rules</strong></p>
+<p>These are in the format of a configuration script that you would load into <code>iptables</code>. So are missing the usual command line prefix. </p>
+<p>Allows all loopback (<code>lo0</code>) traffic and drop all traffic to <code>127/8</code> that doesn’t use <code>lo0</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A INPUT ! -i lo <span class="_">-d</span> 127.0.0.0/8 -j REJECT</span><br></pre></td></tr></table></figure>
+<p>Accepts all established inbound connections.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows all outbound traffic, you could modify this to only allow only certain traffic.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A OUTPUT -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows HTTP and HTTPS connections from anywhere (the normal ports for websites).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp --dport 443 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows SSH connections.</p>
+<p>The <code>--dport</code> number is the same as in <code>/etc/ssh/sshd_config</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The default SSH port is often changed from 22 to avoid unwanted activity. Or even better only allow access from certain IP’s and use SSH keys.</p>
+</blockquote>
+<p>Allows ping with the next code snippet, be aware that blocking other <strong>types</strong> of ICMP packets is considered a bad idea by some. Hence the <code>icmp-type 8</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Reject all other inbound packets, aka deny by default unless explicitly allowed as part of other policies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -j REJECT</span><br><span class="line">-A FORWARD -j REJECT</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>Sources</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-iptables-on-ubuntu-14-04" target="_blank" rel="external">How To Set Up a Firewall Using iptables on Ubuntu 14.04</a></li>
+<li><a href="https://major.io/?s=iptables" target="_blank" rel="external">Major.io iptables Posts</a></li>
+<li><a href="https://wiki.debian.org/iptables" target="_blank" rel="external">Debian WIki - iptables</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Firewall/" class="post__tag__link">Firewall</a></li><li class="post__tag__item"><a href="/tags/Networking/" class="post__tag__link">Networking</a></li><li class="post__tag__item"><a href="/tags/IP/" class="post__tag__link">IP</a></li></ul><a href="/2015/05/18/iptables-ipv4/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

@@ -1,0 +1,624 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Debian - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-06-12T23:00:00.000Z" class="post__time">June 13, 2016</time><h1 class="post__title"><a href="/2016/06/13/debian8-vps-checklist/">Debian 8 (Jessie) VPS Basic Checklist</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/JXNdLSN.png" alt="VPS Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Here are some base guidelines I follow when setting up a new VPS manually without configuration management. These steps if anything make the system more secure overall and provide a good starting point from which you can setup the services/software’s required for the purpose of the VPS. </p>
+<p>All of these steps in this post are from the context of a <em>droplet</em> (VPS) hosted by <a href="https://m.do.co/c/e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> using the Debian 8.5 x64 kernel images they use as of the above date. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Setup-VPS-User-Account"><a href="#1-–-Setup-VPS-User-Account" class="headerlink" title="1 – Setup VPS User Account"></a>1 – Setup VPS User Account</h1><p>Initial root access for this section is assumed. Adding a registered SSH public key to the droplet creation on Digital Ocean gives pass-wordless root access to the VPS. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh root@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Install the <code>sudo</code> package manually as this is not included with Digital Ocean’s Debian 8 image.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install sudo</span><br></pre></td></tr></table></figure>
+<p>Add your new Linux user to the system. Whenever you see <code>scarlz</code> here in commands it should be replaced with your own preferred username, and substituted in from throughout. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz</span><br></pre></td></tr></table></figure>
+<p>Add the newly created user to the <code>sudo</code> elevation privileges group.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz sudo</span><br></pre></td></tr></table></figure>
+<p>You can also add the user to the <code>adm</code> group which grants read access to system log files if you think this would be useful. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz adm</span><br></pre></td></tr></table></figure>
+<p>Exit the root SSH session. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Copy-Client-Public-SSH-Key"><a href="#2-–-Copy-Client-Public-SSH-Key" class="headerlink" title="2 – Copy Client Public SSH Key"></a>2 – Copy Client Public SSH Key</h1><p>Install your public key to the new user added in the previous step. </p>
+<p>Do this by running the <code>ssh-copy-id</code> command, supplying it with the the username and IP address of the VPS. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id scarlz@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>The public key (after authentication) will be added to the remote user’s <code>~/.ssh/authorized_keys</code> file. </p>
+<p>As long as the client has the private key tied to the public key just registered, it can be used to log into the VPS. </p>
+<hr>
+<h1 id="3-–-Update-and-Install-System-Packages"><a href="#3-–-Update-and-Install-System-Packages" class="headerlink" title="3 – Update and Install System Packages"></a>3 – Update and Install System Packages</h1><p>SSH back into the VPS as the new user you created previously, which should work without requiring authentication details thanks to the previous step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh scarlz@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Run this command to ensure the system’s packages are up to date. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Default-SSH-Port-and-Root-Access"><a href="#4-–-Default-SSH-Port-and-Root-Access" class="headerlink" title="4 – Default SSH Port and Root Access"></a>4 – Default SSH Port and Root Access</h1><p>This step removes the assumption any port scanning makes on what port number the SSH service is running on. The default is <code>22</code> so these processes will check for that first and foremost. Changing this number to an ephemeral port can help to reduce the number of attempted malicious login attempts that are made. However there are several finer points as to why you might not want to do this, so decide if this seems worthwhile or not before doing it (see the next link). </p>
+<blockquote>
+<p><strong>Note:</strong> <a href="http://security.stackexchange.com/questions/32308/should-i-change-the-default-ssh-port-on-linux-servers" target="_blank" rel="external">Should I change the default SSH port on linux servers?</a></p>
+</blockquote>
+<p>All I  would say is don’t get into the habit of doing this for other service’s port numbers. If you choose not to do this then Fail2ban (which we install later) will be enough in its place. </p>
+<p>Disabling password authentication for the root user account and relying on the registered SSH key can also put a stop to attempted root logins from unwanted hosts. </p>
+<p>Change the VPS’s default SSH port &amp; disable root login via passwords in the system wide SSH config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p>Change the <code>Port 22</code> entry to any number between <code>1025</code> and <code>65536</code> respectively, if you have decided you want to do this.  </p>
+<p>For example:</p>
+<figure class="highlight bash"><figcaption><span>/etc/ssh/sshd_config</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Port 3267</span><br></pre></td></tr></table></figure>
+<p>Change the <code>PermitRootLogin yes</code> entry to <code>PermitRootLogin without-password</code> instead,</p>
+<p>This as mentioned before means only users with public SSH keys registered in the root authorised keys file can log in as root itself. </p>
+<figure class="highlight bash"><figcaption><span>/etc/ssh/sshd_config</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin without-password</span><br></pre></td></tr></table></figure>
+<p>Restart SSH so the changes take effect.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>When accessing the VPS via SSH in the future, you must now append the correct port number to the command e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh scarlz@your.vps.ip.address -p 3267</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Automatic-Security-Upgrades"><a href="#5-–-Automatic-Security-Upgrades" class="headerlink" title="5 – Automatic Security Upgrades"></a>5 – Automatic Security Upgrades</h1><p>Using a package named <code>unattended-upgrades</code> it’s possible to have updates done by the package manager automatically at set intervals. It is advised to only enable security updating and not the normal package upgrading as this could potentially cause problems with conflicts or unwanted changes. </p>
+<p>Install the package to begin with.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unattended-upgrades</span><br></pre></td></tr></table></figure>
+<p>Open/create the <code>10periodic</code> configuration file for this package using your preferred text editor.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apt/apt.conf.d/10periodic</span><br></pre></td></tr></table></figure>
+<p>Add in the lines found in the below code snippet:</p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/10periodic</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists <span class="string">"1"</span>;</span><br><span class="line">APT::Periodic::Download-Upgradeable-Packages <span class="string">"1"</span>;</span><br><span class="line">APT::Periodic::AutocleanInterval <span class="string">"7"</span>;</span><br><span class="line">APT::Periodic::Unattended-Upgrade <span class="string">"1"</span>;</span><br></pre></td></tr></table></figure>
+<p>Save your additions and exit the file. </p>
+<p>Now open up another configuration file named <code>50unattended-upgrades</code> for changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apt/apt.conf.d/50unattended-upgrades</span><br></pre></td></tr></table></figure>
+<p>Enable security updates only by adding the line - <code>&quot;origin=Debian,codename=${distro_codename},label=Debian-Security&quot;;</code> to the correct location, as shown in the next code snippet on line 17:</p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/50unattended-upgrades</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Unattended-Upgrade::Origins-Pattern &#123;</span><br><span class="line">        // Codename based matching:</span><br><span class="line">        // This will follow the migration of a release through different</span><br><span class="line">        // archives (e.g. from testing to stable and later oldstable).</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie-proposed-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie,l=Debian-Security"</span>;</span><br><span class="line"></span><br><span class="line">        // Archive or Suite based matching:</span><br><span class="line">        // Note that this will silently match a different release after</span><br><span class="line">        // migration to the specified archive (e.g. testing becomes the</span><br><span class="line">        // new stable).</span><br><span class="line">//      <span class="string">"o=Debian,a=stable"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,a=stable-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,a=proposed-updates"</span>;</span><br><span class="line">        <span class="string">"origin=Debian,codename=<span class="variable">$&#123;distro_codename&#125;</span>,label=Debian-Security"</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Further down in the file add an email address thatcan receive the update reports and uncomment the line itself: </p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/50unattended-upgrades</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Send email to this address <span class="keyword">for</span> problems or packages upgrades</span><br><span class="line">// If empty or <span class="built_in">unset</span> <span class="keyword">then</span> no email is sent, make sure that you</span><br><span class="line">// have a working mail setup on your system. A package that provides</span><br><span class="line">// <span class="string">'mailx'</span> must be installed. E.g. <span class="string">"user@example.com"</span></span><br><span class="line">Unattended-Upgrade::Mail <span class="string">"user@email-domain.com"</span>;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Setup-Dotfiles-Optional"><a href="#6-–-Setup-Dotfiles-Optional" class="headerlink" title="6 – Setup Dotfiles (Optional)"></a>6 – Setup Dotfiles (Optional)</h1><p>Most administrators or developers will have their own customised <em>dotfiles</em> they use to personalise the server and make tasks easier, or introduce extra functionality to the system. Here is where I would setup my own using Git and GitHub.   </p>
+<p>It is unlikely that you’ll want to carry out the commands in this step as these instructions are for my own dotfiles, so only really relevant to me. </p>
+<p><strong>Replace this step with installing and setting up your own equivalent dotfiles!</strong></p>
+<blockquote>
+<p><a href="https://github.com/5car1z/dotfiles" target="_blank" rel="external">https://github.com/5car1z/dotfiles</a></p>
+</blockquote>
+<p>Install Git via the system package manager. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<p>Clone your dotfiles repository onto the system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/dotfiles.git </span><br><span class="line">$ <span class="built_in">cd</span> ~/dotfiles</span><br></pre></td></tr></table></figure>
+<p>Run the two install scripts that add more packages (all the good stuff) and create the necessary symlinks using GNU Stow. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./install-debian-ubuntu-dotfile-dependencies.sh</span><br><span class="line">$ ./stow-dotfiles.sh</span><br></pre></td></tr></table></figure>
+<p>If there’s any submodule problems update them to their latest remote versions with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ update_submodules</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-Install-Software-Packages"><a href="#7-–-Install-Software-Packages" class="headerlink" title="7 – Install Software Packages"></a>7 – Install Software Packages</h1><p>Any outstanding or super essential packages that haven’t been brought in by the “dotfiles” step should be considered before moving on. What these are will be known only to you though as everybody’s preferences and needs are different. </p>
+<p>Here are several examples however. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git vim curl cowsay fortune-mod jq vim tmux ranger</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Install-and-Run-UFW"><a href="#8-–-Install-and-Run-UFW" class="headerlink" title="8 – Install and Run UFW"></a>8 – Install and Run UFW</h1><p>UFW stands for “Uncomplicated Firewall” and is more concise easier to understand alternative to older firewall implementations like <a href="http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/">iptables</a>.  </p>
+<p>Install on Debian 8 like any other package simply using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ufw</span><br></pre></td></tr></table></figure>
+<p>Like with other firewalls of this elk it’s common practice to put in place a blanket set of ingress/egress rules then add the exceptions to services and ports on top afterwards. </p>
+<p>Make the default overall action for any incoming traffic to be blocked and denied. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default deny incoming</span><br></pre></td></tr></table></figure>
+<p>Then make the default overall action for outgoing traffic to be permissible and allowed. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default allow outgoing</span><br></pre></td></tr></table></figure>
+<p>From here, any services you wish to allow that are received by the VPS can be added as an exception. See a separate post that covers the key areas of UFW in itself for information on how to do this. </p>
+<blockquote>
+<p><a href="http://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">Full UFW Guide</a></p>
+</blockquote>
+<p>To continue here, open the SSH port number you chose earlier on by replacing the number <code>3267</code> with your own number, in the following command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow 3267/tcp</span><br></pre></td></tr></table></figure>
+<p>Lastly after all the extra rules you need, enable the firewall so the configuration becomes active. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Install-and-Run-Fail2ban"><a href="#9-–-Install-and-Run-Fail2ban" class="headerlink" title="9 – Install and Run Fail2ban"></a>9 – Install and Run Fail2ban</h1><p>This application permanently stops any excessive failed attempts (brute forcing) at connecting to the VPS - it achieves this by banning the offending source IP. This is configurable over various services on the system and not just SSH. </p>
+<p>Install it as done before with the system package manager. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install fail2ban sendmail</span><br></pre></td></tr></table></figure>
+<p>Sendmail can also be used by Fail2ban when sending out notification messages for bans that have occurred, so this is useful to install alongside it. Unless you want to configure it to use a different mail service. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo sed <span class="string">'s/^banaction = .*/banaction = ufw/'</span> /etc/fail2ban/jail.conf &gt; /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
+<p>Start the service and ensure it’s running by ussing the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service fail2ban start</span><br></pre></td></tr></table></figure>
+<p>A more detailed rundown of the configuration involved with Fail2ban is covered in a separate post to this one. </p>
+<blockquote>
+<p><a href="">Full Fail2ban Guide - To Be Added</a></p>
+</blockquote>
+<hr>
+<p>This is a pretty straightforward post, all things considered. Remember that a persons needs for configuring a VPS will be tailored to their own requirements, criteria, and preferences. So these steps are good general outline but mainly the ones I personally follow - other people’s will be different, according to their needs. </p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-debian-8" target="_blank" rel="external">Digital Ocean - Initial Server Setup with Debian 8</a> – Partial inspiration for this post. </li>
+<li><a href="https://www.reddit.com/r/netsec/comments/4o7wpo/my_first_10_minutes_on_a_server/" target="_blank" rel="external">Reddit Thread - My First 10 Minutes On a Server</a> – Reddit thread that links to an article on best security practives to follow when setting up a VPS/server. </li>
+<li><a href="https://wiki.debian.org/UnattendedUpgrades" target="_blank" rel="external">Debian Wiki - Unattended Upgrades</a> – Helpful explanation and information on how to use the configuration files. </li>
+<li><a href="https://www.digitalocean.com/community/questions/what-is-your-server-security-check-list" target="_blank" rel="external">Digital Ocean - What is your server security check list?</a> – November 29, 2016 Question Thread.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Jessie/" class="post__tag__link">Jessie</a></li><li class="post__tag__item"><a href="/tags/VPS/" class="post__tag__link">VPS</a></li></ul><a href="/2016/06/13/debian8-vps-checklist/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-11-30T00:00:00.000Z" class="post__time">November 30, 2015</time><h1 class="post__title"><a href="/2015/11/30/django-modwsgi-apache/">Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. </p>
+<p>More popular methods of running and hosting Django are mentioned at the end of the post. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Update-amp-Install-Packages"><a href="#1-–-Update-amp-Install-Packages" class="headerlink" title="1 – Update &amp; Install Packages"></a>1 – Update &amp; Install Packages</h1><p>Update and upgrade the server’s system packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Install Apache, mod-wsgi, and Python’s pip package manager.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2 libapache2-mod-wsgi python-pip</span><br></pre></td></tr></table></figure>
+<p>Also the <code>virtualenv</code> package is required for the next step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install virtualenv</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Setup-Virtual-Environment"><a href="#2-–-Setup-Virtual-Environment" class="headerlink" title="2 – Setup Virtual Environment"></a>2 – Setup Virtual Environment</h1><p>Decide where you want to keep your Django project. </p>
+<p>There are several places form which you could run the project. One that is very common is the user’s <code>home</code> directory. Another suitable place is the <code>/srv/</code> system directory. A final place could be directly inside the system’s web server directories i.e. <code>/var/www</code> and down. </p>
+<p>In my example I’ll be using a Linux user’s home directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/django-project &amp;&amp; <span class="built_in">cd</span> ~/django-project</span><br></pre></td></tr></table></figure>
+<p>Inside the new project folder create a dedicated Python virtual environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv django-virt-env</span><br></pre></td></tr></table></figure>
+<p>Activate the environment and enter into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Now you’re within the environment (prompt will change) install Django with pip into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install django</span><br></pre></td></tr></table></figure>
+<p>Once Django is installed, use the <code>deactivate</code> command to exit the environment prompt.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Create-or-Import-Django-Project"><a href="#3-–-Create-or-Import-Django-Project" class="headerlink" title="3 – Create or Import Django Project"></a>3 – Create or Import Django Project</h1><p>To start from scratch you can use the Django installation in the virtual environment and make a brand new Django project. Or instead import your Django project files from something like version control. </p>
+<p>For this tutorial we’ll go down the path of importing a a pre-existing Django project from Git. </p>
+<p>Before this though, here are the initial steps for starting a brand new Django project. </p>
+<h2 id="Create-Project"><a href="#Create-Project" class="headerlink" title="Create Project"></a>Create Project</h2><p>Skip past this section to instead import an existing Django project.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Create the new project and give it a name, where <code>project_name</code> is replaced with your name you want to give it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ django-admin.py startproject project-name .</span><br></pre></td></tr></table></figure>
+<p>Run initial migration: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py migrate</span><br></pre></td></tr></table></figure>
+<p>Create a superuser for the project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py createsuperuser</span><br></pre></td></tr></table></figure>
+<p>Open up the <code>settings.py</code> file for editing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim project-name/settings.py</span><br></pre></td></tr></table></figure>
+<p>Add this new line to the bottom section of the file:</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project_name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STATIC_ROOT = os.path.join(BASE_DIR, <span class="string">"static/"</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Copy static content into the directory set in the previous <code>STATIC_ROOT</code> directive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./manage.py collectstatic</span><br></pre></td></tr></table></figure>
+<p>Test the server runs correctly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py runserver 0.0.0.0:8000</span><br></pre></td></tr></table></figure>
+<p>You can test the project works in a web browser at: <code>your.vps.ip.address:8000</code></p>
+<p><img src="https://i.gyazo.com/a0ca362f8a25159e68f4df71b43b6a0b.png" alt="It Worked Django Image"></p>
+<p><code>CTRL</code> + <code>C</code> once checked to exit the server process. </p>
+<p>Then <code>deactivate</code> once again to leave the Python virtual env prompt. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<h2 id="Import"><a href="#Import" class="headerlink" title="Import"></a>Import</h2><p>This is the assumption I’m following for the rest of the post, that you already have a Django project created and want to host it. You could still however carry on with the new blank project from before. </p>
+<p>Import the Django project into our local project’s root folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git ~/django-project</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Then move on to setting up the virtual host.</p>
+<hr>
+<h1 id="4-–-Setup-Apache-Virtual-Host"><a href="#4-–-Setup-Apache-Virtual-Host" class="headerlink" title="4 – Setup Apache Virtual Host"></a>4 – Setup Apache Virtual Host</h1><p>Using your preferred text editor open the default Apache <em>vhost</em> for writing, or a <em>dedicated vhost</em> instead. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apache2/sites-available/000-default.conf</span><br></pre></td></tr></table></figure>
+<p>The complete main block of the virtual host should contain the following:</p>
+<figure class="highlight apache"><figcaption><span>/etc/apache2/sites-available/000-default.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute"><span class="nomarkup">ServerName</span></span> exampledomain.com</span><br><span class="line"><span class="attribute">ServerAlias</span> www.exampledomain.com</span><br><span class="line"><span class="attribute">ServerAdmin</span> server-administrator@emaildomain.com</span><br><span class="line">    </span><br><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br><span class="line"></span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project&gt;</span></span><br><span class="line">    <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">        <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">    <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> project-name</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<p>What follows are the broken down areas of the above virtual host, and how to set them.</p>
+<p><strong>Static Alias</strong></p>
+<p>The first option to set is an alias, and needs to point to the <code>static</code> directory we generated when either creating or importing the Django project files. </p>
+<p>So username needs to be your Linux username, and <code>django-project</code> needs to be substituted for whatever you named the very first folder we created. Back at the start of <strong>Step 3</strong>. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br></pre></td></tr></table></figure>
+<p><strong>Static Directory Access</strong></p>
+<p>The web server must also allow access to the directory we aliased for <code>static</code>. Do this with a directory block that looks like this. Except again with the same values as before substituted in.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">  <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>wsgi.py Access</strong></p>
+<p>The <code>wsgi.py</code> file inside your <code>project-name</code> directory should also be open for access. Add this second directory block to ensure it’s accessible.</p>
+<p>Again <code>project_name</code> and the previous values need altering to your own.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/project-name&gt;</span></span><br><span class="line">  <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">  <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>WSGI Settings</strong><br>The gateway interface mod for Apache uses <code>wsgi.py</code> to handle passing clients to the Django web app. Set it up with a daemon process path, process group name, and alias to the <code>wsgi.py</code> file location. </p>
+<p>Some things to note are that the latter half of the <code>python-path</code> setting should point to your virtual environment’s Python site packages, and not your system wide ones. The <code>:</code> character delimits separate paths. </p>
+<p>For the <code>WSGIDaemonProcess</code> and <code>WSGIProcessGroup</code> name (<code>project-name</code> in my example) you can set it to any suitable name. </p>
+<p>All relevant values here once again should be replaced with your own. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> django-project</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Apache-Permissions"><a href="#5-–-Apache-Permissions" class="headerlink" title="5 – Apache Permissions"></a>5 – Apache Permissions</h1><p>Change the system permissions so that the Linux group owner of the database file can read and write. </p>
+<p>The database file is named  <code>db.sqlite3</code> by default and is in the root project directory if not moved previously. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod 664 ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>Apache runs under the <code>www-data</code> system group, give said group ownership of the database file:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>In order for the <code>www-data</code> Apache group to properly write to the database file, we also need to give it ownership of the database file’s parent directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/myproject</span><br></pre></td></tr></table></figure>
+<p>Restart Apache to implement the changes we just made:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service apache2 restart</span><br></pre></td></tr></table></figure>
+<p>Assuming your firewall is setup correctly you should now be able to access your Django site by going to your server’s domain name or IP address in a browser. </p>
+<hr>
+<h1 id="Live-Deployment-Considerations"><a href="#Live-Deployment-Considerations" class="headerlink" title="Live Deployment Considerations"></a>Live Deployment Considerations</h1><h1 id="1-–-Django-Project-Settings"><a href="#1-–-Django-Project-Settings" class="headerlink" title="1 – Django Project Settings"></a>1 – Django Project Settings</h1><p>The <code>settings.py</code> file usually contains sensitive data values such as passwords, <em>secret keys</em>, and user credentials. Which are at risk of being exposed when stored in the Project’s version control (at least if public version control is used). </p>
+<p>The exact details set in <code>settings.py</code> are also likely to differ from user to user. As different directives and values may be required depending upon the installation context and user in question. For example <code>DEBUG</code> being set to <code>TRUE</code> on a local environment versus a live environment. </p>
+<p>It’s for these reasons it’s advisable to instead import these values into <code>settings.py</code> from another local <em>credentials</em> file. One that the user fills out manually upon setting up the project locally for the first time. </p>
+<p>The same “credentials” file must then be permanently ignored by the version control system, so the user specific details and passwords are kept private, but still imported into <code>settings.py</code> . </p>
+<p>Here is what an example template for this credentials file might look like:</p>
+<script src="https://gist.github.com/5car1z/6b014dd95f216780b1ce.js"></script>
+
+<p>Once created the <code>credentials.py</code> file and it’s stored directives can all then be imported inside the main Django settings file. </p>
+<p>Via this line of code: </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Imports sensitive/user config variable values.</span></span><br><span class="line"><span class="keyword">from</span> credentials <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
+<p>It’s a good idea to use a template file like the one above to replace the <code>credentials.py</code> in version control. So new users and installs can make a copy of it, and fill in the details required. </p>
+<hr>
+<h1 id="2-–-Live-Specific-Directives"><a href="#2-–-Live-Specific-Directives" class="headerlink" title="2 – Live Specific Directives"></a>2 – Live Specific Directives</h1><p>As mentioned in the previous section, some directives will need to be set differently for different situations. </p>
+<p>Here are some of the directives defined in <code>credentials.py</code> (or an equivalent user specific settings file) that are suitable for a live setup.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>Setting this next directive is optional more than anything but provides a means of helping with debugging errors and exceptions raised while rendering the apps templates.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATE_DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>This line and directive can be kept directly in <code>settings.py</code> unlike the other directives, although it doesn’t hurt to place in <code>credentials.py</code> anyway. Once <code>DEBUG</code> is set to <code>false</code> , this allows only the specified FQDN’s access to your Django site. </p>
+<p>It’s wise to ensure you <a href="https://github.com/DigitalOcean-User-Projects/Articles-and-Tutorials/blob/master/set_hostname_fqdn_on_ubuntu_centos.md" target="_blank" rel="external">have a valid FQDN hostname set on your server</a> if experiencing any problems with this directive.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">'127.0.0.1'</span>, <span class="string">'localhost'</span>, <span class="string">'.leagueofyorkshire.co.uk'</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> it is unwise to add a <code>*</code> symbol to the <code>ALLOWED_HOSTS</code> directive, as this would give access to any and all potential requests. </p>
+</blockquote>
+<p>Django uses the <code>STATIC_ROOT</code> directive to tell Apache where the generated <em>static</em> files are located. If the <code>./manage.py collectstatic</code> is run with live settings then the <code>STATIC_ROOT</code> directive must be set to something other than the previous <code>static</code> directory. In this case in the below code it’s set to generate it in a directory named <code>assets</code>. The other commented directives also need enabling in here for this to work:  </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span></span><br><span class="line"><span class="comment"># STATIC_URL = '/static/'</span></span><br><span class="line"><span class="comment"># STATIC_ROOT = os.path.join(BASE_DIR, "assets/")</span></span><br><span class="line"><span class="comment"># STATICFILES_DIRS = (os.path.join('static'),)</span></span><br></pre></td></tr></table></figure>
+<p>These previous directives are not <strong>all</strong> the ones you will find or define in the credentials file, but are mostly the ones to consider when working with a live deployment install of the project. </p>
+<p>See here for detailed information about more of these:</p>
+<blockquote>
+<p><a href="https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-ADMINS" target="_blank" rel="external">Django Official Documentation - Settings</a></p>
+</blockquote>
+<hr>
+<h1 id="3-–-Web-Server-Permissions"><a href="#3-–-Web-Server-Permissions" class="headerlink" title="3 – Web Server Permissions"></a>3 – Web Server Permissions</h1><p>We set some permissions on the database file and parent directory in an earlier step, however the other Django files hosted by your web server have their own permissions to consider. </p>
+<p>The main file to take into account when setting permission is the file that holds your live environment specific directives, and user sensitive data. In our example this was the <code>credentials.py</code> file, created from a template that takes it’s place in version control. </p>
+<p>Consider taking away read and write privileges to <em>everyone else</em> / <em>other</em> for this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o-rw ~/django-project/project-name/credentials.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Error-Reporting-amp-Logging"><a href="#4-–-Error-Reporting-amp-Logging" class="headerlink" title="4 – Error Reporting &amp; Logging"></a>4 – Error Reporting &amp; Logging</h1><blockquote>
+<p><strong>Section To Be Added</strong></p>
+</blockquote>
+<hr>
+<h1 id="5-–-gitignore"><a href="#5-–-gitignore" class="headerlink" title="5 – .gitignore"></a>5 – .gitignore</h1><p>Here is a .gitignore containing lots of potential file types and directories you likely don’t want to track for live or in general. Some are Django specific, others are Python project related. </p>
+<script src="https://gist.github.com/5car1z/2bd1ade7177fbccca339.js"></script>
+
+<hr>
+<h1 id="Further-Considerations"><a href="#Further-Considerations" class="headerlink" title="Further Considerations"></a>Further Considerations</h1><p>There are other alternatives to this entire procedure that have their own advantages and merits. These should be considered as an alternative or more specialised way of running Django. </p>
+<p><strong>Gunicorn</strong> </p>
+<p>“Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX. It’s a pre-fork worker model ported from Ruby’s Unicorn project. The Gunicorn server is broadly compatible with various web frameworks, simply implemented, light on server resources, and fairly speedy.”</p>
+<blockquote>
+<p><a href="http://gunicorn.org/" target="_blank" rel="external">http://gunicorn.org/</a></p>
+</blockquote>
+<p><strong>uWSGI</strong></p>
+<p>“The uWSGI project aims at developing a full stack for building hosting services. Versatility, performance, low-resource usage and reliability are the strengths of the project “</p>
+<blockquote>
+<p><a href="https://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html" target="_blank" rel="external">Quickstart for Python/WSGI applications</a></p>
+</blockquote>
+<p><strong>Tornado</strong></p>
+<p>“Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.”</p>
+<blockquote>
+<p><a href="http://www.tornadoweb.org/en/stable/wsgi.html" target="_blank" rel="external">tornado.wsgi — Interoperability with other Python frameworks and servers</a></p>
+</blockquote>
+<p><strong>Other Python Web Frameworks/Servers</strong></p>
+<ul>
+<li><a href="http://www.cherrypy.org/" target="_blank" rel="external">CherryPy</a></li>
+<li><a href="http://twistedmatrix.com/trac/wiki/TwistedWeb" target="_blank" rel="external">Twisted Web</a></li>
+<li><a href="http://waitress.readthedocs.org/en/latest/" target="_blank" rel="external">Waitress WSGI Server</a></li>
+</ul>
+<hr>
+<p><strong>More Information</strong> </p>
+<ul>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Serve Django Applications with Apache and mod_wsgi on Ubuntu 14.04</a> – Main source of inspiration and workflow for this blog post. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps" target="_blank" rel="external">Digital Ocean – How to Run Django with mod_wsgi and Apache with a virtualenv Python environment on a Debian VPS</a> – Similar to the first link here but with different approaches and older. </p>
+</li>
+<li><p><a href="https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/modwsgi/" target="_blank" rel="external">Official Django Documentation - How to use Django with Apache and mod_wsgi</a> – Good general purpose information. </p>
+</li>
+<li><p><a href="http://www.slideshare.net/GrahamDumpleton/getting-started-with-modwsgi" target="_blank" rel="external">Graham Dumpleton - PyCon AU 2010 - Getting Started With Apache/mod_wsgi</a> – Slides that are useful for troubleshooting Django errors, is a bit outdated now ion parts however. </p>
+</li>
+<li><p><a href="http://modwsgi.readthedocs.org/en/develop/index.html" target="_blank" rel="external">Official Documentation for mod_wsgi</a> – Anything and everything for mod_wsgi. </p>
+</li>
+<li><p><a href="http://www.djangobook.com/en/2.0/chapter12.html" target="_blank" rel="external">“Django Book” - Chapter 12: Deploying Django</a> – Overall good deployment practices. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications" target="_blank" rel="external">https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications</a> – The python web frameworks/servers from the last step. </p>
+</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Apache/" class="post__tag__link">Apache</a></li><li class="post__tag__item"><a href="/tags/Python/" class="post__tag__link">Python</a></li><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Django/" class="post__tag__link">Django</a></li></ul><a href="/2015/11/30/django-modwsgi-apache/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-10-04T23:00:00.000Z" class="post__time">October 5, 2015</time><h1 class="post__title"><a href="/2015/10/05/minecraft-server-debian/">Installing Minecraft Server on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Covers the general process of setting up a basic Minecraft server from start to finish. Along with how to configure some of the server’s properties and user permissions. </p>
+<ul>
+<li>Uses Java (OpenJDK in this case) as a dependency. </li>
+<li>Requires GNU Screen to maintain a shell session.</li>
+<li>The Minecraft game client is necessary to test access to the server. </li>
+<li>Suitable Server Hardware specifications are addressed. </li>
+</ul>
+<blockquote>
+<p><a href="https://minecraft.net/" target="_blank" rel="external">Minecraft’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm the action by entering <code>y</code> for any prompts in this step.</p>
+<hr>
+<h1 id="2-—-Install-Screen"><a href="#2-—-Install-Screen" class="headerlink" title="2 — Install Screen"></a>2 — Install Screen</h1><p>Screen is used to keep the Minecraft server running in a persistent shell session, it also allows us to disconnect or re-attach to the session when needed.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Install-Open-JDK"><a href="#3-–-Install-Open-JDK" class="headerlink" title="3 – Install Open JDK"></a>3 – Install Open JDK</h1><p>Install the open JDK platform with Debian’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install openjdk-7-jre-headless</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> “It is recommended that Linux users avoid using OpenJDK 6 for server hosting, as it has been known to cause issues.”</p>
+</blockquote>
+<hr>
+<h1 id="4-–-Create-Dedicated-User"><a href="#4-–-Create-Dedicated-User" class="headerlink" title="4 – Create Dedicated User"></a>4 – Create Dedicated User</h1><p>Add a user with a suitable name who’ll run and store the server software in its <code>home</code> directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser minecraft</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-iptables-Firewall"><a href="#5-–-iptables-Firewall" class="headerlink" title="5 – iptables Firewall"></a>5 – iptables Firewall</h1><p>If using <code>iptables</code> you’ll need to allow access on the Minecraft server’s TCP port <code>25565</code> for incoming connecting clients. </p>
+<p>Here is one command to add this, tweak it to your own needs and firewall setup:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 3 -p tcp --dport 25565 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 25565 Minecraft server"</span></span><br></pre></td></tr></table></figure>
+<p>Remember to re-save your updated rules (IPv4 in my case). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-save &gt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Download-Minecraft-Server-Software"><a href="#6-–-Download-Minecraft-Server-Software" class="headerlink" title="6 – Download Minecraft Server Software"></a>6 – Download Minecraft Server Software</h1><p>SSH to the new <code>minecraft</code> user (or whatever you named them). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh minecraft@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Download the latest version of the Minecraft server <em>jar</em> file. </p>
+<p>The current version number is <code>1.8.8</code> at the time of writing this: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -v https://s3.amazonaws.com/Minecraft.Download/versions/1.8.8/minecraft_server.1.8.8.jar</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Amend your command to include the version number that is currently in release. Previously found at <a href="https://minecraft.net/download" target="_blank" rel="external">https://minecraft.net/download</a> towards the bottom of the page. </p>
+</blockquote>
+<hr>
+<h1 id="7-–-Create-Minecraft-Executable-Script"><a href="#7-–-Create-Minecraft-Executable-Script" class="headerlink" title="7 – Create Minecraft Executable Script"></a>7 – Create Minecraft Executable Script</h1><p>With a text editor create a shell script named something similar to the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>In the newly created script add the code in the next snippet, replacing the two <code>java</code> parameter values with your own preferred memory usage values. </p>
+<figure class="highlight bash"><figcaption><span>~/run-minecraft-server.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line">BINDIR=$(dirname <span class="string">"<span class="variable">$(readlink -fn "$0")</span>"</span>)</span><br><span class="line"><span class="built_in">cd</span> <span class="string">"<span class="variable">$BINDIR</span>"</span></span><br><span class="line"></span><br><span class="line">java -Xmx1024M -Xms1024M -jar minecraft_server.*.*.*.jar nogui</span><br></pre></td></tr></table></figure>
+<p>See the next image for recommendations on server requirements from the official Minecraft wiki, to determine your values.</p>
+<p><img src="http://i.gyazo.com/252e38114f335e58904cda95b00e96f8.png" alt="Minecraft Wiki Server Requirements"></p>
+<blockquote>
+<p>-<strong>Note:</strong> <code>Xms256M</code> dictates the lowest amount of system memory the Minecraft server will consume, and <code>Xmx512M</code> specifies the upper limit of server memory it can max out at.</p>
+</blockquote>
+<p>Save your changes to the script and exit back to the command line. </p>
+<p>Finally in this step use <code>chmod</code> to make the previous script executable. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Run-Executable-Script"><a href="#8-–-Run-Executable-Script" class="headerlink" title="8 – Run Executable Script"></a>8 – Run Executable Script</h1><p>Run it from the command line by adding the <code>./</code> prefix. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>You’ll see the following output if the script has been written correctly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[09:10:50] [Server thread/INFO]: Starting minecraft server version 1.8.8</span><br><span class="line">[09:10:50] [Server thread/WARN]: To start the server with more ram, launch it as <span class="string">"java -Xmx1024M -Xms1024M -jar minecraft_server.jar"</span></span><br><span class="line">[09:10:50] [Server thread/INFO]: Loading properties</span><br><span class="line">[09:10:50] [Server thread/WARN]: server.properties does not exist</span><br><span class="line">[09:10:50] [Server thread/INFO]: Generating new properties file</span><br><span class="line">[09:10:50] [Server thread/WARN]: Failed to load eula.txt</span><br><span class="line">[09:10:50] [Server thread/INFO]: You need to agree to the EULA <span class="keyword">in</span> order to run the server. Go to eula.txt <span class="keyword">for</span> more info.</span><br><span class="line">[09:10:50] [Server thread/INFO]: Stopping server</span><br><span class="line">[09:10:50] [Server Shutdown Thread/INFO]: Stopping server</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Agree-to-EULA"><a href="#9-–-Agree-to-EULA" class="headerlink" title="9 – Agree to EULA"></a>9 – Agree to EULA</h1><p>The EULA you must agree to is located in the same user’s home directory. </p>
+<p>Again using a text editor open it for writing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim eula.txt</span><br></pre></td></tr></table></figure>
+<p>Set the <code>eula</code> directive  to <code>true</code> like in the example below:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).</span></span><br><span class="line"><span class="comment">#Mon Oct 05 09:10:50 EDT 2015</span></span><br><span class="line">eula=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>Save changes and exit the text editor. </p>
+<p>Back on the command line begin a screen session by providing the full path to your executable script:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen ./run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>The server now runs and begins to generate the in-game content. </p>
+<hr>
+<h1 id="10-–-Client-Connections"><a href="#10-–-Client-Connections" class="headerlink" title="10 – Client Connections"></a>10 – Client Connections</h1><p>The server should now be running continually and Minecraft clients can connect to it. </p>
+<blockquote>
+<p>Connect with a Minecraft client to the server IP. </p>
+</blockquote>
+<p>Everything should be functioning as intended, and the server is ready for use!</p>
+<p>You can leave and detach from the screen session by pressing <code>CTRL</code> + <code>d</code> then <code>a</code> on your keyboard, back in the terminal. </p>
+<hr>
+<h1 id="11-–-Administration"><a href="#11-–-Administration" class="headerlink" title="11 – Administration"></a>11 – Administration</h1><p>Logged in once again as the Linux user <code>minecraft</code> or whatever you chose to call your dedicated user, re-attach to the minecraft <em>screen</em> session from earlier with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -r</span><br></pre></td></tr></table></figure>
+<p>Shut down the server which saves player created progress and the in-game content.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/stop</span><br></pre></td></tr></table></figure>
+<p>Now the server has been stopped you can begin to play around with its file structure. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br></pre></td></tr></table></figure>
+<p>There are several key files in in regards to maintaining the server, and two other directories to consider. </p>
+<blockquote>
+<p>Any time you modify these files while the game is running, you will need to stop and restart the server for the changes to take effect.</p>
+</blockquote>
+<hr>
+<h2 id="ops-json"><a href="#ops-json" class="headerlink" title="ops.json"></a>ops.json</h2><p>This file named <code>ops.json</code> contains usernames of players that have <em>ops</em> privileges on your server.</p>
+<p>It is empty until you add player usernames however.</p>
+<blockquote>
+<p><strong>Warning:</strong> Players listed in this file can change their game mode, input certain commands, and ban or unban other players from the server. </p>
+</blockquote>
+<p>You can either add user details directly to this <code>.json</code> file, if you understand the formatting involved. </p>
+<p>Or create a completely separate <code>ops.txt</code> file with a list of usernames inside. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/ops.txt</span><br></pre></td></tr></table></figure>
+<p>The text file you create is then converted into the <code>ops.json</code> file from earlier once the server is next booted.</p>
+<p>It is recommended that you follow this method if you are unfamiliar with JSON formatting.   </p>
+<p>For more information on ops or <em>operators</em> in Minecraft click the next link:</p>
+<blockquote>
+<p><a href="http://minecraft.gamepedia.com/Operator" target="_blank" rel="external">Minecraft Wiki Operators Page</a></p>
+</blockquote>
+<hr>
+<h2 id="server-properties"><a href="#server-properties" class="headerlink" title="server.properties"></a>server.properties</h2><p>The bulk of in-game settings and properties are stored in the following text file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/server.properties</span><br></pre></td></tr></table></figure>
+<p>There are a longer list of properties you can add to the file that are listed at this next URL: </p>
+<blockquote>
+<p><a href="]http://minecraft.gamepedia.com/Server.properties">Minecraft Wiki Server.properties Page</a></p>
+</blockquote>
+<hr>
+<h2 id="banned-ips-json-amp-banned-players-json"><a href="#banned-ips-json-amp-banned-players-json" class="headerlink" title="banned-ips.json &amp; banned-players.json"></a>banned-ips.json &amp; banned-players.json</h2><p>In order to ban an IP address from connecting to the server, the full IP address must be specified; - impartial addresses or wildcards are not supported here. </p>
+<p>Any players who are banned in this manner see “Your IP address is banned from this server!” when attempting to connect through the client. </p>
+<p>In-game an operator can instead use  “/ban-ip ipaddress”, where “ipaddress” is the IP address of the user they wish to ban. To remove and undo a ban, the operator can issue “pardon-ip ipaddress”. Or if they have access, edit the server’s <code>banned-ips.json</code> file.</p>
+<hr>
+<h1 id="white-list-json"><a href="#white-list-json" class="headerlink" title="white-list.json"></a>white-list.json</h1><p>This essentially can be used to make a server private to a select group of clients. To do so add their usernames to the file <code>white-list.txt</code>. You will need to edit the <code>server.properties</code> file, changing <code>white-list=false</code> to <code>white-list=true</code> .</p>
+<p>Alongside this you can also use this file to change the public message on your Minecraft server. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/white-list.txt</span><br></pre></td></tr></table></figure>
+<p>Edit <code>motd=A Minecraft Server</code> to show the name or phrase that you want to display publicly to clients. </p>
+<hr>
+<h2 id="World-Directories"><a href="#World-Directories" class="headerlink" title="World Directories"></a>World Directories</h2><p>This directory and its subdirectories contain map and player data for the <em>realms</em> in your game. </p>
+<p>It is worth backing up these directories regularly so that you can revert to previous versions in case of in-game mishaps or unwanted trolls. These directories may be in different locations, depending on which version of the Minecraft server you installed. </p>
+<p>Also note that the directories for the <em>nether</em> and <em>the end</em> will not be created until a player visits the area at least once on the server.</p>
+<hr>
+<h2 id="Log-Directory"><a href="#Log-Directory" class="headerlink" title="Log Directory"></a>Log Directory</h2><p>Anything and everything that goes on is stored in the <code>logs</code> directory. It’s worth reviewing it’s contents every now and then or if any technical problems arise. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ less ~/logs/latest.log</span><br></pre></td></tr></table></figure>
+<p>Previous logs are compressed automatically as and when needed.</p>
+<hr>
+<h2 id="Console-Commands"><a href="#Console-Commands" class="headerlink" title="Console Commands"></a>Console Commands</h2><p>The link below contains a table that summarizes all available commands. Some of which have been mentioned here, but most of which have not.  </p>
+<blockquote>
+<p><a href="http://minecraft.gamepedia.com/Commands#Summary_of_commands" target="_blank" rel="external">Minecraft Wiki Commands Page</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.linode.com/docs/applications/game-servers/minecraft-on-linode-with-ubuntu-12-04" target="_blank" rel="external">Minecraft on Linode </a></li>
+<li><a href="http://minecraft.gamepedia.com/Server/Requirements/Dedicated" target="_blank" rel="external">Minecraft Wiki Server Requirement Pages</a></li>
+<li><a href="http://minecraft.gamepedia.com/Server" target="_blank" rel="external">Minecraft Wiki Server Maintenance Page</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/Java/" class="post__tag__link">Java</a></li></ul><a href="/2015/10/05/minecraft-server-debian/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-10-01T23:00:00.000Z" class="post__time">October 2, 2015</time><h1 class="post__title"><a href="/2015/10/02/terraria-tdsm-server/">Installing TDSM Terraria Server Mod on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>TDSM is one of several open-source server mods available for the online action-adventure game Terraria. This modification is developed to allow the Terraria server software to be run on Linux like operating systems, and opens up many other potential benefits for players using the server. </p>
+<ul>
+<li>External plugin support. </li>
+<li>Administrative permissions system. </li>
+<li>MySQL &amp; SQLite databases.</li>
+<li>New &amp; custom in-game commands.</li>
+<li>Remote console administration. </li>
+</ul>
+<p>It’s also updated relatively quickly by the maintainers after a new Terraria client version is released.</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod" target="_blank" rel="external">TDSM Github Project Page</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h1><ul>
+<li><p>A Terraria game client for connection to the server after installation. </p>
+</li>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM. </p>
+</li>
+</ul>
+<hr>
+<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm the action by entering <code>y</code> for any prompts in this step. </p>
+<hr>
+<h1 id="2-–-Install-Screen"><a href="#2-–-Install-Screen" class="headerlink" title="2 – Install Screen"></a>2 – Install Screen</h1><p>Screen will be used to keep the TDSM server running in a persistent shell session, and allows us to disconnect or re-attach to the session when needed. </p>
+<p>Install Screen with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Install-Mono"><a href="#3-–-Install-Mono" class="headerlink" title="3 – Install Mono"></a>3 – Install Mono</h1><p>Mono is the open source implementation of Microsoft’s .NET Framework, and we need it to successfully run and start the TDSM server later on.</p>
+<p>Install Mono and all its packages with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mono-complete</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Install-Unzip"><a href="#4-–-Install-Unzip" class="headerlink" title="4 – Install Unzip"></a>4 – Install Unzip</h1><p>The server software comes packaged in a <code>.zip</code> file. So install the <em>unzip</em> package which we’ll use in the next step, to extract the files. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Add-Swap-Space"><a href="#5-–-Add-Swap-Space" class="headerlink" title="5 – Add Swap Space"></a>5 – Add Swap Space</h1><p>The server mod requires adequate swap space to be allocated by the system. Otherwise this can result in crashing and instability with TDSM whilst it is running. </p>
+<p>Create the base swap file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo fallocate <span class="_">-l</span> &lt;^&gt;4G&lt;^&gt; /swapfile</span><br></pre></td></tr></table></figure>
+<p>Give it the correct permissions it needs:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+<p>Have the system build the file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+<p>Then enable it with the <code>swapon</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+<p>To automate the mounting of the swap file on boot we need to include its details into the <code>/etc/fstab</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nano /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>Insert this top line show in the next code snippet into the file.</p>
+<figure class="highlight bash"><figcaption><span>/etc/fstab</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile   none    swap    sw    0   0</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Download-the-TDSM-Server-Software"><a href="#6-–-Download-the-TDSM-Server-Software" class="headerlink" title="6 – Download the TDSM Server Software"></a>6 – Download the TDSM Server Software</h1><p>The TDSM server software that we’ll download in this step will be stored and run from your user’s home directory.</p>
+<p>Make sure this is your current working directory by entering:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+<p>As of writing this tutorial the current TDSM server build release is number: <code>005</code></p>
+<p>For newer versions than the current <code>005</code> release, and to download the most up to date version.<br>You’ll need to change the URL passed to <code>wget</code> in the next code snippet. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/DeathCradle/Terraria<span class="_">-s</span>-Dedicated-Server-Mod/releases/download/Build-5/tdsm-b5.zip</span><br></pre></td></tr></table></figure>
+<p>The TDSM server releases and their file URL’s can be found on the project’s GitHub page:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases" target="_blank" rel="external">TDSM Releases on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="7-–-Run-the-Terraria-Server-Binary"><a href="#7-–-Run-the-Terraria-Server-Binary" class="headerlink" title="7 – Run the Terraria Server Binary"></a>7 – Run the Terraria Server Binary</h1><p>Next unzip the downloaded archive file and extract the contents into a new folder named <code>tdsm-terraria-server</code> using the <code>-d</code> option:</p>
+<blockquote>
+<p><strong>Note:</strong> The downloaded <code>.zip</code> file name will differ for future release downloads.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ unzip tdsm-b5.zip <span class="_">-d</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Change into the unpacked <code>tdsm-terraria-server</code> directory with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Now to run the server software in it’s most basic form without any arguments or parameters, enter the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen mono tdsm.exe</span><br></pre></td></tr></table></figure>
+<p>Note the inclusion of Screen in the last command. This runs the Mono program and server in a separate shell session to our original one.</p>
+<hr>
+<h1 id="8-–-Create-a-New-World"><a href="#8-–-Create-a-New-World" class="headerlink" title="8 – Create a New World"></a>8 – Create a New World</h1><p>The below output (or similar) is seen upon successfully running the server binary in “<strong>Step 7 – Run the Terraria Server Binary</strong>“.</p>
+<p>Type <code>n</code>  and press <code>ENTER</code> to create a new world.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind API build 5lr running on Mono                                                                                                                                                                            ﻿10/2/2015 2:05:20 PM Run&gt; Logging started to file <span class="string">"/home/&lt;username&gt;/src/tdsm-terraria-server/Data/server_20151002_1405.log"</span>.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; Loading plugin from TDSM.Core.dll.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core build 5lr</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core enabled</span><br><span class="line">10/2/2015 2:05:21 PM Run&gt; Server state changed to: Initialising</span><br><span class="line">10/2/2015 2:05:23 PM Run&gt; Server state changed to: Starting</span><br><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> depending upon your preference and suitability of world size. </p>
+<p>The requirements section at the start of this article indicates what world size is suitable for your VPS. </p>
+<p>Here it is again:</p>
+<ul>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM.   </p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Warning:</strong> Be aware that the larger the world the more memory and CPU your server will need to consume whilst the server is up and running, so be sure to select a suitable world size. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Small</span><br><span class="line">2       Medium</span><br><span class="line">3       Large</span><br><span class="line"></span><br><span class="line">Choose size:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> again once more depending upon your desired level of in-game difficulty.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Normal</span><br><span class="line">2       Expert</span><br><span class="line"></span><br><span class="line">Choose difficulty:</span><br></pre></td></tr></table></figure>
+<p>Now give the new world a suitable name. </p>
+<p>For example purposes we’re calling ours <code>test-tdsm-server</code> in this guide. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Enter world name:</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Wait for the new world to be generated as it outputs its progress and percentage completion.</strong></p>
+</blockquote>
+<hr>
+<h1 id="9-–-Set-World-Details"><a href="#9-–-Set-World-Details" class="headerlink" title="9 – Set World Details"></a>9 – Set World Details</h1><p>Once the world is created and has finished generating, choose your previously created world by entering <code>1</code> into the prompt:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1   <span class="built_in">test</span>-tdsm-server      norm, crim, exp   Last used: 10/02/2015 10:27 AM</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Provide the world with a <strong>max</strong> number of players that can join the server at any one time. If you are unsure on a value, the default of <code>8</code> is a sensible choice. </p>
+<blockquote>
+<p><strong>Warning:</strong> Once again be aware that the more players the world has connected the more memory and CPU your server will need to consume whilst running. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Max players (press enter <span class="keyword">for</span> 8):</span><br></pre></td></tr></table></figure>
+<p>Enter a suitable port the server can transmit on, go for the default choice of <code>7777</code> if you don’t have a specific port you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Server port (press enter <span class="keyword">for</span> 7777):</span><br></pre></td></tr></table></figure>
+<p>The final two questions are up to you (forwarding and password). Forwarding with <code>iptables</code> is covered in this next section however. </p>
+<blockquote>
+<p><strong>Wait for the server to load as it outputs its progress.</strong></p>
+</blockquote>
+<hr>
+<h1 id="10-–-iptables-Firewall"><a href="#10-–-iptables-Firewall" class="headerlink" title="10 – iptables Firewall"></a>10 – iptables Firewall</h1><p>Now the server is up running you’ll need to de-attach from the currently active screen session with:</p>
+<p><code>CTRL</code> + <code>a</code> then <code>c</code></p>
+<p>If using <code>iptables</code> (or you intend to use it) as a firewall solution on the VPS, then open up the port number you chose in <strong>“ 9 – Set World Details”</strong></p>
+<p>To do this use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 7777 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 7777 Terraria server"</span></span><br></pre></td></tr></table></figure>
+<p>Replacing <code>7777</code> for your own chosen port number.</p>
+<p>For any other firewall program you may use in its place perform the equivalent port forwarding/opening actions. </p>
+<p>To now connect back to the previous screen session press: </p>
+<p><code>CTRL</code> + <code>a</code> then <code>n</code></p>
+<hr>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>The server itself is now ready and should be open for connections via the Terraria client.</p>
+<p>To learn how to administer, run, and configure the server properly alongside what configuration files it uses, see the Github wiki:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server" target="_blank" rel="external">TDSM Project Github Wiki</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://store.steampowered.com/app/105600/" target="_blank" rel="external">Terraria Client on Steam</a> – The client is very small in size and available through Steam. </li>
+<li><a href="http://terraria.gamepedia.com/Mods" target="_blank" rel="external">Terraria Mod Information</a> – Brief explanation of mods for Terraria. </li>
+<li><a href="https://github.com/NyxStudios/TShock" target="_blank" rel="external">TShock Terraria Server Mod</a> – Another mod that may function on Linux/Unix OS, but not one hundred percent supported.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-01-15T00:00:00.000Z" class="post__time">January 15, 2015</time><h1 class="post__title"><a href="/2015/01/15/web-deployment-git-hooks/">Debian 7 Web Server Deployment with Git Hooks</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/p0i25Hx.png" alt="Github Logo"></p>
+<p>Some notes on how to use a git hook for web server deployment on Debian 7.</p>
+<ul>
+<li>Web server live directory: <code>/var/www</code></li>
+<li>Web server live directory with virtual hosts: <code>/var/www/www.exampledomain.com</code></li>
+<li>VPS “live” repository: <code>/var/repo-name/project-name</code></li>
+</ul>
+<a id="more"></a>
+<hr>
+<p>SSH into the server or VPS and create the following folders in the respective directories.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /var</span><br><span class="line">$ mkdir repository-name</span><br><span class="line">$ <span class="built_in">cd</span> repository-name</span><br><span class="line">$ mkdir project-name </span><br><span class="line">$ <span class="built_in">cd</span> project-name</span><br></pre></td></tr></table></figure></p>
+<p>Use bare to initialise only the version control components of git and not any other of the source files. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git init --bare</span><br></pre></td></tr></table></figure>
+<p>Change into the <code>hooks</code> directory and create a text file named <code>post-receive</code> and begin writing to it. I’m using vim in this example. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> hooks</span><br><span class="line">$ vim post-receive</span><br></pre></td></tr></table></figure>
+<p>Enter the following lines for a single web server host, or <strong>skip</strong> to the next code block for multiple virtual hosts. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www --git-dir=/var/loy-web/loy-website checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
+<p>For multiple virtual hosts enter this coding instead:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www/www.example-domain.com --git-dir=/var/repo-name/project-name checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
+<p>Turn the newly created and completed <code>post-receive</code> file into a an executable file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x post-receive</span><br></pre></td></tr></table></figure>
+<p>On a user’s local git repository (the repository used previously for the same project, and for development of the website) add  the remote path of our server repository like so.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add live ssh://user@vps_address/var/repo-name/project-name</span><br></pre></td></tr></table></figure>
+<p>Push to the ‘live’ remote on the ‘master’ branch which will then update the specified web server hosting directory. Which in this case was <code>/var/www</code> or <code>/var/www/www.example-domain.com</code> for multiple virtual hosts. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push live master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/VPS/" class="post__tag__link">VPS</a></li><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li></ul><a href="/2015/01/15/web-deployment-git-hooks/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><a title="Next" href="/tags/Debian/page/2/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

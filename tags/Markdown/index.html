@@ -1,0 +1,388 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Markdown - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-07-26T23:00:00.000Z" class="post__time">July 27, 2015</time><h1 class="post__title"><a href="/2015/07/27/notes-vim-pathogen-plugins/">Vim Plugins and Pathogen</a></h1></header><div class="post__main echo"><p><img src="http://www.catonmat.net/blog/wp-content/uploads/2008/12/vim-plugins-surround-vim.gif" alt="Vim Plugins Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Vim does a lot with its base install and provides everything you’d expect from a CLI text editor, but to unlock even further awesomeness one needs to delve into the vast libraries of plugins on offer.</p>
+<p>One such site that aims to index these plugins is:</p>
+<blockquote>
+<p><a href="http://vimawesome.com/" target="_blank" rel="external">http://vimawesome.com/</a></p>
+</blockquote>
+<p>Which is awesome in its own right.</p>
+<p>To install said plugins there are several varying install solutions on offer (Vundle, NeoBundle, VimPlug, Pathogen, etc). In this post I’ll follow the most basic method of using Pathogen to install Vim plugins, whilst highlighting and describing a list of my own thus far installed and used plugins.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Install-Pathogen"><a href="#1-–-Install-Pathogen" class="headerlink" title="1 – Install Pathogen"></a>1 – Install Pathogen</h1><p>Start by making the two configuration directories in your user’s home directory, here’s how to do this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p ~/.vim/<span class="built_in">autoload</span> ~/.vim/bundle &amp;&amp; \</span><br></pre></td></tr></table></figure>
+<p>Now in the prompt that’s initiated from the last command retrieve the contents of the two new folders with Curl:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl -LSso ~/.vim/<span class="built_in">autoload</span>/pathogen.vim https://tpo.pe/pathogen.vim</span><br></pre></td></tr></table></figure>
+<p>Install Curl first if you don’t have it install it on Debian/Ubuntu with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install curl</span><br></pre></td></tr></table></figure>
+<p>Or on Arch Linux with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S curl</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-pathogen" target="_blank" rel="external">Pathogen Plugin Manager on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="2-–-Edit-vimrc"><a href="#2-–-Edit-vimrc" class="headerlink" title="2 – Edit .vimrc"></a>2 – Edit .vimrc</h1><p>After returning to the command line continue by opening your <code>~/.vimrc</code> file for writing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.vimrc</span><br></pre></td></tr></table></figure>
+<p>Then add these two lines to run Pathogen and enable plugins:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">execute</span> pathogen#infect()</span><br><span class="line"><span class="keyword">filetype</span> plugin <span class="built_in">indent</span> <span class="keyword">on</span></span><br></pre></td></tr></table></figure>
+<p><strong>Save</strong> and quit.</p>
+<hr>
+<h1 id="3-–-Install-Plugins"><a href="#3-–-Install-Plugins" class="headerlink" title="3 – Install Plugins"></a>3 – Install Plugins</h1><p>Any plugins I use I’ll add details about here in this section.</p>
+<h1 id="vim-markdown"><a href="#vim-markdown" class="headerlink" title="vim-markdown"></a>vim-markdown</h1><p>To install vim-markdown use these two commands on your system (with Git installed):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle &amp;&amp; \</span><br><span class="line">&gt; git <span class="built_in">clone</span> git://github.com/plasticboy/vim-markdown.git</span><br></pre></td></tr></table></figure>
+<p>To disable the “folding” in markdown files provided by <code>vim-markdown</code> add this line to your <code>~/.vimrc</code> config file:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:vim_markdown_folding_disabled</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><strong>Commands</strong></p>
+<p><code>:Toc</code> create a quickfix vertical window navigable table of contents with the headers.</p>
+<p><code>:Toch</code> Same as <code>:Toc</code> but in an horizontal window.</p>
+<p><code>:Toct</code> Same as <code>:Toc</code> but in a new tab.</p>
+<p><code>:Tocv:</code> Same as :<code>Toc</code> for symmetry with <code>:Toch</code> and <code>:Tocv</code> .</p>
+<blockquote>
+<p><strong>Note:</strong> <a href="https://github.com/plasticboy/vim-markdown" target="_blank" rel="external">vim-markdown Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="SuperTab"><a href="#SuperTab" class="headerlink" title="SuperTab"></a>SuperTab</h1><p>SuperTab is an auto-completion plugin that allows extra <strong>insert mode</strong> completion using the <tab> key.</tab></p>
+<p>After typing a few letters of a word that exists within the current open buffer (vim session) SuperTab will list the auto-completion options it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/ervandew/supertab.git ~/.vim/bundle/supertab</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> <a href="https://github.com/ervandew/supertab" target="_blank" rel="external">SuperTab Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="NERD-Tree"><a href="#NERD-Tree" class="headerlink" title="NERD Tree"></a>NERD Tree</h1><p>NERD tree allows you to explore your filesystem in order to easily open files and directories. It takes the form of a tree which you manipulate with the keyboard and/or mouse. It also supports basic filesystem operations.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/scrooloose/nerdtree ~/.vim/bundle/supertab</span><br></pre></td></tr></table></figure>
+<p>Include this next line in your <code>~/.vimrc</code> to stop garbled characters and broken directory traversing in your NERDTree.:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> NERDTreeDirArrows = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="Running-NERD-Tree"><a href="#Running-NERD-Tree" class="headerlink" title="Running NERD Tree"></a>Running NERD Tree</h2><p>To start a tree in the currently opened file’s directory type this into Vim:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree</span><br></pre></td></tr></table></figure>
+<p>To do the same but commence the tree in a separate directory, specify the directory path like this:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree /etc/X11/Xresources/</span><br></pre></td></tr></table></figure>
+<p>To close the tree in the current tab use:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTreeClose</span><br></pre></td></tr></table></figure>
+<p>To quickly find the current file in the tree:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTreeFind</span><br></pre></td></tr></table></figure>
+<h2 id="Bookmarks"><a href="#Bookmarks" class="headerlink" title="Bookmarks"></a>Bookmarks</h2><p>When the NERD Tree window/tab is active you can type the next command in the current buffer, to bookmark a file or directory that is currently highlighted by the tree.</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Bookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<p>Opening bookmark is done with:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:OpenBookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<p>If you need to remove a bookmark then use</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:ClearBookmarks bookmark_name bookmark_name bookmark_name</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> If no bookmark names are passed then this will remove all bookmarks on the current node.</p>
+</blockquote>
+<p>Any previous bookmarks made with NERDTree can be used to start the tree by providing the bookmark name. The second command in this next example provides auto-completion when typing out the bookmark name, both commands have the same result however:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree bookmark_name</span><br><span class="line">:NERDTreeFromBookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<h2 id="NERD-tree-Mappings"><a href="#NERD-tree-Mappings" class="headerlink" title="NERD tree Mappings"></a>NERD tree Mappings</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line"><span class="number">2.3</span>. NERD tree Mappings                                     *NERDTreeMappings*</span><br><span class="line"></span><br><span class="line">Default  Description~                                             <span class="keyword">help</span>-<span class="keyword">tag</span>~</span><br><span class="line">Key~</span><br><span class="line"></span><br><span class="line"><span class="keyword">o</span>.......Open <span class="keyword">files</span>, directories <span class="built_in">and</span> bookmarks....................|NERDTree-<span class="keyword">o</span>|</span><br><span class="line"><span class="keyword">go</span>......Open selected <span class="keyword">file</span>, but leave <span class="built_in">cursor</span> in the NERDTree.....|NERDTree-<span class="keyword">go</span>|</span><br><span class="line">t.......Open selected node/bookmark in <span class="keyword">a</span> <span class="keyword">new</span> <span class="keyword">tab</span>.................|NERDTree-t|</span><br><span class="line">T.......Same <span class="keyword">as</span> <span class="string">'t'</span> but keep the focus <span class="keyword">on</span> the current <span class="keyword">tab</span>........|NERDTree-T|</span><br><span class="line">i.......Open selected <span class="keyword">file</span> in <span class="keyword">a</span> <span class="keyword">split</span> window.....................|NERDTree-i|</span><br><span class="line">gi......Same <span class="keyword">as</span> i, but leave the <span class="built_in">cursor</span> <span class="keyword">on</span> the NERDTree..........|NERDTree-gi|</span><br><span class="line">s.......Open selected <span class="keyword">file</span> in <span class="keyword">a</span> <span class="keyword">new</span> <span class="keyword">vsplit</span>.......................|NERDTree-s|</span><br><span class="line">gs......Same <span class="keyword">as</span> s, but leave the <span class="built_in">cursor</span> <span class="keyword">on</span> the NERDTree..........|NERDTree-gs|</span><br><span class="line">O.......Recursively <span class="keyword">open</span> the selected directory..................|NERDTree-O|</span><br><span class="line"><span class="keyword">x</span>.......Close the current nodes parent...........................|NERDTree-<span class="keyword">x</span>|</span><br><span class="line"><span class="keyword">X</span>.......Recursively <span class="keyword">close</span> <span class="keyword">all</span> children of the current node.......|NERDTree-<span class="keyword">X</span>|</span><br><span class="line"><span class="keyword">e</span>.......Edit the current dir.....................................|NERDTree-<span class="keyword">e</span>|</span><br><span class="line"></span><br><span class="line"><span class="symbol">&lt;CR&gt;</span>...............same <span class="keyword">as</span> |NERDTree-<span class="keyword">o</span>|.</span><br><span class="line">double-click.......same <span class="keyword">as</span> the |NERDTree-<span class="keyword">o</span>| <span class="keyword">map</span>.</span><br><span class="line">middle-click.......same <span class="keyword">as</span> |NERDTree-i| <span class="keyword">for</span> <span class="keyword">files</span>, same <span class="keyword">as</span></span><br><span class="line">                   |NERDTree-<span class="keyword">e</span>| <span class="keyword">for</span> dirs.</span><br><span class="line"></span><br><span class="line">D.......Delete the current bookmark .............................|NERDTree-D|</span><br><span class="line"></span><br><span class="line"><span class="keyword">P</span>.......Jump <span class="keyword">to</span> the root node....................................|NERDTree-<span class="keyword">P</span>|</span><br><span class="line"><span class="keyword">p</span>.......Jump <span class="keyword">to</span> current nodes parent.............................|NERDTree-<span class="keyword">p</span>|</span><br><span class="line">K.......Jump <span class="keyword">up</span> inside directories at the current tree depth.....|NERDTree-K|</span><br><span class="line">J.......Jump down inside directories at the current tree depth...|NERDTree-J|</span><br><span class="line"><span class="symbol">&lt;C-J&gt;</span>...Jump down <span class="keyword">to</span> the <span class="keyword">next</span> sibling of the current directory...|NERDTree-C-J|</span><br><span class="line"><span class="symbol">&lt;C-K&gt;</span>...Jump <span class="keyword">up</span> <span class="keyword">to</span> the <span class="keyword">previous</span> sibling of the current directory.|NERDTree-C-K|</span><br><span class="line"></span><br><span class="line">C.......Change the tree root <span class="keyword">to</span> the selected dir.................|NERDTree-C|</span><br><span class="line"><span class="keyword">u</span>.......Move the tree root <span class="keyword">up</span> one directory......................|NERDTree-<span class="keyword">u</span>|</span><br><span class="line">U.......Same <span class="keyword">as</span> <span class="string">'u'</span> except the old root node <span class="keyword">is</span> <span class="keyword">left</span> <span class="keyword">open</span>........|NERDTree-U|</span><br><span class="line">r.......Recursively refresh the current directory................|NERDTree-r|</span><br><span class="line">R.......Recursively refresh the current root.....................|NERDTree-R|</span><br><span class="line"><span class="keyword">m</span>.......Display the NERD tree <span class="keyword">menu</span>...............................|NERDTree-<span class="keyword">m</span>|</span><br><span class="line"><span class="keyword">cd</span>......Change the CWD <span class="keyword">to</span> the dir of the selected node...........|NERDTree-<span class="keyword">cd</span>|</span><br><span class="line">CD......Change tree root <span class="keyword">to</span> the CWD..............................|NERDTree-CD|</span><br><span class="line"></span><br><span class="line">I.......Toggle whether hidden <span class="keyword">files</span> displayed....................|NERDTree-I|</span><br><span class="line"><span class="keyword">f</span>.......Toggle whether the <span class="keyword">file</span> filters are used.................|NERDTree-<span class="keyword">f</span>|</span><br><span class="line">F.......Toggle whether <span class="keyword">files</span> are displayed.......................|NERDTree-F|</span><br><span class="line">B.......Toggle whether the bookmark table <span class="keyword">is</span> displayed...........|NERDTree-B|</span><br><span class="line"></span><br><span class="line">q.......Close the NERDTree window................................|NERDTree-q|</span><br><span class="line">A.......Zoom (maximize/minimize) the NERDTree window.............|NERDTree-A|</span><br><span class="line">?.......Toggle the <span class="keyword">display</span> of the quick <span class="keyword">help</span>.....................|NERDTree-?|</span><br><span class="line"></span><br><span class="line">-----------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/scrooloose/nerdtree" target="_blank" rel="external">NERDTree Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h2 id="Syntastic"><a href="#Syntastic" class="headerlink" title="Syntastic"></a>Syntastic</h2><p>This is a syntax checking plugin for Vim that runs files through various external syntax checkers to display any resulting errors to the user. This can be done on demand if needed, or automatically as files are saved. If syntax errors are detected, the user is notified and is happy because they didn’t have to compile their code or execute their script to find them!</p>
+<p>Here are the languages it has built in support for:</p>
+<p><strong>“ActionScript, Ada, API Blueprint, AppleScript, AsciiDoc, ASM, BEMHTML, Bro, Bourne shell, C, C++, C#, Cabal, Chef, CoffeeScript, Coco, Coq, CSS, Cucumber, CUDA, D, Dart, DocBook, Dust, Elixir, Erlang, eRuby, Fortran, Gentoo metadata, GLSL, Go, Haml, Haskell, Haxe, Handlebars, HSS, HTML, Java, JavaScript, JSON, JSX, LESS, Lex, Limbo, LISP, LLVM intermediate language, Lua, Markdown, MATLAB, Mercury, NASM, Nix, Objective-C, Objective-C++, OCaml, Perl, Perl POD, PHP, gettext Portable Object, OS X and iOS property lists, Puppet, Python, R, Racket, Relax NG, reStructuredText, RPM spec, Ruby, SASS/SCSS, Scala, Slim, SML, Sphinx, Tcl, TeX, Texinfo, Twig, TypeScript, Vala, Verilog, VHDL, VimL, xHtml, XML, XSLT, YACC, YAML, z80, Zope Page Templates, and Zsh.”</strong></p>
+<p>Install the plugin with Pathogen as usual via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic</span><br></pre></td></tr></table></figure>
+<p>Include these new lines in your <code>~/.vimrc</code> to ensure Syntastic works and displays its content properly:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_always_populate_loc_list</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_auto_loc_list</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_check_on_open</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_check_on_wq</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%#warningmsg#</span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%&#123;SyntasticStatuslineFlag()&#125;</span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%*</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/scrooloose/syntastic" target="_blank" rel="external">Syntastic Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="fugitive-vim"><a href="#fugitive-vim" class="headerlink" title="fugitive.vim"></a>fugitive.vim</h1><p><strong>“Fugitive.vim may very well be the best Git wrapper of all time.”</strong></p>
+<p>This plugin adds a whole new set of commands to Vim to make using Git smoother, flexible, more varied, and all from within the Vim session in question.</p>
+<p>Install it as usual with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tpope/vim-fugitive.git ~/.vim/bundle/vim-fugitive</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The percent symbol (<code>%</code>) is short-hand for the path of the current file.</p>
+</blockquote>
+<h2 id="Base-Fugitive-Commands"><a href="#Base-Fugitive-Commands" class="headerlink" title="Base Fugitive Commands"></a>Base Fugitive Commands</h2><table>
+<thead>
+<tr>
+<th>Git</th>
+<th>fugitive.vim</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:Git add %</td>
+<td>:Gwrite</td>
+<td>Stage the current file to the index</td>
+</tr>
+<tr>
+<td>:Git checkout %</td>
+<td>:Gread</td>
+<td>Revert current file to last checked in version</td>
+</tr>
+<tr>
+<td>:Git rm %</td>
+<td>:Gremove</td>
+<td>Delete the current file and the corresponding Vim buffer</td>
+</tr>
+<tr>
+<td>:Git mv %</td>
+<td>:Gmove</td>
+<td>Rename the current file and the corresponding Vim buffer</td>
+</tr>
+<tr>
+<td>:Git commit</td>
+<td>:Gcommit</td>
+<td>Opens up a split window to enter a commit message and features Vim’s auto-completion functionality (<code>CTRL</code> + <code>N</code>). <code>:wq</code> and <code>ENTER</code> to confirm.</td>
+</tr>
+<tr>
+<td>:Git blame %</td>
+<td>:Gblame</td>
+<td>Opens a vertically split window containing annotations for each line of the file: the last commit reference, with author and timestamp. When you scroll one, the other window follows.</td>
+</tr>
+<tr>
+<td>:Git status</td>
+<td>:Gstatus</td>
+<td>Opens a split window with status, that is interact-able. <code>CNTRL</code>+<code>N</code> &amp; <code>CNTRL</code> + <code>P</code> moves between files names listed, pressing <code>-</code> minus whilst untracked files are highlighted will add it to the index, <code>-</code> on the added modified files will remove them from the index. You can highlight multiple files with visual mode. <code>p</code> on a highlighted file opens up the specific file changes. <code>ENTER</code> opens the highlighted file in the window beneath</td>
+</tr>
+<tr>
+<td>:Git diff %</td>
+<td>:Gdiff</td>
+<td>Shows current individual file’s insertions or removals in comparison to indexed version.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-fugitive" target="_blank" rel="external">fugitive.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="goyo-vim"><a href="#goyo-vim" class="headerlink" title="goyo.vim"></a>goyo.vim</h1><p>Distraction free writing tool that sets the writing dimensions suitable for non technical and non programming contexts. Also removes any unnecessary interface elements from the Vim UI. Works well with the limelight.vim plugin shown after this one.</p>
+<p><img src="https://camo.githubusercontent.com/58569256e607d63a1c6c930d64d80b8d93e8e8c1/68747470733a2f2f7261772e6769746875622e636f6d2f6a756e6567756e6e2f692f6d61737465722f676f796f2e706e67" alt="Goyo Vim Image"></p>
+<p>Install it from Github with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/junegunn/goyo.vim.git ~/.vim/bundle/goyo.vim</span><br></pre></td></tr></table></figure>
+<p>Toggle Goyo on:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo</span><br></pre></td></tr></table></figure>
+<p>Turn Goyo off:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo!</span><br></pre></td></tr></table></figure>
+<p>Toggle Goyo on but with a specific width:</p>
+<figure class="highlight vim"><figcaption><span>Width</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo <span class="number">120</span></span><br></pre></td></tr></table></figure>
+<p>Or with a specific height:</p>
+<figure class="highlight vim"><figcaption><span>Height</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo x30</span><br></pre></td></tr></table></figure>
+<p>Both a specific width and height work too:</p>
+<figure class="highlight vim"><figcaption><span>Both</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Goyo <span class="number">120</span>x30</span><br></pre></td></tr></table></figure>
+<p>Percentages can be passed instead:</p>
+<figure class="highlight vim"><figcaption><span>Percentage</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Goyo <span class="number">120</span>x50%</span><br></pre></td></tr></table></figure>
+<p>Defaults can be set in your <code>~/.vimrc</code> file via:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">g:goyo_width</span> (defaul<span class="variable">t:</span> <span class="number">80</span>)</span><br><span class="line"><span class="variable">g:goyo_height</span> (defaul<span class="variable">t:</span> <span class="number">85</span>%)</span><br><span class="line"><span class="variable">g:goyo_linenr</span> (defaul<span class="variable">t:</span> <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/junegunn/goyo.vim" target="_blank" rel="external">goyo.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="limelight-vim"><a href="#limelight-vim" class="headerlink" title="limelight.vim"></a>limelight.vim</h1><p>Allows you to focus and highlight blocks of text and content dynamically, useful for writing oriented environments. Works well with the previous Goyo plugin.</p>
+<p><img src="https://camo.githubusercontent.com/fa4e9321be0b4a565ae84a66bae36e97545c101b/68747470733a2f2f7261772e6769746875622e636f6d2f6a756e6567756e6e2f692f6d61737465722f6c696d656c696768742e676966" alt="Limelight Examples Video"></p>
+<p>Install with Pathogen as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/junegunn/limelight.vim.git ~/.vim/bundle/limelight.vim</span><br></pre></td></tr></table></figure>
+<p>Turn Limelight on:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight</span><br></pre></td></tr></table></figure>
+<p>Turn Limelight on at a specific brightness, can use any value between <code>0.0</code> ~ <code>1.0</code> where the higher the value the brighter/darker it is:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight0.<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>Turn Limelight off:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight!</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/junegunn/limelight.vim" target="_blank" rel="external">limelight.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="vim-startify"><a href="#vim-startify" class="headerlink" title="vim-startify"></a>vim-startify</h1><p>This plugin provides an awesome start menu that can be seen whenever Vim is called on its own without any arguments or piped text.</p>
+<p>Install with Pathogen as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mhinz/vim-startify.git ~/.vim/bundle/vim-startify.vim</span><br></pre></td></tr></table></figure>
+<p>Run Vim in a terminal to see the plugin:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/mhinz/vim-startify/102aa438b2d2a88e2b4e331d8ff5320eed52f0c4/startify.png" alt="Startify Example"></p>
+<h2 id="Startify-Layout"><a href="#Startify-Layout" class="headerlink" title="Startify Layout"></a>Startify Layout</h2><p>This is the layout of Startify and how it organises its content by default:</p>
+<p><strong>Custom header</strong> – How about some ASCII art action? Perhaps even dynamically generated?</p>
+<p>Default: <code>&lt;empty&gt;</code></p>
+<p><strong>Recently used files from directory</strong> – List recently modified files from the current directory recursively. The list can also be filtered.</p>
+<p>Default: <code>&lt;enabled&gt;</code></p>
+<p><strong>Recently used files</strong>: List recently used files. The list can also be filtered.</p>
+<p>Default: <code>&lt;enabled&gt;</code></p>
+<p><strong>Sessions:</strong> List all your sessions from a certain directory, when you’ve made them with the in-built session commands.</p>
+<p>Default:  <code>~/.vim/session</code></p>
+<p><strong>Bookmarks</strong> – Define bookmarks, thus entries for files that will always be listed. Again appears when you define them.</p>
+<p>Default:  <code>&lt;empty&gt;</code></p>
+<p><strong>Custom footer:</strong> Same as the custom header.. but at the bottom.</p>
+<p>Default:  <code>&lt;empty&gt;</code></p>
+<h2 id="Navigating-Startify"><a href="#Navigating-Startify" class="headerlink" title="Navigating Startify"></a>Navigating Startify</h2><p>Navigating the menu can be done by using the usual Vim keys <code>j</code> <code>k</code> or just by keying in whatever is written between the square brackets on that line. You can also double-click anywhere on a line to highlight the paths.</p>
+<p>Moreover, you can open several files at once if needed.</p>
+<p>Whilst the cursor is on an entry hit either:</p>
+<ul>
+<li><code>b</code> – Opens in same window,</li>
+<li><code>s</code> – Open in a split window.</li>
+<li><code>t</code> – Open in a tab.</li>
+</ul>
+<p>There is also <code>e</code> for creating an empty buffer (new file), and <code>i</code> for creating an empty buffer <strong>and</strong> jumping into insert mode straight away, and then <code>q</code> for quitting the menu.</p>
+<p>You can always reopen the Stratify screen via <code>:Startify</code> inside a Vim session.</p>
+<p>##Startify Sessions<br>Using <code>:mksession</code> in Vim to save a <code>Session.vim</code> file to the current directory will show the session as an option in the Startify menu. It will be shown at the top of all lists as entry <code>[0]</code> .</p>
+<p>The vim-startify inbuilt session commands can also be used to place saved session files in the <code>~/.vim/sessions/</code> folder.</p>
+<p>These inbuilt session commands are:</p>
+<ul>
+<li><code>:SLoad</code> – Load a session.</li>
+<li><code>:SSave</code> –  Save a session.</li>
+<li><code>:Delete</code> – Delete a session.</li>
+</ul>
+<p>##Startify Custom Header<br>Add this line to your <code>~/.vimrc</code> file to generate an ASCII art cow displaying random both serious and humorous quotes in the Startify page:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_custom_header</span> =</span><br><span class="line">                         \ <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'fortune | cowthink '</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>,<span class="string">''</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You must have <code>cowsay</code> and <code>fortune</code> installed for this to work.</p>
+</blockquote>
+<p>Instead hardcoded ASCII art or any other message can be set like so:</p>
+<figure class="highlight"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">let g:startify_custom_header = [</span><br><span class="line">            \ '                                 ________  __ __        ',</span><br><span class="line">            \ '            __                  /\_____  \/\ \\ \       ',</span><br><span class="line">            \ '    __  __ /\_\    ___ ___      \/___//''/''\ \ \\ \    ',  </span><br><span class="line">            \ '   /\ \/\ \\/\ \ /'' __` __`\        /'' /''  \ \ \\ \_ ',</span><br><span class="line">            \ '   \ \ \_/ |\ \ \/\ \/\ \/\ \      /'' /''__  \ \__ ,__\',</span><br><span class="line">            \ '    \ \___/  \ \_\ \_\ \_\ \_\    /\_/ /\_\  \/_/\_\_/  ',  </span><br><span class="line">            \ '     \/__/    \/_/\/_/\/_/\/_/    \//  \/_/     \/_/    ',  </span><br><span class="line">            \ '',</span><br><span class="line">            \ '',</span><br><span class="line">            \ ]</span><br></pre></td></tr></table></figure>
+<h2 id="Startify-Custom-Footer"><a href="#Startify-Custom-Footer" class="headerlink" title="Startify Custom Footer"></a>Startify Custom Footer</h2><p>Similar to the Header except appears at the bottom of the menu. This example in the next code snippet displays the date and time in the machine’s local format, and the operating system’s name and version number:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_custom_footer</span> =</span><br><span class="line">                       \ [<span class="string">''</span>] + <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'date -R'</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>] + <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'lsb_release -a | tail -n 3'</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="Extra-Startify-Variables"><a href="#Extra-Startify-Variables" class="headerlink" title="Extra Startify Variables"></a>Extra Startify Variables</h2><p>There are more variables that can be defined and are documented in:</p>
+<p><code>~/.vim/bundle/vim-startify/doc/startify.txt</code></p>
+<p>Here are two more that set up the hard coded bookmarks, and another that deletes session file buffers:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_bookmarks</span> = [ <span class="string">'/etc/apache2/apache2.conf'</span>,<span class="string">'~/.vimrc'</span>]                       <span class="comment">"Hard-coded vim-startify bookmarks.</span></span><br><span class="line"> <span class="number">20</span> <span class="keyword">let</span> <span class="variable">g:startify_session_delete_buffers</span> = <span class="number">1</span>                                       <span class="comment">"Deletes any session file buffers when a session is loaded.</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/mhinz/vim-startify" target="_blank" rel="external">vim-startify Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="eunuch-vim"><a href="#eunuch-vim" class="headerlink" title="eunuch-vim"></a>eunuch-vim</h1><p>This strangely named plugin adds some much appreciated Unix command functionality into Vim.</p>
+<p>Install it in Pathogen as usual by cloning the repository with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tpope/vim-eunuch.git ~/.vim/bundle/vim-eunuch</span><br></pre></td></tr></table></figure>
+<p>The features of eunuch-vim include:</p>
+<ul>
+<li><code>:Remove</code> – Delete a buffer and the file on disk simultaneously.</li>
+<li><code>:Unlink</code> – Like <code>:Remove</code>, but keeps the now empty buffer.</li>
+<li><code>:Move</code> – Rename a buffer and the file on disk simultaneously.</li>
+<li><code>:Rename</code> – Like <code>:Move</code>, but relative to the current file’s containing directory.</li>
+<li><code>:Chmod</code> – Change the permissions of the current file.</li>
+<li><code>:Mkdir</code> – Create a directory, defaulting to the parent of the current file.</li>
+<li><code>:Find</code> – Run <code>find</code> and load the results into the quickfix list.</li>
+<li><code>:Locate</code> – Run <code>locate</code> and load the results into the quickfix list.</li>
+<li><code>:Wall</code> – Write every open window. Handy for kicking off tools like <a href="https://github.com/guard/guard" target="_blank" rel="external">guard</a>.</li>
+<li><code>:SudoWrite</code> – Write a privileged file with <code>sudo</code>.</li>
+<li><p><code>:SudoEdit</code> – Edit a privileged file with <code>sudo</code>.</p>
+</li>
+<li><p>File type detection for <code>sudo -e</code> is based on original file name.</p>
+</li>
+<li>New files created with a <em>shebang</em> line are automatically made executable.</li>
+<li>New <em>init</em> scripts are automatically pre-populated with the <code>/etc/init.d/skeleton</code> file.</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-eunuch" target="_blank" rel="external">vim-eunuch Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="vim-wordy"><a href="#vim-wordy" class="headerlink" title="vim-wordy"></a>vim-wordy</h1><blockquote>
+<p>“Wordy is not a grammar checker. Nor is it a guide to proper word usage. Rather, wordy is a lightweight tool to assist you in identifying those words and phrases known for their history of misuse, abuse, and overuse, at least according to usage experts. For example, if wordy highlights moreover in your document, a word for which no good usage exists, you should consider a rewrite to eliminate it. But if wordy highlights therefore in a sentence where you can demonstrate the usage is sound, you can elect to keep it —wordy be damned.”</p>
+</blockquote>
+<p>Still not sure how this works?</p>
+<p>See the gif below:</p>
+<p><img src="https://camo.githubusercontent.com/93ca72de04ae43e6a9f58e431189afde58d86da7/687474703a2f2f692e696d6775722e636f6d2f447a666a4568342e676966" alt="vim-wordy demo"></p>
+<p>Install it with this line:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/reedes/vim-wordy.git ~/.vim/bundle/vim-wordy</span><br></pre></td></tr></table></figure>
+<p>To disable it and restore your previous Vim environment after using one of the below options, enter the command:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NoWordy</span><br></pre></td></tr></table></figure>
+<p>Use Vim’s <em>Normal</em> mode commands for navigating misspelled words to go to those words flagged by <em>wordy</em>.</p>
+<ul>
+<li><code>]s</code>    – Move to next misspelled word after the cursor.</li>
+<li><code>[s</code>    – Like <code>]s</code> but search backwards.</li>
+</ul>
+<h2 id="Weak-amp-Lazy-Usage"><a href="#Weak-amp-Lazy-Usage" class="headerlink" title="Weak &amp; Lazy Usage"></a>Weak &amp; Lazy Usage</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Wordy weak</span><br></pre></td></tr></table></figure>
+<h2 id="Redundant-amp-Problematic-Usage"><a href="#Redundant-amp-Problematic-Usage" class="headerlink" title="Redundant &amp; Problematic Usage"></a>Redundant &amp; Problematic Usage</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Wordy redundant</span><br><span class="line">:Wordy problematic</span><br></pre></td></tr></table></figure>
+<h2 id="Puffery-amp-Jargon"><a href="#Puffery-amp-Jargon" class="headerlink" title="Puffery &amp; Jargon"></a>Puffery &amp; Jargon</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Wordy puffery</span><br><span class="line">:Wordy business-jargon</span><br><span class="line">:Wordy art-jargon</span><br></pre></td></tr></table></figure>
+<h2 id="Manipulative-Language"><a href="#Manipulative-Language" class="headerlink" title="Manipulative Language"></a>Manipulative Language</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Wordy weasel</span><br></pre></td></tr></table></figure>
+<h2 id="To-Be-amp-The-Passive-Voice"><a href="#To-Be-amp-The-Passive-Voice" class="headerlink" title="To Be &amp; The Passive Voice"></a>To Be &amp; The Passive Voice</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Wordy being</span><br><span class="line">:Wordy passive-voice</span><br></pre></td></tr></table></figure>
+<h2 id="Colloquialisms-Idioms-and-Similies"><a href="#Colloquialisms-Idioms-and-Similies" class="headerlink" title="Colloquialisms, Idioms, and Similies"></a>Colloquialisms, Idioms, and Similies</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Wordy colloquial</span><br><span class="line">:Wordy idiomatic</span><br><span class="line">:Wordy similies</span><br></pre></td></tr></table></figure>
+<h2 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:Wordy said-synonyms</span><br><span class="line">:Wordy opinion</span><br><span class="line">:Wordy contractions</span><br><span class="line">:Wordy vague-time</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://vimawesome.com/plugin/vim-wordy" target="_blank" rel="external">vim-wordy Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="gist-vim"><a href="#gist-vim" class="headerlink" title="gist-vim"></a>gist-vim</h1><p>This is a plugin for creating and pushing Gists – <a href="http://gist.github.com" target="_blank" rel="external">http://gist.github.com</a></p>
+<h2 id="gist-vim-Setup"><a href="#gist-vim-Setup" class="headerlink" title="gist-vim Setup"></a>gist-vim Setup</h2><p>Install the plugin by cloning the gist-vim repository:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mattn/gist-vim.git ~/.vim/bundle/gist-vim</span><br></pre></td></tr></table></figure>
+<p>Then also install the webapi-vim plugin as gist-vim requires it to authenticate to Github:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mattn/webapi-vim.git ~/.vim/bundle/webapi-vim</span><br></pre></td></tr></table></figure>
+<p>Now ensure your username is set in Git’s global config file with the next command, where <code>5car1z</code> is replaced with your own Git username:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global github.user 5car1z</span><br></pre></td></tr></table></figure>
+<p>Open a blank Vim file and enter the basic command to begin authenticating with Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist</span><br></pre></td></tr></table></figure>
+<p>Enter your Github account password:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Gist.<span class="keyword">vim</span> requires authorization <span class="keyword">to</span> use the Github API. These settings are stored in <span class="string">"~/.gist-vim"</span>. If you want <span class="keyword">to</span> revoke, <span class="keyword">do</span> <span class="string">"rm ~/.gist-vim"</span>.</span><br><span class="line">Github Password <span class="keyword">for</span> <span class="number">5</span>car1z:</span><br></pre></td></tr></table></figure>
+<p>Now the token file is created in your user’s <em>home</em> directory you can continue onto using the plugin. If you stop using the plugin, remember to remove this file. Or to revoke the associated Github token, go to the list of “Authorised applications” on Github’s “Account Settings” through their website.</p>
+<h2 id="gist-vim-Commands"><a href="#gist-vim-Commands" class="headerlink" title="gist-vim Commands"></a>gist-vim Commands</h2><p>Post the current buffer (file) to Github Gists using the default privacy option:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist</span><br></pre></td></tr></table></figure>
+<p>Create a private Gist:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">p</span></span><br></pre></td></tr></table></figure>
+<p>Create a public Gist - Only relevant if you’ve set Gists to be private by default:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">P</span></span><br></pre></td></tr></table></figure>
+<p>Create a Gist anonymously:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">a</span></span><br></pre></td></tr></table></figure>
+<p>Create a Gist with all open buffers:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">m</span></span><br></pre></td></tr></table></figure>
+<p>Edit the Gist (you need to have opened the gist buffer first). You can update the Gist with the <code>:w</code> command within the Gist buffer:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">e</span></span><br></pre></td></tr></table></figure>
+<p>Edit the Gist with the name <code>example.sh</code> (you need to have opened the Gist buffer first):</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">e</span> example.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
+<p>Post/Edit the Gist with an added description (you need to have opened the Gist buffer first):</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Gist -s Add words here <span class="keyword">for</span> <span class="keyword">a</span> description of the gist.</span><br><span class="line">:Gist -<span class="keyword">e</span> -s Add words here <span class="keyword">for</span> <span class="keyword">a</span> description of the gist after editing.</span><br></pre></td></tr></table></figure>
+<p>Delete the Gist (you need to have opened the Gist buffer first) and password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -d</span><br></pre></td></tr></table></figure>
+<p>Fork the Gist (you need to have opened the Gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">f</span></span><br></pre></td></tr></table></figure>
+<p>Star the Gist (you need to have opened the Gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist +<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Unstar the Gist (you need to have opened the gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Get gist <code>example-name</code> from Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist example-name</span><br></pre></td></tr></table></figure>
+<p>Get gist <code>example-name</code> and add it to the clipboard:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">c</span> example-name</span><br></pre></td></tr></table></figure>
+<p>List your public Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">l</span></span><br></pre></td></tr></table></figure>
+<p>List Gists from user <code>5car1z</code> on Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">l</span> <span class="number">5</span>car1z</span><br></pre></td></tr></table></figure>
+<p>List everyone’s Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">la</span></span><br></pre></td></tr></table></figure>
+<p>List Gists only from your starred Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">ls</span></span><br></pre></td></tr></table></figure>
+<p>Open the Gist in a web browser after you post or update it.</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">b</span></span><br></pre></td></tr></table></figure>
+<h2 id="gist-vim-Variables"><a href="#gist-vim-Variables" class="headerlink" title="gist-vim Variables"></a>gist-vim Variables</h2><p>To make gist-vim detect filetypes from the filename enable:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_detect_filetype</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to set it to open your web browser along with a Gist post:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_open_browser_after_post</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to set or change the browser in question, where <code>firefox</code> is the name of the browser’s command line program:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_browser_command</span> = <span class="string">'firefox %URL% &amp;'</span></span><br></pre></td></tr></table></figure>
+<p>If you want to show your private Gists  as part of the <code>:Gist -l</code> command:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_show_privates</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want all your Gist posts to be private by default:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_post_private</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want all your Gist posts to be anonymous by default:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_post_anonymous</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to manipulate multiple files in a gist:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_get_multiplefile</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to use gist-vim with Github Enterprise instead:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_api_url</span> = <span class="string">'http://your-github-enterprise-domain/api/v3'</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/mattn/gist-vim" target="_blank" rel="external">gist.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<p><strong>To Be Added!</strong></p>
+<ul>
+<li><a href="https://github.com/godlygeek/tabular" target="_blank" rel="external">Tabular Plugin on Github</a> – Plugin for automagically lining up text.</li>
+<li><a href="https://github.com/MattesGroeger/vim-bookmarks" target="_blank" rel="external">vim-bookmarks Plugin on Github</a> – Plugin for creating in file bookmark points.</li>
+<li><a href="https://github.com/xolox/vim-notes" target="_blank" rel="external">vim-notes Plugin on Github</a> – Plugin for taking notes.</li>
+<li><a href="https://github.com/suan/vim-instant-markdown" target="_blank" rel="external">vim-instant-markdown on Github</a> – Markdown preview for Vim. </li>
+<li>Pathogen Plugin Management with Git Submodules.</li>
+</ul>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://mirnazim.org/writings/vim-plugins-i-use/" target="_blank" rel="external">Blog Post on Pathogen &amp; Vim Plugins</a> – One of several good posts on the subject.</li>
+<li><a href="http://vimdoc.sourceforge.net/htmldoc/filetype.html" target="_blank" rel="external">Vim Documentation for “filetype”</a> - Explains in detail how the filetype command in Vim works.</li>
+<li><a href="http://vimcasts.org/blog/2011/05/the-fugitive-series/" target="_blank" rel="external">vimcasts.org - fugitive.vim Video Series</a> – Really in-depth video tutorials for fugitive.vim.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/Vim/" class="post__tag__link">Vim</a></li><li class="post__tag__item"><a href="/tags/Pathogen/" class="post__tag__link">Pathogen</a></li><li class="post__tag__item"><a href="/tags/Markdown/" class="post__tag__link">Markdown</a></li></ul><a href="/2015/07/27/notes-vim-pathogen-plugins/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

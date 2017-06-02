@@ -1,0 +1,204 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Arch Linux System Installation - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-07-13T23:00:00.000Z" class="post__time">July 14, 2015</time><h1 class="post__title"><a href="/2015/07/14/notes-arch-system-install/">Arch Linux System Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>These are my notes on installing an Arch Linux system that begin at the initial shell prompt after booting from the installation media, and end with the configuring of the live partition. </p>
+<p>There is no coverage of installing the desktop environment or window manager as I’ll be looking to document this in another post.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Initial-Shell-Prompt"><a href="#1-–-Initial-Shell-Prompt" class="headerlink" title="1 – Initial Shell Prompt"></a>1 – Initial Shell Prompt</h1><p>After booting into the installation media load the key layout for your language. </p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes#/Partial_ISO_639_table" target="_blank" rel="external">ISO 639-1 Two Digit Language Codes </a></p>
+</blockquote>
+<p>In my case this is with the <code>uk</code> initials: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ loadkeys uk</span><br></pre></td></tr></table></figure>
+<p>Test to see if you have a working internet connection by using <code>ping</code> in either of the below two forms:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If you get <code>ping: unknown host www.google.co.uk</code> or <code>connect: Network is unreachable</code> for either of these commands then you need to do the rest of this step. </p>
+<p>If everything looks fine and you are sending plus receiving through <code>ping</code> with a working internet connection, then move on to step 2 instead. </p>
+<p>Find your Ethernet interface name using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>If you are unsure of the name, your Ethernet interface you are looking for is likely to start with the letter “e”, and unlikely to be “lo” or start with the letter “w”. </p>
+<p><img src="http://i.gyazo.com/2742bf027aad981b4e3af4652079026a.png" alt="Ethernet interface name"></p>
+<p>In my case my interface was named “eno167777736”. So I’ll use that as the example here.</p>
+<p>Next make sure the interface is <em>up</em> and running with this command structure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Substituting the interface name ID with your own.</p>
+<p>Then start and enable <code>dhcpcd.service</code> with <code>systemctl</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpcd.service</span><br></pre></td></tr></table></figure>
+<p>Attempt a <code>ping</code> once again and this time it should succeed, with the internet connection working correctly. </p>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful:</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh Arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="2-–-Partitioning"><a href="#2-–-Partitioning" class="headerlink" title="2 – Partitioning"></a>2 – Partitioning</h1><p>There are a quite a number of programs you can choose from when setting up the partition table. I’m using <code>cfdisk</code> for simplicity and clarity. </p>
+<p>Run it to see your disk’s current partitions and installed file systems and their labels. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cfdisk</span><br></pre></td></tr></table></figure>
+<p>With this you can manage the system’s partitions and delete or create them as needed. </p>
+<hr>
+<h1 id="3-–-Filesystems"><a href="#3-–-Filesystems" class="headerlink" title="3 – Filesystems"></a>3 – Filesystems</h1><p>Back outside of <code>cfdisk</code> you can begin to create your main file system for Arch on a suitable free partition. </p>
+<p>I’m using <em>ext4</em> and in this example not choosing to split system directories over different partitions. i.e. <code>boot</code> , <code>home</code> , <code>root</code> , <code>swap</code> , etc.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.ext4 /dev/sda3</span><br></pre></td></tr></table></figure>
+<p>Where <code>3</code> is the number of the partition you want to install Arch on. </p>
+<hr>
+<h1 id="4-–-Mounting"><a href="#4-–-Mounting" class="headerlink" title="4 – Mounting"></a>4 – Mounting</h1><p>Mount the new <em>ext4</em> partition into <code>/mnt/</code> via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda3 /mnt/</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Mirrors-amp-System-Packages"><a href="#5-–-Mirrors-amp-System-Packages" class="headerlink" title="5 – Mirrors &amp; System Packages"></a>5 – Mirrors &amp; System Packages</h1><p>Append and rename the <em>mirrorlist</em> with <code>.orig</code> so we can create a new file with it’s original name to replace it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig</span><br></pre></td></tr></table></figure>
+<p>Run <code>rankmirrors</code> on the file and redirect the output to create the new mirrorlist file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig &gt;/etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>Sync and refresh the system packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Syy</span><br></pre></td></tr></table></figure>
+<p>Build the new file system’s core directories and structures in the mounted partition using <code>pacstrap</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacstrap /mnt/ base base-devel</span><br></pre></td></tr></table></figure>
+<p>Copy the mirrorlist files across into the new partition also:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-fstab"><a href="#6-–-fstab" class="headerlink" title="6 – fstab"></a>6 – fstab</h1><p>Generate the necessary directories and files Arch needs to mount at boot on the hard drive, inside of the new partition:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ genfstab -p /mnt/ &gt;&gt; /mnt/etc/fstab</span><br></pre></td></tr></table></figure>
+<p>Next begin a new Bash shell session inside of our formed Arch partition:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ arch-chroot /mnt/ /bin/bash</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-GRUB-Bootloader"><a href="#7-–-GRUB-Bootloader" class="headerlink" title="7 – GRUB Bootloader"></a>7 – GRUB Bootloader</h1><p>Inside the bash shell install the <em>GRUB Bootloader</em> through <code>pacman</code> . This is required to select which operating system to run on boot, as in my case we are installing alongside other systems. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S grub</span><br></pre></td></tr></table></figure>
+<p>Run Grub’s install routine onto the hard drive that the computer’s BIOS boots from first upon start up.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-install /dev/sda</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Warning:</strong> Change /dev/sda to reflect your hard drive if needed. Do not append a partition number, and do not replace it with “sdax” either.</p>
+</blockquote>
+<p>Before generating a configuration profile for Grub to use when booting, install and run the <code>os-prober</code> program, so the other operating systems on the hard drive are picked up and provided as an option in the boot menu. </p>
+<p>Here’s how to install it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S os-prober</span><br></pre></td></tr></table></figure>
+<p>Run it like any other installed program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ os-prober</span><br></pre></td></tr></table></figure>
+<p>Now we can generate the config file mentioned before and place it in its correct location: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<hr>
+<p>#8 – hostname</p>
+<p>Set the <code>hostname</code> to today’s date, or whatever you prefer. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"archlinux-desktop"</span> &gt; /etc/hostname</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-localtime"><a href="#9-–-localtime" class="headerlink" title="9 – localtime"></a>9 – localtime</h1><p>Set the <code>localtime</code> to London’s current time (obviously change this in relation to your own timezone.) </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ln <span class="_">-s</span> /usr/share/zoneinfo/Europe/London /etc/localtime</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="10-–-locale"><a href="#10-–-locale" class="headerlink" title="10 – locale"></a>10 – locale</h1><p><em>Locales</em> define which language the system uses and other regional considerations like currency denomination, numerology and character sets. </p>
+<p>Using <code>vi</code> do this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/locale.gen</span><br></pre></td></tr></table></figure>
+<p>Uncomment the relevant language you wish to use (UTF-8 support recommended):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en_GB.UTF-8 UTF-8</span><br></pre></td></tr></table></figure>
+<p>Write and save to the file, then exit back to the command line.</p>
+<p>Then generate the <em>locales</em>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ locale-gen</span><br></pre></td></tr></table></figure>
+<p>The <code>/etc/locale.conf</code> file does not exist by default. Create it, where <code>LANG</code> refers to the first uncommented entry in <code>/etc/locale.gen</code> from earlier. </p>
+<p>See the next command for an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> LANG=en_GB.UTF-8 &gt; /etc/locale.conf</span><br></pre></td></tr></table></figure>
+<p>Lastly export the chosen <em>locale</em>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> LANG=en_GB.UTF-8</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-passwd"><a href="#11-–-passwd" class="headerlink" title="11 – passwd"></a>11 – passwd</h1><p>Change the root user’s password for the system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-unmount-amp-reboot"><a href="#12-–-unmount-amp-reboot" class="headerlink" title="12 – unmount &amp; reboot"></a>12 – unmount &amp; reboot</h1><p>Exit from the <em>chrooted</em> shell environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>While partitions are unmounted automatically by <em>systemd</em> on shutdown, you may do so manually with the next command as a safety measure. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umount -R /mnt/</span><br></pre></td></tr></table></figure>
+<p>Remove your Arch installation boot media (CD, USB, etc) after rebooting.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ reboot now</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="13-–-First-Live-Login"><a href="#13-–-First-Live-Login" class="headerlink" title="13 – First Live Login"></a>13 – First Live Login</h1><p>Log into the system we created in the previous post this time on the actual file-system we generated (i.e. without the boot media), using the one and only <em>root</em> account currently in existence. </p>
+<p>Make your console keyboard settings permanent this time on system reboot/boot by opening this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/vconsole.conf</span><br></pre></td></tr></table></figure>
+<p>Then add the line in the next code block, where <code>uk</code> is replaced by your own countries keyboard initials:</p>
+<figure class="highlight bash"><figcaption><span>/etc/vconsole.conf </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KEYMAP=uk</span><br></pre></td></tr></table></figure>
+<p>Save and exit the file.</p>
+<p>This next set of command refers to the base console font setting. This is nothing to do with X server, which we haven’t even installed yet!</p>
+<p>To change the default font of the console you can move to the below directory and see some compressed font packages. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /usr/share/kbd/consolefonts/</span><br><span class="line">$ ls</span><br></pre></td></tr></table></figure>
+<p>To test them use <code>setfont</code> followed by the compressed file name. </p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ setfont iso01.14.gz</span><br></pre></td></tr></table></figure>
+<p>To make this persistent between boots, once again open the previous <code>vconsole.conf</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/vconsole.conf</span><br></pre></td></tr></table></figure>
+<p>Insert a new line that specifies the font file you want to use in console sessions:</p>
+<figure class="highlight bash"><figcaption><span>/etc/vconsole.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">KEYMAP=uk</span><br><span class="line">FONT=iso1.16.gz</span><br></pre></td></tr></table></figure>
+<p>Save the changes and exit back to the command line.</p>
+<hr>
+<h1 id="14-–-Internet-Connection"><a href="#14-–-Internet-Connection" class="headerlink" title="14 – Internet Connection"></a>14 – Internet Connection</h1><p>Test internet connectivity once again with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>Move onto step 15 if this is successful, if not use <code>iplink</code> to see your network interfaces:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>Then use it again to enable your Ethernet device:</p>
+<blockquote>
+<p><strong>Note:</strong>  “eno16777736” is my example Ethernet device name, substitute it for your own like in the earlier example. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Ensure the <code>dhcpd</code> service from <em>systemd</em> is enabled and running by starting it with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpd.service</span><br></pre></td></tr></table></figure>
+<p>Test network connectivity again with <code>ping</code> and this time it should be successful. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful:</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh Arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="15-–-pacman-conf"><a href="#15-–-pacman-conf" class="headerlink" title="15 – pacman.conf"></a>15 – pacman.conf</h1><p><strong>If</strong> using a 64-bit system begin editing the <code>/etc/pacman.conf</code> file:   </p>
+<blockquote>
+<p><strong>If not using a 64 bit system then move onto Step 16 now.</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/pacman.conf</span><br></pre></td></tr></table></figure>
+<p>Now <em>uncomment</em> the two following lines in this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[multilib]</span><br><span class="line">Include = /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>After doing this write/save to the file and exit it. </p>
+<p>When back at the shell prompt update repositories with <code>pacman</code> by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Sy</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="16-–-User-Creation"><a href="#16-–-User-Creation" class="headerlink" title="16 – User Creation"></a>16 – User Creation</h1><p>Make another user account here so <em>root</em> isn’t the default account in use all the time (bad practice to do so), whilst at the same time adding it to some groups. </p>
+<blockquote>
+<p><strong>Note:</strong> There are no spaces present between the groups listed in this next command.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ useradd -m -g users -G wheel,storage,power,sys,adm <span class="_">-s</span> /bin/bash scarlz</span><br></pre></td></tr></table></figure>
+<p>Set the password for the new user that has just been created.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd scarlz</span><br></pre></td></tr></table></figure>
+<p>Install <code>sudo</code> with <code>pacman</code> <strong>if</strong> it did not install as part of your previous base Arch set-up. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S sudo</span><br></pre></td></tr></table></figure>
+<p>If you ever want to see a list of packages related to a search term, you could type the following command, where the package name specified at the end is the “search term”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Ss sudo</span><br></pre></td></tr></table></figure>
+<p>Now <code>sudo</code> is installed on the system we need to enable it for users belonging to the <code>wheel</code> group in the <em>sudoers</em> file to gain the privileges. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EDITOR=vi visudo</span><br></pre></td></tr></table></figure>
+<p>Find the “user privilege specification” section and <em>uncomment</em> the following line so it looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%wheel ALL=(ALL) ALL</span><br></pre></td></tr></table></figure>
+<p>After doing so save/write to the file, and exit. </p>
+<p>I’m also going to install <em>bash completion</em> here.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S bash-completion</span><br></pre></td></tr></table></figure>
+<p>The operating system installation is now mostly complete. </p>
+<hr>
+<h1 id="Display-amp-Window-Manager"><a href="#Display-amp-Window-Manager" class="headerlink" title="Display &amp; Window Manager"></a>Display &amp; Window Manager</h1><p>Another forthcoming post will go into depth on how to install a tiling window manager (bspwm) and configure <code>.xinitrc</code> to serve as a display manager. </p>
+<p>Or to continue you can find and research a window manager/desktop environment from the Arch-wiki to setup and install. </p>
+<blockquote>
+<p><a href="https://wiki.archlinux.org/index.php/Window_manager" target="_blank" rel="external">Arch-wiki Window Managers</a><br><a href="https://wiki.archlinux.org/index.php/Desktop_environment" target="_blank" rel="external">Arch-wiki Desktop Environments</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Beginners%27_guide" target="_blank" rel="external">Arch Linux Beginner’s Guide</a> - From the official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/Systemd#Using_units" target="_blank" rel="external">Arch-wiki - systemd</a> - Using units (systemctl).</li>
+<li><a href="http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process" target="_blank" rel="external">Lifehacker Article on Arch Installation</a>  - Useful article that covers the same process. </li>
+<li><a href="http://www.linuxveda.com/2014/06/07/arch-linux-tutorial/" target="_blank" rel="external">Linux Neda: How to install Arch Linux</a> - Similar to the previous article but also useful. </li>
+<li><a href="https://wiki.archlinux.org/index.php/GRUB" target="_blank" rel="external">Arch Linux GRUB Article</a> - For more information on configuring and using GRUB.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/Pacman/" class="post__tag__link">Pacman</a></li><li class="post__tag__item"><a href="/tags/GRUB/" class="post__tag__link">GRUB</a></li></ul><a href="/2015/07/14/notes-arch-system-install/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><div class="comments"><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript></div></div></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2015/07/27/notes-vim-pathogen-plugins/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/2015/07/12/pwgen-unix-password-generator/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","embed");
+</script></body></html>

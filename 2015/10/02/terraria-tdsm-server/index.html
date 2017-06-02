@@ -1,0 +1,149 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Installing TDSM Terraria Server Mod on Debian 8 - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-10-01T23:00:00.000Z" class="post__time">October 2, 2015</time><h1 class="post__title"><a href="/2015/10/02/terraria-tdsm-server/">Installing TDSM Terraria Server Mod on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>TDSM is one of several open-source server mods available for the online action-adventure game Terraria. This modification is developed to allow the Terraria server software to be run on Linux like operating systems, and opens up many other potential benefits for players using the server. </p>
+<ul>
+<li>External plugin support. </li>
+<li>Administrative permissions system. </li>
+<li>MySQL &amp; SQLite databases.</li>
+<li>New &amp; custom in-game commands.</li>
+<li>Remote console administration. </li>
+</ul>
+<p>It’s also updated relatively quickly by the maintainers after a new Terraria client version is released.</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod" target="_blank" rel="external">TDSM Github Project Page</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h1><ul>
+<li><p>A Terraria game client for connection to the server after installation. </p>
+</li>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM. </p>
+</li>
+</ul>
+<hr>
+<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm the action by entering <code>y</code> for any prompts in this step. </p>
+<hr>
+<h1 id="2-–-Install-Screen"><a href="#2-–-Install-Screen" class="headerlink" title="2 – Install Screen"></a>2 – Install Screen</h1><p>Screen will be used to keep the TDSM server running in a persistent shell session, and allows us to disconnect or re-attach to the session when needed. </p>
+<p>Install Screen with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Install-Mono"><a href="#3-–-Install-Mono" class="headerlink" title="3 – Install Mono"></a>3 – Install Mono</h1><p>Mono is the open source implementation of Microsoft’s .NET Framework, and we need it to successfully run and start the TDSM server later on.</p>
+<p>Install Mono and all its packages with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mono-complete</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Install-Unzip"><a href="#4-–-Install-Unzip" class="headerlink" title="4 – Install Unzip"></a>4 – Install Unzip</h1><p>The server software comes packaged in a <code>.zip</code> file. So install the <em>unzip</em> package which we’ll use in the next step, to extract the files. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Add-Swap-Space"><a href="#5-–-Add-Swap-Space" class="headerlink" title="5 – Add Swap Space"></a>5 – Add Swap Space</h1><p>The server mod requires adequate swap space to be allocated by the system. Otherwise this can result in crashing and instability with TDSM whilst it is running. </p>
+<p>Create the base swap file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo fallocate <span class="_">-l</span> &lt;^&gt;4G&lt;^&gt; /swapfile</span><br></pre></td></tr></table></figure>
+<p>Give it the correct permissions it needs:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+<p>Have the system build the file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+<p>Then enable it with the <code>swapon</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+<p>To automate the mounting of the swap file on boot we need to include its details into the <code>/etc/fstab</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nano /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>Insert this top line show in the next code snippet into the file.</p>
+<figure class="highlight bash"><figcaption><span>/etc/fstab</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile   none    swap    sw    0   0</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Download-the-TDSM-Server-Software"><a href="#6-–-Download-the-TDSM-Server-Software" class="headerlink" title="6 – Download the TDSM Server Software"></a>6 – Download the TDSM Server Software</h1><p>The TDSM server software that we’ll download in this step will be stored and run from your user’s home directory.</p>
+<p>Make sure this is your current working directory by entering:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+<p>As of writing this tutorial the current TDSM server build release is number: <code>005</code></p>
+<p>For newer versions than the current <code>005</code> release, and to download the most up to date version.<br>You’ll need to change the URL passed to <code>wget</code> in the next code snippet. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/DeathCradle/Terraria<span class="_">-s</span>-Dedicated-Server-Mod/releases/download/Build-5/tdsm-b5.zip</span><br></pre></td></tr></table></figure>
+<p>The TDSM server releases and their file URL’s can be found on the project’s GitHub page:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases" target="_blank" rel="external">TDSM Releases on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="7-–-Run-the-Terraria-Server-Binary"><a href="#7-–-Run-the-Terraria-Server-Binary" class="headerlink" title="7 – Run the Terraria Server Binary"></a>7 – Run the Terraria Server Binary</h1><p>Next unzip the downloaded archive file and extract the contents into a new folder named <code>tdsm-terraria-server</code> using the <code>-d</code> option:</p>
+<blockquote>
+<p><strong>Note:</strong> The downloaded <code>.zip</code> file name will differ for future release downloads.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ unzip tdsm-b5.zip <span class="_">-d</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Change into the unpacked <code>tdsm-terraria-server</code> directory with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Now to run the server software in it’s most basic form without any arguments or parameters, enter the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen mono tdsm.exe</span><br></pre></td></tr></table></figure>
+<p>Note the inclusion of Screen in the last command. This runs the Mono program and server in a separate shell session to our original one.</p>
+<hr>
+<h1 id="8-–-Create-a-New-World"><a href="#8-–-Create-a-New-World" class="headerlink" title="8 – Create a New World"></a>8 – Create a New World</h1><p>The below output (or similar) is seen upon successfully running the server binary in “<strong>Step 7 – Run the Terraria Server Binary</strong>“.</p>
+<p>Type <code>n</code>  and press <code>ENTER</code> to create a new world.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind API build 5lr running on Mono                                                                                                                                                                            ﻿10/2/2015 2:05:20 PM Run&gt; Logging started to file <span class="string">"/home/&lt;username&gt;/src/tdsm-terraria-server/Data/server_20151002_1405.log"</span>.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; Loading plugin from TDSM.Core.dll.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core build 5lr</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core enabled</span><br><span class="line">10/2/2015 2:05:21 PM Run&gt; Server state changed to: Initialising</span><br><span class="line">10/2/2015 2:05:23 PM Run&gt; Server state changed to: Starting</span><br><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> depending upon your preference and suitability of world size. </p>
+<p>The requirements section at the start of this article indicates what world size is suitable for your VPS. </p>
+<p>Here it is again:</p>
+<ul>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM.   </p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Warning:</strong> Be aware that the larger the world the more memory and CPU your server will need to consume whilst the server is up and running, so be sure to select a suitable world size. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Small</span><br><span class="line">2       Medium</span><br><span class="line">3       Large</span><br><span class="line"></span><br><span class="line">Choose size:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> again once more depending upon your desired level of in-game difficulty.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Normal</span><br><span class="line">2       Expert</span><br><span class="line"></span><br><span class="line">Choose difficulty:</span><br></pre></td></tr></table></figure>
+<p>Now give the new world a suitable name. </p>
+<p>For example purposes we’re calling ours <code>test-tdsm-server</code> in this guide. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Enter world name:</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Wait for the new world to be generated as it outputs its progress and percentage completion.</strong></p>
+</blockquote>
+<hr>
+<h1 id="9-–-Set-World-Details"><a href="#9-–-Set-World-Details" class="headerlink" title="9 – Set World Details"></a>9 – Set World Details</h1><p>Once the world is created and has finished generating, choose your previously created world by entering <code>1</code> into the prompt:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1   <span class="built_in">test</span>-tdsm-server      norm, crim, exp   Last used: 10/02/2015 10:27 AM</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Provide the world with a <strong>max</strong> number of players that can join the server at any one time. If you are unsure on a value, the default of <code>8</code> is a sensible choice. </p>
+<blockquote>
+<p><strong>Warning:</strong> Once again be aware that the more players the world has connected the more memory and CPU your server will need to consume whilst running. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Max players (press enter <span class="keyword">for</span> 8):</span><br></pre></td></tr></table></figure>
+<p>Enter a suitable port the server can transmit on, go for the default choice of <code>7777</code> if you don’t have a specific port you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Server port (press enter <span class="keyword">for</span> 7777):</span><br></pre></td></tr></table></figure>
+<p>The final two questions are up to you (forwarding and password). Forwarding with <code>iptables</code> is covered in this next section however. </p>
+<blockquote>
+<p><strong>Wait for the server to load as it outputs its progress.</strong></p>
+</blockquote>
+<hr>
+<h1 id="10-–-iptables-Firewall"><a href="#10-–-iptables-Firewall" class="headerlink" title="10 – iptables Firewall"></a>10 – iptables Firewall</h1><p>Now the server is up running you’ll need to de-attach from the currently active screen session with:</p>
+<p><code>CTRL</code> + <code>a</code> then <code>c</code></p>
+<p>If using <code>iptables</code> (or you intend to use it) as a firewall solution on the VPS, then open up the port number you chose in <strong>“ 9 – Set World Details”</strong></p>
+<p>To do this use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 7777 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 7777 Terraria server"</span></span><br></pre></td></tr></table></figure>
+<p>Replacing <code>7777</code> for your own chosen port number.</p>
+<p>For any other firewall program you may use in its place perform the equivalent port forwarding/opening actions. </p>
+<p>To now connect back to the previous screen session press: </p>
+<p><code>CTRL</code> + <code>a</code> then <code>n</code></p>
+<hr>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>The server itself is now ready and should be open for connections via the Terraria client.</p>
+<p>To learn how to administer, run, and configure the server properly alongside what configuration files it uses, see the Github wiki:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server" target="_blank" rel="external">TDSM Project Github Wiki</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://store.steampowered.com/app/105600/" target="_blank" rel="external">Terraria Client on Steam</a> – The client is very small in size and available through Steam. </li>
+<li><a href="http://terraria.gamepedia.com/Mods" target="_blank" rel="external">Terraria Mod Information</a> – Brief explanation of mods for Terraria. </li>
+<li><a href="https://github.com/NyxStudios/TShock" target="_blank" rel="external">TShock Terraria Server Mod</a> – Another mod that may function on Linux/Unix OS, but not one hundred percent supported.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><div class="comments"><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript></div></div></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2015/10/05/minecraft-server-debian/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/2015/09/26/git-version-control-two/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","embed");
+</script></body></html>

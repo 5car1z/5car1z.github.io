@@ -1,0 +1,48 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Security - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-07-11T23:00:00.000Z" class="post__time">July 12, 2015</time><h1 class="post__title"><a href="/2015/07/12/pwgen-unix-password-generator/">pwgen Unix Password Generator</a></h1></header><div class="post__main echo"><p><img src="http://worm.org.ua/wp-content/uploads/pwgen-logo.png" alt="pwgen Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>The shell program <code>pwgen</code> is one of a number of password generation tools that creates both human readable and machine formatted random passwords. It achieves this using <code>/dev/urandom</code> and like any of these password solution programs attempts to make passwords as secure as possible, within the given parameters. </p>
+<p>Here’s a seemingly safe password strength checker where you can gauge how secure any existing or generated passwords are: </p>
+<blockquote>
+<p><a href="https://howsecureismypassword.net/" target="_blank" rel="external">https://howsecureismypassword.net/</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Install-pwgen"><a href="#1-–-Install-pwgen" class="headerlink" title="1 – Install pwgen"></a>1 – Install pwgen</h1><p>You can usually find <code>pwgen</code> in your distribution’s repositories through its package manager. </p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using Pacman this acquires and installs the program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S pwgen</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>Using Apt this acquires and installs the program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install pwgen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Letters-amp-Numbers"><a href="#2-–-Letters-amp-Numbers" class="headerlink" title="2 – Letters &amp; Numbers"></a>2 – Letters &amp; Numbers</h1><p>Will generate a one line password consisting of only letters and numbers, with a total of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Secure"><a href="#3-–-Secure" class="headerlink" title="3 –  Secure"></a>3 –  Secure</h1><p>Generate a one line password with hard to memorize random characters (<code>-s</code>), that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 <span class="_">-s</span> 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Symbols"><a href="#4-–-Symbols" class="headerlink" title="4 – Symbols"></a>4 – Symbols</h1><p>Generate a one line password inclusive of at least one symbol <code>-y</code> that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -y 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Secure-amp-Symbols"><a href="#5-–-Secure-amp-Symbols" class="headerlink" title="5 – Secure &amp; Symbols"></a>5 – Secure &amp; Symbols</h1><p>Generate a one line password with hard to memorize random characters (<code>-s</code>), inclusive of at least one symbol (<code>-y</code>) that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -sy 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Extra-Options"><a href="#6-–-Extra-Options" class="headerlink" title="6 – Extra Options"></a>6 – Extra Options</h1><p>Don’t include numbers in the generated password with <code>-0</code> and consist of 8 characters overall:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -0 8</span><br></pre></td></tr></table></figure>
+<p>Don’t use characters that could be confused by the user when printed, such as <code>l</code> and <code>1</code>, or <code>0</code> or <code>O</code>‘, and consist of 8 characters overall:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -B 8</span><br></pre></td></tr></table></figure>
+<p>Don’t include capitals in the generated password and consist of 8 characters overall::</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -A 8</span><br></pre></td></tr></table></figure>
+<p>For everything else there’s <code>man</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ man pwgen</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>More Information</strong> </p>
+<ul>
+<li><a href="http://www.maketecheasier.com/password-generators-for-linux/" target="_blank" rel="external">Password Generators for Linux</a> - Other similar password generators.</li>
+<li><a href="http://linux.die.net/man/1/pwgen" target="_blank" rel="external">pwgen(1) - Linux man page</a> - Online Manual Page.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</blockquote>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Security/" class="post__tag__link">Security</a></li><li class="post__tag__item"><a href="/tags/Passwords/" class="post__tag__link">Passwords</a></li></ul><a href="/2015/07/12/pwgen-unix-password-generator/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

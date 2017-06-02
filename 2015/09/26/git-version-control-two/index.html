@@ -1,0 +1,171 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Git Version Control (2) - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-09-25T23:00:00.000Z" class="post__time">September 26, 2015</time><h1 class="post__title"><a href="/2015/09/26/git-version-control-two/">Git Version Control (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a follow up from the <a href="http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/">previous Git post</a> and covers some of the areas not mentioned in the original.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-VCS-Background"><a href="#1-–-VCS-Background" class="headerlink" title="1 – VCS Background"></a>1 – VCS Background</h1><ul>
+<li><p><strong>Local Version Control</strong> – A singular database on local storage media that keeps insertions and deletions to the code-base. Very primitive and not interconnected between a team and its members.</p>
+</li>
+<li><p><strong>Centralized Version Control</strong> – The many drawbacks and limitations of local version control brought about a new practice of centralised version control. Allowing multiple developers to work on the same code or content. Progress of coding could be tracked and viewed by all involved leading to better communication as well has giving more power over access rights.</p>
+</li>
+<li><p><strong>Distributed Version Control</strong> – Instead of housing the code in a single repository like in CVS, the code-base is shared locally across all clients involved. This way if the remote central server fails or is compromised, many backups exist and developers can continue to work in the mean time. <em>Mirrored</em> backups can also be used to restore central servers if needed.</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-–-Git-Principles"><a href="#2-–-Git-Principles" class="headerlink" title="2 – Git Principles"></a>2 – Git Principles</h1><ul>
+<li><p><strong>Snapshots</strong> – Git stores data in a file-system made up of multiple snapshots. Each time you update or change your project’s content with a <em>commit</em>, Git creates a snapshot of the altered object (e.g. file) and stores a reference to it.</p>
+</li>
+<li><p><strong>Local Operations</strong> – Git is mostly designed to cache data and work with locally held information. Instead of continually going over the network to another server, to retrieve core information.</p>
+</li>
+<li><p><strong>Tracking</strong> – Anything and everything within the project’s Git repository can be tracked for changes or removal. Which makes it function as an alternate backup service if needed.</p>
+</li>
+<li><p><strong>Data Integrity</strong> – Git is designed with security and potential data corruption in mind. Making it very difficult for a third party to intefere with a commit’s contents. Whilst at the same time taking measures to ensure data that is sent is confirmed as arriving intact.</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-–-Git-Terminology"><a href="#3-–-Git-Terminology" class="headerlink" title="3 – Git Terminology"></a>3 – Git Terminology</h1><p>Files in a Git repository can exist in three main states:</p>
+<ol>
+<li><strong>Modified</strong> – The file has been altered but its changes have not been saved to anything Git related.</li>
+<li><strong>Staged</strong> – The previously changed file has had its changed tracked but not committed to the database.</li>
+<li><strong>Committed</strong> – The previously tracked file is now committed and securely stored in the local Git database.</li>
+</ol>
+<p><img src="http://i.imgur.com/DSgJ1QV.png" alt="Main States Image"></p>
+<p>A local Git repository has three main areas:</p>
+<ol>
+<li><strong>Working Directory</strong> – The current files and their local state reside here.</li>
+<li><strong>Index</strong> – The area local file changes are stored before being confirmed as valid alterations.  </li>
+<li><strong>Head</strong> – Points to the most recent commit made in the project.</li>
+</ol>
+<hr>
+<h1 id="4-–-Stashing-Changes"><a href="#4-–-Stashing-Changes" class="headerlink" title="4 – Stashing Changes"></a>4 – Stashing Changes</h1><p>If you’ve made some changes locally but need to pull, fetch, whilst still keeping your local edits, use the <em>stash</em> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash</span><br></pre></td></tr></table></figure>
+<p>This is useful for when you in general don’t want to lose any changes. All this does is temporarily hide the changes then give you a clean working directory. To retrieve the changes and apply them to your working directory use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Remotes"><a href="#5-–-Remotes" class="headerlink" title="5 – Remotes"></a>5 – Remotes</h1><p>With <em>cloned</em> repositories, Git automatically gives the name <code>origin</code> to the remote server from which you cloned. As well as the name <code>master</code> to your local default branch.</p>
+<p><strong>Remote Repositories Diagram</strong></p>
+<p><img src="http://i.imgur.com/PyWO8kj.png" alt="Remote Repositories Diagram"></p>
+<p>To see all current locally added remotes in a repository enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>The <code>-v</code> switch shows the remote’s URL’s as part of the output.</p>
+<figure class="highlight bash"><figcaption><span>Example Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remote1 https://github.com/remote1/example (fetch)</span><br><span class="line">remote1 https://github.com/remote1/example (push)</span><br><span class="line">remote2 https://github.com/remote2/example (fetch)</span><br><span class="line">remote2 https://github.com/remote2/example (push)</span><br><span class="line">remote3 https://github.com/remote3/example (fetch)</span><br><span class="line">remote3 https://github.com/remote3/example (push)</span><br></pre></td></tr></table></figure>
+<p>To add a remote to the local repository you would use the next command.</p>
+<p>The <code>remote4</code> parameter should be the <em>shortname</em> of the remote.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add remote4 https://github.com/remote4/example</span><br></pre></td></tr></table></figure>
+<p>If you need to rename a remote’s short name, make use of:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rename remote4 remote5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be aware that the <em>rename</em> command also alters the names of the respective remote branches e.g. remote4/master would change to remote5/master in the last example.</p>
+</blockquote>
+<p>To remove a remote for the local repository when contributor has left the team, or the server URL has changed use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rm remote5</span><br></pre></td></tr></table></figure>
+<h2 id="Fetching"><a href="#Fetching" class="headerlink" title="Fetching"></a>Fetching</h2><p>Fetching is the name given to pulling data you don’t currently have from a remote’s project, in order to update your local repository.</p>
+<p>Here is the command to do it, where <code>remote4</code> is the remote’s shorthand name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch remote4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You should also possess the references to all branches for that specific remote when fetching from it.</p>
+</blockquote>
+<p>For cloned repositories, you can use the command <code>git fetch origin</code> to pull down any of the new changes that were pushed to it, since you originally cloned or last issued the <code>fetch</code> command.</p>
+<h2 id="Pulling"><a href="#Pulling" class="headerlink" title="Pulling"></a>Pulling</h2><p>The <code>fetch</code> command only pulls new data to a local repository; it does not at any point <em>merge</em> changes with or attempt to modify your local work. The <code>pull</code> command however allows for both fetching and automatic merging at the same time.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull remote4</span><br></pre></td></tr></table></figure>
+<p>See the More Information Section for a more detailed thread about he differences between <code>fetch</code> and <code>pull</code> commands.</p>
+<hr>
+<h1 id="6-–-Fixing-amp-Reverting-Changes"><a href="#6-–-Fixing-amp-Reverting-Changes" class="headerlink" title="6 – Fixing &amp; Reverting Changes"></a>6 – Fixing &amp; Reverting Changes</h1><p>For editing of your last commit there’s the <code>--amend</code> parameter. This works if no file changes have been made since the last commit (the one you are wanting to change the message of).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m amend <span class="string">"The last commit message should really be this message instead."</span></span><br></pre></td></tr></table></figure>
+<p><strong>History Diagram</strong></p>
+<p><img src="http://i.imgur.com/kGHejcc.png" alt="History Diagram"></p>
+<p>This also works if you want to add more modified files to the previous commit.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git add modified-file.md</span><br><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure>
+<p>When <code>git reset --hard</code> is used, Git will overwrite any and all changes in the working directory, permanently destroying uncommitted changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br></pre></td></tr></table></figure>
+<p><strong>Reset Diagram</strong></p>
+<p><img src="http://i.imgur.com/RAf1UVE.png" alt="Reset Diagram"></p>
+<p>To get rid of changes resulting from a previous commit, we can use the <code>git revert</code> command. This command does not technically revert everything, but instead creates a new most recent commit that undoes the changes introduced in your specified past commit. Preventing Git from losing any of its history. This is in stark contrast to the <code>reset</code> command which actually alters the existing previous commit history.</p>
+<p>The hash value identifies the commit to be reverted.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert ed04fb96992698248d240ed545b104f2414a61ed</span><br></pre></td></tr></table></figure>
+<p><strong>Revert Diagram</strong></p>
+<p><img src="http://i.imgur.com/obncGjG.png?1" alt="Revert Diagram"></p>
+<p>To do the last commit you can simply provide it with <code>HEAD</code> in its place:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>Another way of resetting staged file changes back to the last commit, is to use the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout modified-file.md</span><br></pre></td></tr></table></figure>
+<p>This is different to <code>reset</code> as it mechanically erases any changes made to the file by <strong>copying</strong> HEAD’s file version over it.</p>
+<p><strong>Checkout Diagram</strong></p>
+<p><img src="http://i.imgur.com/f9sk5h8.png" alt="Checkout Diagram"></p>
+<hr>
+<h1 id="7-–-Rebasing"><a href="#7-–-Rebasing" class="headerlink" title="7 – Rebasing"></a>7 – Rebasing</h1><p>In Git, <em>Rebasing</em> is an alternative to merging.</p>
+<p>It works by using the <em>diffs</em> resulting from each last commit of your current branch and the one you want to rebase into. Both commits are stored in temporary files, and then the “current branch” gets reset to the same commit as that of the branch you are targeting. Last but not least, all the changes are then applied to the latter branch.</p>
+<p><strong>Rebasing Process Diagram</strong></p>
+<p><img src="http://i.imgur.com/fgrpfC4.png" alt="Rebasing Process Diagram"></p>
+<p>The main difference between merging is:</p>
+<blockquote>
+<p>“The rebasing process rewrites a project’s history by replaying all changes committed on one branch to another one, leading to cleaner application of commits on a remote branch and a linear history.””</p>
+</blockquote>
+<p>As an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout <span class="built_in">test</span>-branch</span><br><span class="line">$ git rebase master</span><br></pre></td></tr></table></figure>
+<p>There are opposing viewpoints regarding merging and rebasing. The general arguments and differences between the two are:</p>
+<p><strong>Merging</strong> – The true commit history of a repository should not be altered because it’s a log and record of occurrences.</p>
+<p><strong>Rebasing</strong> – Commit histories should be polished and well edited, and rebasing provides this.</p>
+<hr>
+<h1 id="8-–-Tags"><a href="#8-–-Tags" class="headerlink" title="8 – Tags"></a>8 – Tags</h1><p>Git has a feature that allows it to flag certain points in a project’s history as being significant or of some importance.</p>
+<p><strong>Tags Diagram</strong></p>
+<p><img src="http://i.imgur.com/uxjfzpe.png" alt="Tags Diagram"></p>
+<p>Listing current tags in a project is done with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag</span><br></pre></td></tr></table></figure>
+<p>There are two types of tags you can choose to create.</p>
+<p><strong>Lightweight</strong> – This type of tag points to a particular commit.</p>
+<p><strong>Annotated</strong> – These tags are kept in the Git database as a <em>full object</em>, they contain a tagging message, tagger name, email address, and tag date. Annotated Tags are also often signed and verified with GNU Privacy Guard (GPG). The best practice is to use annotated tags whenever possible.</p>
+<p>Lightweight tags only hold a checksum and the commit value it points to.</p>
+<p>To create a lightweight tag, use the command below <strong>without</strong> any extra command line options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v3.0</span><br></pre></td></tr></table></figure>
+<p>Create an annotated tag like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag <span class="_">-a</span> v3.0 -m “version 3.1”</span><br></pre></td></tr></table></figure>
+<p>The <code>-m</code> option passes a message for the tag.</p>
+<p>See the tag once it’s created via the <code>show</code> parameter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show v3.0</span><br></pre></td></tr></table></figure>
+<p>Users must explicitly push tags to remote servers after creation as by default <code>git push</code> does not send tags as part of its data.</p>
+<p>Use the <code>--tags</code> option with the git push command to include them.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push --tags</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Ignoring-Files"><a href="#9-–-Ignoring-Files" class="headerlink" title="9 – Ignoring Files"></a>9 – Ignoring Files</h1><p>At some point you’ll come across a situation where you don’t want Git to track certain files. There are a few ways to tell Git which files to <em>ignore</em> and not take into account.</p>
+<p><strong>Repository Wide .gitignore</strong></p>
+<p>Creating a file named <code>.gitignore</code> in your repository allows Git to ignore the file names it holds. They will not be included in any commits or changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim .gitignore</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>“GitHub maintains an official list of recommended <code>.gitignore</code> files for many popular operating systems, environments, and languages in the <a href="https://github.com/github/gitignore" target="_blank" rel="external">github/gitignore public repository</a>.”</p>
+</blockquote>
+<p>The <code>.gitignore</code> file itself should be tracked and committed to Git so others using the repository can incorporate the same ignore rules.</p>
+<p>This Gist has some less specific general purpose ignore rules you may want to add to your own file:</p>
+<script src="//gist.github.com/9257657.js?file=.gitignore"></script>
+<p><strong>Global Repositories .gitignore</strong></p>
+<p>It is also possible to create a global <code>.gitignore</code> file. Which differs from the above in that it is a list of rules for ignoring files in <em>every</em> Git repository on your local machine.</p>
+<p>To create this make a file at <code>~/.gitignore_global</code> and add your desired global rules to it.</p>
+<p>Afterwards run the following in your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+<p>If in either of the two main examples above (repository wide or global) you want to ignore a file that has already been checked in, and the current version is in turn kept on a remote. You must untrack the file first fully, ignoring it with this next command. Before then ignoring it as usual.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached example-file</span><br></pre></td></tr></table></figure>
+<p>This removes the file contents from the index, which means on committing the change it removes it from <code>HEAD</code> and thereby the remote upon pushing changes.</p>
+<hr>
+<p>The vast majority of the content in this post is derived from a Git guide provided by <a href="https://www.udemy.com/" target="_blank" rel="external">Udemy</a>.</p>
+<p>The Udemy post can be accessed at this link on their blog:</p>
+<blockquote>
+<p><a href="https://blog.udemy.com/git-tutorial-a-comprehensive-guide/" target="_blank" rel="external">https://blog.udemy.com/git-tutorial-a-comprehensive-guide/</a></p>
+</blockquote>
+<p>Be sure to read the rest of it for the areas of Git not covered here.</p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/292357/what-are-the-differences-between-git-pull-and-git-fetch" target="_blank" rel="external">Stack Overflow Git fetch/pull Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="http://stackoverflow.com/questions/3639342/whats-the-difference-between-git-reset-and-git-checkout" target="_blank" rel="external">Stack Overflow Git checkout/reset Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="https://www.atlassian.com/git/" target="_blank" rel="external">Getting Git Right Tutorials</a> – Very well presented Git tutorials from Atlassian, diagrams originate from here.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><div class="comments"><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript></div></div></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2015/10/02/terraria-tdsm-server/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/2015/09/10/slack-irssi-connection/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","embed");
+</script></body></html>

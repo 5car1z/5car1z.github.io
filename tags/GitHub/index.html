@@ -1,0 +1,148 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>GitHub - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-04-25T23:00:00.000Z" class="post__time">April 26, 2016</time><h1 class="post__title"><a href="/2016/04/26/github-flow/">Contributing to GitHub Projects</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/HLLz1Wv.png" alt="Octocat!"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>GitHub is one of the most popular ways to contribute to open-source projects. Many major and minor organisations keep their open-source code-base hosted there, adopting the idea that anyone who follows the rules can have their own efforts put up for consideration. This post talks about said process, which if anything is referred to as “GitHub Flow”.   </p>
+<p>This information as presented by GitHub is readily available in various forms within their <a href="https://guides.github.com/" target="_blank" rel="external">“GitHub Guides”</a> documentation. More specific links to these are listed at the end of the post. </p>
+<blockquote>
+<p><strong>“As of April 2016, GitHub reports having more than 14 million users and more than 35 million repositories, making it the largest host of source code in the world.”</strong></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Github-Flow"><a href="#Github-Flow" class="headerlink" title="Github Flow"></a>Github Flow</h1><p>Summarised, the general concept here in terms of public contributions is to:</p>
+<ol>
+<li>Fork, then create a suitable topic branch from master.</li>
+<li>Make some commits to improve the project.</li>
+<li>Push the branch to the forked GitHub project.</li>
+<li>Open a Pull Request for merging on the original GitHub repo.</li>
+<li>Discuss, and optionally continue committing.</li>
+<li>The project owner then merges or closes the Pull Request.</li>
+</ol>
+<p>The upcoming sections cover these steps in more detail.</p>
+<p>This PDF gives a loose impression of how the “flow” process would apply in the context of a formal team working on their project (i.e. the non public workflow): </p>
+<object data="https://guides.github.com/pdfs/githubflow-online.pdf#" type="application/pdf" width="100%" height="900"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="https://guides.github.com/pdfs/githubflow-online.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<h1 id="Public-Pull-Requests"><a href="#Public-Pull-Requests" class="headerlink" title="Public Pull Requests"></a>Public Pull Requests</h1><p>Outside of an internal team back in the public domain, we return to the steps summarised before. These are now covered in greater detail and do not mirror the steps above completely as these are laid out in a more practical manner. </p>
+<h2 id="1-–-Fork-Repository"><a href="#1-–-Fork-Repository" class="headerlink" title="1 – Fork Repository"></a>1 – Fork Repository</h2><p><img src="https://i.gyazo.com/7776cde860e0215dacab1fd81d53894a.png" alt="Flow - Step 1"></p>
+<p>The first step is to find the project on GitHub you want to contribute to, then read through any guidelines they may have in the <code>CONTRIBUTING</code> file, or similarly named. These guidelines are usually code conventions/syntax, feature requests, or nuances specific to the project. </p>
+<p>Project’s often have wiki’s containing information along these lines too (especially the larger ones). This can be accessed from the top of the project page tabs, if it exists. </p>
+<p>Once selected, the next step is to <em>fork</em> the repository by clicking the aptly named button. You must be signed into your GitHub account when doing this.</p>
+<p>Here’s a picture of what the button looks like:</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/forkbutton.png" alt="GitHub Fork Button"></p>
+<p>After a few seconds, you’re taken to your own forked version of the repository. In which everything you do is now separate to the original project.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/fork-a-repo/" target="_blank" rel="external">Pro Git Book - Forking Projects</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Sync-Fork"><a href="#2-–-Sync-Fork" class="headerlink" title="2 – Sync Fork"></a>2 – Sync Fork</h2><p>Any updates or commits that get added to the original repository by the maintainers won’t be included in your fork, so they need to be retrieved and merged. This is so that when it comes to offering up your own changes, they’re in the context of the up to date target project. </p>
+<p>This syncing may not be required right now, but once future commits are made to the <em>upstream</em> repository, you’ll need to pull them into your own fork so it’s kept up to date. </p>
+<p>Clone your forked repository locally then add the original upstream repository as a remote.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git</span><br></pre></td></tr></table></figure>
+<p>Confirm success with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Fetch the branches and their respective commits from the <code>upstream</code> repository. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br></pre></td></tr></table></figure>
+<p>Ensure you’re on the <code>master</code> branch.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>Upstream commits to <code>master</code> are now stored in a local branch named <code>upstream/master</code> . </p>
+<p>Merge the changes from <code>upstream/master</code> into your local <code>master</code> branch; this doesn’t automatically lose any of your own local changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge upstream/master</span><br></pre></td></tr></table></figure>
+<p>Assuming there are no merge conflicts you are then safe to push these to your own fork’s remote repo.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>This completes the syncing process, but the merge will need to be carried out each time you want to update your own fork with the original repo’s new commits. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br><span class="line">$ git checkout master</span><br><span class="line">$ git merge upstream/master</span><br><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>A secondary method where you manually <code>pull</code> in the updates is also available, and the steps for it are described <a href="https://help.github.com/articles/merging-an-upstream-repository-into-your-fork/#platform-linux" target="_blank" rel="external">here</a>.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/" target="_blank" rel="external">GitHub Help - Configuring a Remote For a Fork</a><br><a href="https://help.github.com/articles/syncing-a-fork/" target="_blank" rel="external">GitHub Help - Syncing a Fork</a></p>
+</blockquote>
+<hr>
+<h2 id="3-–-Make-Changes-on-New-Branch"><a href="#3-–-Make-Changes-on-New-Branch" class="headerlink" title="3 – Make Changes on New Branch"></a>3 – Make Changes on New Branch</h2><p><img src="https://i.gyazo.com/0e84174ca44be84d385dd7c7055d79d2.png" alt="Flow - Step 2"></p>
+<p>Creating a new branch based off of the master branch and then implementing your changes in there, is good practice when working on a project. It’s possible to make changes directly to the master branch, but even just for the sake of etiquette, avoid doing this. It also means you can push follow-up commits if you need to update the future pull request.</p>
+<p>Your branch names should be descriptive (e.g. refactor-authentication, user-content-cache-key, make-retina-avatars) etc. </p>
+<p>Create a new branch with <code>-b</code> and a suitable name.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>From here on you’re good to make the changes and improvements you need for your eventual Pull Request. </p>
+<p>Remember to add, commit, and push your branch changes to the remote version of the fork once finished. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"message"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="4-–-Create-Pull-Request"><a href="#4-–-Create-Pull-Request" class="headerlink" title="4 – Create Pull Request"></a>4 – Create Pull Request</h2><p><img src="https://i.gyazo.com/1e20c1f9ad9618972aa7e78fdbf85337.png" alt="Flow - Step 3"></p>
+<p>Pull requests allow the original project’s maintainer(s) to compare your branch to their existing master branch, and decide whether or not to incorporate (merge) your changes.</p>
+<p>You can open a Pull Request at any point during the development process, but ideally should be when you’re ready for someone to review your work. Using GitHub’s “@mention” system in your Pull Request message means you can target specific people or teams for feedback, as they’ll be individually notified. </p>
+<p>Click the green “New Pull Request” button on your GitHub fork webpage, and you’ll see a screen that compares the two target repositories. Add as much detail as possible to the Pull Request description to make clear the changes.</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/blink-03-pull-request-open.png" alt="Pro Git Book - Create Pull Request View"></p>
+<p>When you hit “Create Pull Request” to confirm - the project owners of the original repo will get a notification that someone has suggested a new changes or features, and get access to the summary of the request. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/using-pull-requests/" target="_blank" rel="external">GitHub Help - Using Pull Requests</a></p>
+</blockquote>
+<hr>
+<h2 id="5-–-Discuss-Changes"><a href="#5-–-Discuss-Changes" class="headerlink" title="5 – Discuss Changes"></a>5 – Discuss Changes</h2><p><img src="https://i.gyazo.com/48268c6e0a225557ac97ca1ca1714aee.png" alt="Flow - Step 4"></p>
+<p>Pull Requests often initiate discussion about your proposed changes. This comes in the form of he maintainer or his team asking questions and suggesting further improvements. Other users on GitHub can see the Pull Request details too, and may chime in - the review process is not limited to just official project members.</p>
+<blockquote>
+<p><strong>“Pull Requests are designed to encourage and capture this type of conversation.”</strong></p>
+</blockquote>
+<p>If you are asked to make some changes to your Pull Request, simply add new commits to your dedicated branch locally and push them again. These get automatically placed into the existing Pull Request.</p>
+<p>On a final note here user comments are written in Markdown, and you can embed images, emoji, use pre-formatted code blocks, and add other supported formatting. Remember the “@mention” system too. </p>
+<hr>
+<h2 id="6-–-Testing-Optional"><a href="#6-–-Testing-Optional" class="headerlink" title="6 – Testing (Optional)"></a>6 – Testing (Optional)</h2><p><img src="https://i.gyazo.com/01f4248fb138526a54c021a898a34069.png" alt="Flow - Step 5"></p>
+<p>This is generally not something you have to worry about; unless you’ve been asked to include/run some unit tests in your changes. Most of the other “production” tests that verify whether your changes work in a live environment or not (TravisCI, Jenkins, etc), are run by the maintainer and performed automatically. </p>
+<p>As long as these pass you’re fine. If the branch commits do causes issues you should amend your work as instructed by a maintainer - in the same manner as before. </p>
+<hr>
+<h2 id="7-–-Pull-Request-Merges-Closes"><a href="#7-–-Pull-Request-Merges-Closes" class="headerlink" title="7 – Pull Request Merges/Closes"></a>7 – Pull Request Merges/Closes</h2><p><img src="https://i.gyazo.com/098018f3096144cbc5bf434f98c4aff2.png" alt="Flow - Step 6"></p>
+<p>Now that your changes have been approved, maybe iterated on, and tested to work in production, your Pull Request <strong>may</strong> get merged. </p>
+<p>If your Pull Request gets merged by the end of it all  that’s great. If not there was probably good reason. Take any feedback you receive and don’t worry about it too much - it happens a lot. </p>
+<p>If merged successfully however, the Pull Request is preserved and a record of the changes become a part of the project’s Git history.</p>
+<hr>
+<h1 id="Collaborator-Method"><a href="#Collaborator-Method" class="headerlink" title="Collaborator Method"></a>Collaborator Method</h1><p>There are despite all the above not just one but two methods of contributing to a project. When working as part of a team on GitHub or organisation, things become a bit easier and less informal. The PDF from the “Flow” section applies more here too, but not completely as a team could still be comprised of public users. </p>
+<h2 id="1-–-Become-a-Collaborator"><a href="#1-–-Become-a-Collaborator" class="headerlink" title="1 – Become a Collaborator"></a>1 – Become a Collaborator</h2><p>Owners of a repository can add more users to work as “collaborators” for the project. Giving them read and write permissions to a repository.  Repositories owned by GitHub “organisations” have more controls over granting collaborators permissions. </p>
+<p>In general though users can be added as collaborators under your repository’s “Settings” page, by clicking the “Collaborators &amp; teams” tab. Then entering the username you wish to add into the search field.</p>
+<p><img src="https://help.github.com/assets/images/help/repository/repo-settings-collab-autofill.png" alt="Collaborators Search Field"></p>
+<p>Giving them write privileges should they need them, and clicking the “Add collaborator” button to confirm.  </p>
+<blockquote>
+<p><a href="https://help.github.com/categories/managing-repository-collaborators/" target="_blank" rel="external">GitHub Help - Managing Repository Collaborators</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Clone-Repository"><a href="#2-–-Clone-Repository" class="headerlink" title="2 – Clone Repository"></a>2 – Clone Repository</h2><p>The targeted collaborator can now clone the repo to make changes and improvements to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git</span><br></pre></td></tr></table></figure>
+<p>Notice there is no need to fork the repository like previously as any changes committed and pushed will be instantly merged and approved into the remote version on GitHub. </p>
+<hr>
+<h2 id="3-–-Make-Changes"><a href="#3-–-Make-Changes" class="headerlink" title="3 – Make Changes"></a>3 – Make Changes</h2><p>As before make your changes in the same way (still abiding by the new branch workflow). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>But remember if changing contents of the master branch, that these are merged instantly when pushed. Any errors/mistakes can be reverted or undone thanks to Git, but still be careful as the master branch is often used for live deployment setups and in conjunction with the automated CI tools mentioned earlier. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"messsage"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<p>Consider the next two options available to you after pushing. </p>
+<hr>
+<h2 id="Option-A-–-Merge-Changes"><a href="#Option-A-–-Merge-Changes" class="headerlink" title="Option A – Merge Changes"></a>Option A – Merge Changes</h2><p>There are two options on offer to you once you have your feature or fixes committed and pushed to the new remote branch. </p>
+<p>If you’re confident the work can be merged into master, and happy to fix any merge conflicts yourself (and also have the permissions). Then you can merge the changes on the command line. </p>
+<p>Before merging make sure you are on the master branch and it’s up to date locally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br><span class="line">$ git pull origin master</span><br></pre></td></tr></table></figure>
+<p>Merge the new target branch into master.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>Fix any merge conflicts and push the changes to the remote master branch on GitHub. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Option-B-–-Create-Pull-Request"><a href="#Option-B-–-Create-Pull-Request" class="headerlink" title="Option B – Create Pull Request"></a>Option B – Create Pull Request</h2><p>An alternative choice and one better suited to those who want approval or simply for other team members to first see their proposed merges - is to instead create a pull request that visualises the process, and shows up on GitHub. </p>
+<p>After pushing the branch to GitHub’s remote repo, a new “Compare &amp; pull request” button appears on the project page:</p>
+<p><img src="https://i.gyazo.com/2767fdac556f907d3bb77f0d8703415f.png" alt="Compare &amp; pull request Button"></p>
+<p>If this is not present the usual “New pull request” button is available to compare the two branches, with the view to merging.  </p>
+<p><img src="https://i.gyazo.com/cf3c19b47ab83c86bc88270b9ba57597.png" alt="New pull request Button"></p>
+<p>Either way this new request can be commented on, verified, improved further and resolved of any merge conflicts before merging. Which can be done by someone else in the team who has the permissions or power of approval. All thorough GitHub like in the case of a regular public pull request. </p>
+<p><img src="https://i.gyazo.com/84b2b2c365ee221affd3838d6bd551ab.png" alt="Merge pull request Button"></p>
+<hr>
+<h2 id="Protected-Branches"><a href="#Protected-Branches" class="headerlink" title="Protected Branches"></a>Protected Branches</h2><p>One last point worth mentioning that revolves around collaborators and teams is the concept of “Protected Branches”. This idea ensures that approved collaborators cannot make irrevocable changes to branches on repositories. This is intended to keep your project and pull requests organised and safe. </p>
+<p>Specifically these administrator designated branches cannot be force pushed, cannot be deleted, and cannot have changes merged into them until required status checks have passed. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/about-protected-branches/" target="_blank" rel="external">GitHub Help - About Protected Branches</a><br><a href="https://help.github.com/articles/configuring-protected-branches/" target="_blank" rel="external">GitHub Help - Configuring Protected Branches</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://guides.github.com/activities/contributing-to-open-source/" target="_blank" rel="external">GitHub Guides - Contributing to Open Source on GitHub</a></li>
+<li><a href="https://guides.github.com/introduction/flow/index.html" target="_blank" rel="external">GitHub Guides - Understanding the GitHub Flow</a></li>
+<li><a href="https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project" target="_blank" rel="external">Pro Git Book - Contributing to a Project</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/GitHub/" class="post__tag__link">GitHub</a></li></ul><a href="/2016/04/26/github-flow/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

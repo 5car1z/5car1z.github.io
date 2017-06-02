@@ -1,0 +1,659 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-06-13T23:00:00.000Z" class="post__time">June 14, 2015</time><h1 class="post__title"><a href="/2015/06/14/notes-bash-env-variables/">BASH Environment and Shell Variables</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qthCSsn.png" alt="Shell Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Variables provide a simple way to share configuration settings between multiple applications and processes in Linux, and are mainly set in either a terminal or shell configuration file upon start up. </p>
+<p>They are either environmental or shell variables by convention. Both of which are usually defined using all capital letters. This helps users distinguish environmental variables from within other contexts.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Terminology"><a href="#1-–-Terminology" class="headerlink" title="1 – Terminology"></a>1 – Terminology</h1><p>As said there are technically one of two categories a variable can fall into:</p>
+<p><strong>“Environment variables”</strong> have been defined for use in the current shell and will be inherited by any child shells or processes spawned as a result of the parent. Environmental variables can also be used to pass information into processes that are spawned by the shell.</p>
+<p><strong>“Shell variables”</strong> are contained exclusively within the shell in which they were set or defined. They are mostly used to keep track of ephemeral temporal data, like the current working directory in a session. </p>
+<h1 id="2-–-Displaying-Variables"><a href="#2-–-Displaying-Variables" class="headerlink" title="2 – Displaying Variables"></a>2 – Displaying Variables</h1><p>To see all currently set <strong>environment variables</strong> in a terminal type:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv</span><br></pre></td></tr></table></figure>
+<p>Alternatively the shorter command <code>env</code> works too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ env</span><br></pre></td></tr></table></figure>
+<p>To see individual or specific environment variables and print with standard output use either of the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv TERM</span><br></pre></td></tr></table></figure>
+<p>Prints multiple variables.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv SHELL USER</span><br></pre></td></tr></table></figure>
+<p><code>echo</code> prints contents.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$TERM</span></span><br></pre></td></tr></table></figure>
+<p>Which can print multiple variables too.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$LANG</span> <span class="variable">$HOME</span></span><br></pre></td></tr></table></figure>
+<p>To output <strong>shell variables</strong> as well as environment variables using <code>set</code> do the following: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">set</span> | less -N</span><br></pre></td></tr></table></figure>
+<p><code>set</code> is usually used to change or unset shell options and parameters but here we have <em>piped</em> the command through less to see what it outputs instead of allowing it to make changes. </p>
+<p>The command can be modified to not show the residual bash functions included in the last output (using posix mode). The brackets also indicate that the process will be run in a <em>sub shell</em> so that <code>set</code> does not actually change anything in the current shell’s environment. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ (<span class="built_in">set</span> -o posix; <span class="built_in">set</span>) | less -N</span><br></pre></td></tr></table></figure>
+<p>Note that there is no one command for retrieving <strong>only</strong> what we class as shell variables. One way of getting these as output is with a sorted comparison from both of the two previous <code>set</code> and <code>env</code> commands. This is not one hundred percent accurate however. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ comm -23 &lt;(<span class="built_in">set</span> -o posix; <span class="built_in">set</span> | sort) &lt;(env | sort) | less -N</span><br></pre></td></tr></table></figure>
+<p>In the last command <code>comm</code> is used to compare the output of <code>set</code> in a sub shell with the output of <code>env</code> in a sub shell, before finally being fed through <code>less</code> .  The two compared outputs are also sorted with <code>sort</code> .</p>
+<hr>
+<h1 id="3-–-Variable-Definitions"><a href="#3-–-Variable-Definitions" class="headerlink" title="3 – Variable Definitions"></a>3 – Variable Definitions</h1><h2 id="Environment-Variables"><a href="#Environment-Variables" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p><code>SHELL</code>  – <code>/bin/bash</code></p>
+<p>This is how the system knows what shell to be used when interpreting commands. In most Linux systems Bash is the default primary shell, but many others can be installed on the system and assigned to this variable. </p>
+<hr>
+<p><code>TERM</code> – <code>xterm</code></p>
+<p>This specifies the type of terminal to emulate when running the shell. The default in GUI based desktop environments is often <code>linux</code> or <code>xterm</code> .</p>
+<hr>
+<p><code>USER</code>  – <code>scarlz</code></p>
+<p>Is set to the username of the currently logged in Linux user.</p>
+<hr>
+<p><code>PWD</code> – <code>/etc/apache2</code></p>
+<p>Like the <code>pwd</code> command it contains the currently active working directory.</p>
+<hr>
+<p><code>OLDPWD</code> – <code>/home/scarlz/dotfiles</code></p>
+<p>The last working directory the user moved from. The shell uses this when the <code>cd -</code> command is invoked. </p>
+<hr>
+<p><code>LS_COLORS</code> – <code>*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:</code></p>
+<p>The <code>ls</code> command has built-in colour support used to differentiate between file types and folders. Colour codes are stored in this variable that determine the colours used.  </p>
+<hr>
+<p><code>PATH</code> – <code>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin</code></p>
+<p>The shell’s main “Path” variable holds a list of directories that the system will query when looking for commands/programs the user types in. They are checked in the order listed. </p>
+<hr>
+<p><code>LANG</code> – <code>en_GB.UTF-8</code></p>
+<p>The currently set language and localization in use (locales), including character encoding.</p>
+<hr>
+<p><code>HOME</code> – <code>/home/scarlz</code></p>
+<p>The current user’s home directory.</p>
+<hr>
+<p><code>_</code>  – <code>/usr/bin/printenv</code></p>
+<p>The previously executed command and its path. </p>
+<hr>
+<p><code>EDITOR</code> – <code>vim</code></p>
+<p>The shell’s preferred text editor. </p>
+<hr>
+<p><code>PAGER</code> – <code>more</code></p>
+<p>The shell’s preferred pager program. </p>
+<hr>
+<p><code>MAIL</code> – <code>/var/spool/mail/$LOGNAME</code></p>
+<p>Contains the location of incoming email. The traditional path is used as an example here. </p>
+<hr>
+<h2 id="Shell-Variables"><a href="#Shell-Variables" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p><code>BASHOPTS</code> </p>
+<p>The list of options that the shell included when bash was run. Useful for finding out if the shell environment currently can do what you expect it to. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASHOPTS</span></span><br><span class="line">BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>BASH_VERSION</code></p>
+<p>The version of bash being executed, in human-readable form.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSION</span></span><br><span class="line">4.3.11(1)-release</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>BASH_VERSINFO</code> </p>
+<p>Similar to the last variable except in “<em>machine</em>“ readable format. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSINFO</span></span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>COLUMNS</code> </p>
+<p>The number of columns that are being used to draw output to the screen.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$COLUMNS</span></span><br><span class="line">239</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>DIRSTACK</code> </p>
+<p>The stack of directories that are available with the <code>pushd</code> and <code>popd</code> commands.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$DIRSTACK</span></span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HISTFILESIZE</code> </p>
+<p>Number of lines of command history that gets stored to the file per bash session.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTFILESIZE</span></span><br><span class="line">2000</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HISTSIZE</code> </p>
+<p>The number of lines of command history maximum to be stored in memory.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTSIZE</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HOSTNAME</code> </p>
+<p>The hostname of the computer at this time.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HOSTNAME</span></span><br><span class="line">scarlz-corsair</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>IFS</code> </p>
+<p>The internal field separator character that separates input on the command line. By default, this is a space so there is no real output to show as an example command. </p>
+<hr>
+<p><code>PS1</code> </p>
+<p>The primary command prompt’s definition. Defines quint-essentially what your prompt looks like when you start a shell session. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$PS1</span></span><br><span class="line">\[\e]0;\u@\h: \w\a\]<span class="variable">$&#123;debian_chroot:+($debian_chroot)&#125;</span>\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>SHELLOPTS</code> </p>
+<p>Any shell options that can be or have been set with the set option.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$SHELLOPTS</span></span><br><span class="line">braceexpand:emacs:hashall:histexpand:<span class="built_in">history</span>:interactive-comments:monitor</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>UID</code> </p>
+<p>The assigned UID of the current user.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$UID</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Setting-Variables"><a href="#4-–-Setting-Variables" class="headerlink" title="4 – Setting Variables"></a>4 – Setting Variables</h1><h2 id="Shell-Variables-1"><a href="#Shell-Variables-1" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p>To create a shell variable in the current shell session, specify a name and a value in the same manner as usual in Bash. Adhering to the naming convention of using full capitals for the variable name. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
+<p>Note the single quotation marks used since the string content of our variable contains a space. </p>
+<p>Also when special characters like <code>!</code> are used in the string, apostrophes must be inserted instead of double quotes to enclose the the string. </p>
+<p><code>!</code> is special character in Bash as it is usually used to expand the shell history.</p>
+<p>We can see the newly defined variable by using <code>echo</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>As said this is only a shell variable within the current Bash session and not an environmental variable. </p>
+<p>This can be checked by using <code>printenv</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p><strong>No</strong> output is returned as the definition is not recognised as part of the environment. </p>
+<p>Let’s take this as an opportunity to demonstrate a way of accessing the value of any shell or environmental variable.</p>
+<p>Remember like in these example that to reference the value of a variable, precede it with a <code>$</code> sign. This is so the shell knows to substitute the name of the variable for it’s content. </p>
+<h2 id="Environment-Variables-1"><a href="#Environment-Variables-1" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p>To create one, export an existing shell variable into the shell’s persistent environment using the  <code>export</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>This time when we check the variable with <code>printenv</code> it will output.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>The variable now descends into a sub shell child process and is retained from the parent, test this by starting anew shell session with <code>bash</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ bash</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>To bypass having to set a variable and then export it to the environment, the process can be combined like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> INSTANT_ENV_VAR=<span class="string">"instant definition plus export!"</span></span><br></pre></td></tr></table></figure>
+<p>Return to the parent shell we came from with <code>exit</code> , and try to <code>echo</code> the previously exported variable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$INSTANT_ENV_VAR</span></span><br></pre></td></tr></table></figure>
+<p>Notice <strong>no</strong> output is returned as environment variables can only be passed to child processes, and not the other way around. This is sensible for the most part as it “prevents programs from affecting the operating environment from which they were called”.</p>
+<p>Also when you exit back into your main parent shell, the child shell environment is destroyed.</p>
+<hr>
+<h1 id="5-–-Demoting-and-Unsetting-Variables"><a href="#5-–-Demoting-and-Unsetting-Variables" class="headerlink" title="5 – Demoting and Unsetting Variables"></a>5 – Demoting and Unsetting Variables</h1><p>To change an already set environment variable back into a lesser shell variable use the <code>-n</code> parameter with <code>export</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> -n EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>Now nothing is returned when using <code>printenv</code> on the variable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>It’s still set as a shell variable so to undefine it completely from this local shell session you can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">unset</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Persistent-Variables"><a href="#6-–-Persistent-Variables" class="headerlink" title="6 – Persistent Variables"></a>6 – Persistent Variables</h1><p>To create predefined variables at login depends upon how bash is started and which configuration file it uses to do so. The deciding factors on which file is used relies on the types of “login shell” that have being initiated by the user.</p>
+<p>The types being either:</p>
+<ul>
+<li>Login <strong>or</strong> Non-Login </li>
+<li>Interactive <strong>or </strong> Non-Interactive </li>
+</ul>
+<p>So the two distinctions that are taken into account are whether the shell is being spawned as a “login” or “non-login” session. As well as whether the session is either an “interactive session” or “non-interactive” session.</p>
+<h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><p>A login shell is a shell session that always begins by authenticating the user. If you are signing into a terminal session or through SSH and authenticate, your shell session will be classed and set as a “login” shell.</p>
+<p>A session started as a login session will read configuration details from the <code>/etc/profile</code> file first, and then look for the first login shell configuration file it can find in the user’s home directory. In order to get user-specific configuration details.</p>
+<p>These files are the first it can find out of <code>~/.bash_profile</code> , <code>~/.bash_login</code> , and <code>~/.profile</code> .</p>
+<hr>
+<h2 id="Non-Login"><a href="#Non-Login" class="headerlink" title="Non-Login"></a>Non-Login</h2><p>If you start a new shell session from within your authenticated session, like earlier when we called the <code>bash</code> command from the terminal, a non-login shell session is started. This is as you were were not asked for any authentication details when you started the child shell.</p>
+<p>A session defined as a non-login shell will always read  <code>/etc/bash.bashrc</code> and then the user-specific <code>~/.bashrc</code> file to help build its environment.</p>
+<hr>
+<h1 id="Interactive"><a href="#Interactive" class="headerlink" title="Interactive"></a>Interactive</h1><p>An interactive shell session is a shell session that is attached to a terminal and in use. So a normal session that begins with SSH is usually defined as an interactive login shell. See “Non Interactive” in the next section to see the difference between the two. </p>
+<hr>
+<h2 id="Non-Interactive"><a href="#Non-Interactive" class="headerlink" title="Non-Interactive"></a>Non-Interactive</h2><p>A non-interactive shell session is one that is not attached to a terminal session, and not currently in use. For example a script run from the command line is usually run in a non-interactive, non-login shell.</p>
+<p>Most notable non-interactive shells read the environment variable named  <code>BASH_ENV</code> and read the file specified in this variable to construct the new shell environment.</p>
+<hr>
+<h2 id="Setting-Environment-Variables-at-Login"><a href="#Setting-Environment-Variables-at-Login" class="headerlink" title="Setting Environment Variables at Login"></a>Setting Environment Variables at Login</h2><p>So there are a variety of circumstances that dictate which of the different files are needed to set predefined variables. </p>
+<p>This has it’s advantages and gives a lot of flexibility for specific situations where you might want only certain settings for a login shell, and other different settings in a non-login shell. </p>
+<p>Despite this to make things easier and more general, most people most of the time will want the same settings for both scenarios. </p>
+<p>Depending upon your Linux distribution and personal setup, usually the login configuration files source the non-login configuration files. Meaning that you don’t have to define the variables in both files and can get away with defining environment variables that you want in both <strong>only</strong> inside the non-login configuration files. They will then be read in both scenarios as they’re sourced in the latter. </p>
+<p>It’s also best to set them for your individual user and not system wide. so to make them available to both login and non-login shell sessions define these variables in the <code>~/.bashrc</code> .</p>
+<p>An example of the line to set a persistent environment variable in the <code>.bashrc</code> file would look like this:</p>
+<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
+<p>Which is the same as before whilst on the command line.</p>
+<p>The next time you start a shell session, your environment variable declaration(s) are always read and passed on to the shell’s environment (including subsequent child shells too). </p>
+<p>You can force your current session to read the config file at any time by typing in a terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>To set them in the system wide files if you prefer, do the same except add the variable definition(s) to: <code>/etc/profile</code> ,  <code>/etc/bash.bashrc</code> , or <code>/etc/environment</code> instead. </p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps" target="_blank" rel="external">Digital Ocean - How to Read and Set Environmental and Shell Variables on a Linux VPS</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Environment_variables" target="_blank" rel="external">Arch-wiki - Environment Variables Page</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/Bash/" class="post__tag__link">Bash</a></li><li class="post__tag__item"><a href="/tags/Variables/" class="post__tag__link">Variables</a></li></ul><a href="/2015/06/14/notes-bash-env-variables/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-06-08T23:00:00.000Z" class="post__time">June 9, 2015</time><h1 class="post__title"><a href="/2015/06/09/notes-arch-gyazo/">Installing and Configuring Gyazo on Arch Linux with Sxhkd</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/UHrni76.png" alt="Gyazo Ninja"></p>
+<p>Gyazo is a free opensource screenshot program available on all desktop platforms including Linux. It allows full screenshot or custom screen area capturing by the user, with uploading of captured images to an online server so they can be accessed anywhere with the uniquely generated public URL.  </p>
+<p>A premium “ninja” service is also available that gives users more storage options and further benefits such as image enhancement, text captions, and pointer arrow insertion. </p>
+<p>Here are my notes on how to install the program/service onto Arch Linux and bind it to run with an Sxhkd shortcut binding. </p>
+<blockquote>
+<p><a href="https://gyazo.com" target="_blank" rel="external">Gyazo’s Homepage</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Download-Tarball"><a href="#1-–-Download-Tarball" class="headerlink" title="1 – Download Tarball"></a>1 – Download Tarball</h1><p>Acquire the source code from the Arch User Repository and find somewhere suitable to compile it. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -V https://aur.archlinux.org/packages/gy/gyazo/gyazo.tar.gz</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Unpack-Tarball"><a href="#2-–-Unpack-Tarball" class="headerlink" title="2 – Unpack Tarball"></a>2 – Unpack Tarball</h1><p>Unpack and extract the packages that are within the downloaded <code>.tar.gz</code> file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar -zxvf gyazo.tar.gz</span><br></pre></td></tr></table></figure>
+<p>Change into the newly created folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> gyazo</span><br></pre></td></tr></table></figure>
+<h1 id="3-–-Build-amp-Compile-Package"><a href="#3-–-Build-amp-Compile-Package" class="headerlink" title="3 – Build &amp; Compile Package"></a>3 – Build &amp; Compile Package</h1><p>Use <code>makepkg</code> to link, build, and compile the software inside this directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ makepkg PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Download any missing dependencies you’re addressed with through <code>pacman</code> as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -Sy</span><br><span class="line">$ sudo pacman -S imagemagick ruby xclip</span><br></pre></td></tr></table></figure>
+<p>If you get the error output that looks like this: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">==&gt; Validating <span class="built_in">source</span> files with sha256sums...</span><br><span class="line">    master.zip ... FAILED</span><br><span class="line">==&gt; ERROR: One or more files did not pass the validity check!</span><br></pre></td></tr></table></figure>
+<p>Run <code>sha256sum</code> on the <code>master.zip</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sha256sum master.zip</span><br></pre></td></tr></table></figure>
+<p>You will see a hash value that you need to use, in my case and version it was:</p>
+<p><code>58567d7c2a77bae20551c66d203385b64037df7599f431c92f66e3aafe4a6b3f  master.zip</code></p>
+<p>Save the value to your clipboard however you see fit. </p>
+<p>If you don’t know how to do this then enter the following into your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sha256sum master.zip | awk <span class="string">'&#123;print $1&#125;'</span> | xclip</span><br></pre></td></tr></table></figure>
+<p>Open the <code>PKGBUILD</code> file for writing with your preferred text editor, I’ll be using <code>vim</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Line 13 needs changing to whatever SHA value was gained from the previous <code>sha256sum</code> command. </p>
+<p>You can use your middle mouse button to paste it into the file pending the hash is still in your clipboard from before.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Maintainer: procrastinator</span></span><br><span class="line"></span><br><span class="line">pkgname=gyazo</span><br><span class="line">pkgver=1.0_1</span><br><span class="line">pkgrel=2</span><br><span class="line">pkgdesc=<span class="string">"Launch the Gyazo app and drag your mouse to grab the screen. "</span></span><br><span class="line">arch=(<span class="string">'any'</span>)</span><br><span class="line">url=<span class="string">"http://gyazo.com/"</span></span><br><span class="line">license=(<span class="string">'GPL'</span>)</span><br><span class="line">groups=(multimedia)</span><br><span class="line">depends=(<span class="string">'ruby'</span> <span class="string">'xclip'</span> <span class="string">'imagemagick'</span>)</span><br><span class="line"><span class="built_in">source</span>=(<span class="string">"https://github.com/gyazo/Gyazo-for-Linux/archive/master.zip"</span>)</span><br><span class="line">sha256sums=(<span class="string">'58567d7c2a77bae20551c66d203385b64037df7599f431c92f66e3aafe4a6b3f'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">package</span></span>() &#123;</span><br><span class="line">        <span class="built_in">cd</span> <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>"</span></span><br><span class="line"></span><br><span class="line">  install -D -m755 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/src/gyazo.rb"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/bin/gyazo"</span></span><br><span class="line"></span><br><span class="line">  install -D -m664 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/src/gyazo.desktop"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/share/applications/gyazo.desktop"</span></span><br><span class="line"></span><br><span class="line">  install -D -m664 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/icons/gyazo.png"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/share/pixmaps/gyazo.png"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Run the command we ran earlier to build the package again, this time successfully:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ makepkg PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Seeing the same error message from before again means you didn’t enter the correct hash value, or placed it wrongly in the <code>PKGBUILD</code> file. Go back and amend any discrepancies as needed.  </p>
+<hr>
+<h1 id="4-–-Install-Compiled-Package"><a href="#4-–-Install-Compiled-Package" class="headerlink" title="4 – Install Compiled Package"></a>4 – Install Compiled Package</h1><p>To continue install the newly built <code>.pkg.tar.xz</code> package to the Arch system repo’s with <code>pacman</code>  and the <code>-U</code> parameter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -U gyazo-1.0_1-2-any.pkg.tar.xz</span><br></pre></td></tr></table></figure>
+<p>Gyazo is now installed and can be run from the command line simply with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gyazo</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Optional-–-Set-Gyazo’s-Web-Browser"><a href="#Optional-–-Set-Gyazo’s-Web-Browser" class="headerlink" title="Optional – Set Gyazo’s Web Browser"></a>Optional – Set Gyazo’s Web Browser</h1><p>Gyazo is at its base an executable ruby script. </p>
+<p>The script’s variable values can be altered with a text editor. </p>
+<p>Only alter what you know is a good idea and be careful as this could of course cause problems within the program as a whole:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /usr/bin/gyazo</span><br></pre></td></tr></table></figure>
+<p>Line 4 can be changed to whatever web browser you want gyazo to open pushed images in. In this instance I’ve set it to run <code>google-chrome-stable</code> . </p>
+<p>Others could be <code>firefox</code> , <code>chromium</code> , <code>opera</code> , etc. </p>
+<blockquote>
+<p><strong>Note:</strong> This is not needed if you have your <code>xdg-open</code> defaults set elsewhere in Linux. </p>
+</blockquote>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env ruby</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># setting</span></span><br><span class="line">browser_cmd = <span class="string">'google-chrome-stable'</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Login-to-Gyazo"><a href="#5-–-Login-to-Gyazo" class="headerlink" title="5 – Login to Gyazo"></a>5 – Login to Gyazo</h1><p>Login to Gyazo’s website at: </p>
+<blockquote>
+<p><a href="https://gyazo.com" target="_blank" rel="external">https://gyazo.com</a></p>
+</blockquote>
+<p>Or sign up for a free account there. </p>
+<p>Then connect the client machine you’re setting up Gyazo on when prompted. </p>
+<p>Connected machines can be seen in the settings page at:</p>
+<blockquote>
+<p><a href="https://gyazo.com/settings" target="_blank" rel="external">https://gyazo.com/settings</a></p>
+</blockquote>
+<hr>
+<h1 id="6-–-Sxhkd-Shortcut-Daemon"><a href="#6-–-Sxhkd-Shortcut-Daemon" class="headerlink" title="6 – Sxhkd Shortcut Daemon"></a>6 – Sxhkd Shortcut Daemon</h1><p>Through using a daemon like <code>sxhkd</code> it is possible to bind <code>gyazo</code> to run whenever a certain key combination is pressed and triggered. An alternative would be <a href="https://wiki.archlinux.org/index.php/Xbindkeys" target="_blank" rel="external">Xbindkeys</a> or Xorg’s <a href="https://wiki.archlinux.org/index.php/Xmodmap" target="_blank" rel="external">xmodmap</a>.</p>
+<p>I won’t cover installing <code>sxhkd</code> here in these notes but here’s the link to the project and source code on Github if you decide you want to use it:</p>
+<blockquote>
+<p><a href="https://github.com/baskerville/sxhkd" target="_blank" rel="external">Sxhkd’s Github Page</a></p>
+</blockquote>
+<p>Go to your <code>sxhkd</code> config file and add the below line to the shown section:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#wm independant hotkeys</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">ctrl + <span class="built_in">shift</span> + c</span><br><span class="line">    gyazo</span><br></pre></td></tr></table></figure>
+<p>Then force sxhkdrc to reload its configuration file. </p>
+<p>The default keybinding for this is the combination:</p>
+<p><code>SUPER</code> + <code>ESC</code></p>
+<p>Now whenever you enter <code>CTRL</code> + <code>SHIFT</code> + <code>c</code> on your keyboard the screen capture grid appears.</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://aur.archlinux.org/packages/gyazo/" target="_blank" rel="external">Gyazo Package on the Aur</a> - Index of Gyazo Package on the Aur.</li>
+<li><a href="https://wiki.archlinux.org/index.php/Xdg-open" target="_blank" rel="external">Arch Linux Xdg-open Page</a> - From the Official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/Sxhkd" target="_blank" rel="external">Arch Linux Sxhkd Page</a> - From the Official Wiki. </li>
+<li><a href="https://github.com/baskerville/sxhkd" target="_blank" rel="external">Sxhkd on Github</a> - The Sxhkd Github repository. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/Gyazo/" class="post__tag__link">Gyazo</a></li><li class="post__tag__item"><a href="/tags/Sxhkd/" class="post__tag__link">Sxhkd</a></li></ul><a href="/2015/06/09/notes-arch-gyazo/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-05-17T23:00:00.000Z" class="post__time">May 18, 2015</time><h1 class="post__title"><a href="/2015/05/18/iptables-ipv4/">iptables (IPv4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/000yMhS.png" alt="Firewall Logo"></p>
+<p>Notes on <code>iptables</code>  including the most used command types and an example of some basic filter table rules. </p>
+<blockquote>
+<p><strong>Note:</strong> Only IP version 4 examples are covered in this post. </p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Tables"><a href="#Tables" class="headerlink" title="Tables"></a>Tables</h1><p>The tables that are present in the system depends on the kernel configuration options and which modules are enabled. </p>
+<p>The default table used is the filter table. <code>-t</code> specifies the table to be used when available and needed.</p>
+<h2 id="Filter-Table"><a href="#Filter-Table" class="headerlink" title="Filter Table"></a>Filter Table</h2><p>This is the first table and most commonly configured table. </p>
+<p>It’s comprised of the following chains:</p>
+<ul>
+<li><strong>Input</strong> – Intended for incoming packets accessing local sockets.</li>
+<li><strong>Forward</strong> – For packets that get routed through the server. </li>
+<li><strong>Output</strong> – Is for locally-generated out-going packets. </li>
+</ul>
+<h2 id="NAT-Table"><a href="#NAT-Table" class="headerlink" title="NAT Table"></a>NAT Table</h2><p>When a packet forms a new connection this is the table that is consulted. </p>
+<ul>
+<li><strong>Prerouting</strong> – Alters a packet as soon as it comes in. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Postrouting</strong> – Alters packets as they are about to be sent out. </li>
+</ul>
+<h2 id="Mangle-Table"><a href="#Mangle-Table" class="headerlink" title="Mangle Table"></a>Mangle Table</h2><p>This table is made use of for specialised packet alteration. </p>
+<ul>
+<li><strong>Prerouting</strong> – Alters a packet as soon as it comes in. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Input</strong> – Packets entering the host itself. </li>
+<li><strong>Forward</strong> – Changes locally-generated packets before they are routed.</li>
+<li><strong>Postrouting</strong> – Alters packets as they are about to be sent out. </li>
+</ul>
+<h2 id="Raw-Table"><a href="#Raw-Table" class="headerlink" title="Raw Table"></a>Raw Table</h2><p>Used for setting up exemptions from connection tracking in combination with the <em>NOTRACK</em> target.</p>
+<ul>
+<li><strong>Prerouting</strong> – Deals with packets arriving via any network interface. </li>
+<li><strong>Output</strong> – Changes locally-generated packets before they are routed.</li>
+</ul>
+<h2 id="Security-Table"><a href="#Security-Table" class="headerlink" title="Security Table"></a>Security Table</h2><p>This table is used for Mandatory Access Control (MAC) networking rules, such as those enabled by the <em>SECMARK</em> and <em>CONNSECMARK</em> targets. It is called after the “Filter Table”. </p>
+<ul>
+<li><strong>Input</strong> – Intended for incoming packets accessing local sockets.</li>
+<li><strong>Output</strong> – Is for locally-generated out-going packets. </li>
+<li><strong>Forward</strong> – For packets that get routed through the server. </li>
+</ul>
+<hr>
+<h1 id="Viewing-Rules"><a href="#Viewing-Rules" class="headerlink" title="Viewing Rules"></a>Viewing Rules</h1><p>You can view the current rules in their respective tables with the <code>-L</code> parameter.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -L</span><br></pre></td></tr></table></figure>
+<p>Adding the <code>-v</code> parameter (verbose) provides additional information for each rule.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -L -v</span><br></pre></td></tr></table></figure>
+<p>Prints line numbers for each rule and <code>-n</code> prints IP addresses and ports where possible. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -vnL --line-numbers</span><br></pre></td></tr></table></figure>
+<p>Prints all rules in the selected chain (<code>INPUT</code>), all chain’s rules are printed if none are passed. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -S INPUT</span><br></pre></td></tr></table></figure>
+<p>Check whether a rule matching the provided details exists or not with <code>-C</code> .</p>
+<p><code>-C</code> uses the same logic as the delete parameter to find matching entries, except it does not write or alter any rules. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -C INPUT -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Adding-Rules"><a href="#Adding-Rules" class="headerlink" title="Adding Rules"></a>Adding Rules</h1><p>To <em>append</em> a rule to the end of a set of rules, use the <code>-A</code> parameter followed by the chain name and port details.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To instead <em>insert</em> a rule anywhere amongst a set of rules use the <code>-I</code> parameter with the chain name and port details.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To <em>match</em> or add a comment alongside a rule append the following to the end of a rule entry:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-m comment --comment <span class="string">"this is an example comment - comment goes here"</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Removing-Rules"><a href="#Removing-Rules" class="headerlink" title="Removing Rules"></a>Removing Rules</h1><p>Delete a rule by line number with the <code>-D</code> parameter, then chain name, then number that you wish to delete. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -D INPUT 10</span><br></pre></td></tr></table></figure>
+<p>Deleting based off of what a rule is doing is also possible, again with <code>-D</code> and then the pre-existing port and rule details. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -D INPUT <span class="_">-s</span> 127.0.0.1 -p tcp --dport 111 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>To remove the entire active configuration you can use the <code>-F</code> parameter, which <em>flushes</em> all rules and tables. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -F</span><br></pre></td></tr></table></figure>
+<p>Adding a chain name deletes that chain, like so:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -F OUTPUT</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Saving-Rules"><a href="#Saving-Rules" class="headerlink" title="Saving Rules"></a>Saving Rules</h1><p>Rules created and inserted are lost upon shutting down the system. There a few different ways of saving the rules and loading them back in again.</p>
+<p>Here’s one of them.</p>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The package <code>iptables-persistent</code> once installed automatically loads rules saved in the <code>/etc/iptables.rules.v4</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install iptables-persistent</span><br><span class="line">$ sudo service iptables-persistent start</span><br></pre></td></tr></table></figure>
+<p>To save your rules in the above file run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-save &gt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<p>You can confirm their entry after with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo less /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<p>These can also be loaded directly into your iptables firewall at any time using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-restore &lt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Standard-Filter-Table-Rules"><a href="#Standard-Filter-Table-Rules" class="headerlink" title="Standard Filter Table Rules"></a>Standard Filter Table Rules</h1><p><strong>Local-Host / Loop-back Address Example</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 1 -i lo -j ACCEPT -m comment --comment <span class="string">"allow input on localhost"</span> </span><br><span class="line">$ sudo iptables -I OUTPUT 1 -o lo -j ACCEPT -m comment --comment <span class="string">"allow output on localhost"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Maintain Current Connections</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment <span class="string">"maintain all current connections"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Drop All Remaining Incoming Packets</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -j DROP -m comment --comment <span class="string">"Drop All Remaining Packets"</span></span><br></pre></td></tr></table></figure>
+<p><strong>Other Standard Rules</strong></p>
+<p>These are in the format of a configuration script that you would load into <code>iptables</code>. So are missing the usual command line prefix. </p>
+<p>Allows all loopback (<code>lo0</code>) traffic and drop all traffic to <code>127/8</code> that doesn’t use <code>lo0</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A INPUT ! -i lo <span class="_">-d</span> 127.0.0.0/8 -j REJECT</span><br></pre></td></tr></table></figure>
+<p>Accepts all established inbound connections.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows all outbound traffic, you could modify this to only allow only certain traffic.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A OUTPUT -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows HTTP and HTTPS connections from anywhere (the normal ports for websites).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p tcp --dport 80 -j ACCEPT</span><br><span class="line">-A INPUT -p tcp --dport 443 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Allows SSH connections.</p>
+<p>The <code>--dport</code> number is the same as in <code>/etc/ssh/sshd_config</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p tcp -m state --state NEW --dport 22 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The default SSH port is often changed from 22 to avoid unwanted activity. Or even better only allow access from certain IP’s and use SSH keys.</p>
+</blockquote>
+<p>Allows ping with the next code snippet, be aware that blocking other <strong>types</strong> of ICMP packets is considered a bad idea by some. Hence the <code>icmp-type 8</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -p icmp -m icmp --icmp-type 8 -j ACCEPT</span><br></pre></td></tr></table></figure>
+<p>Reject all other inbound packets, aka deny by default unless explicitly allowed as part of other policies:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-A INPUT -j REJECT</span><br><span class="line">-A FORWARD -j REJECT</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>Sources</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-a-firewall-using-iptables-on-ubuntu-14-04" target="_blank" rel="external">How To Set Up a Firewall Using iptables on Ubuntu 14.04</a></li>
+<li><a href="https://major.io/?s=iptables" target="_blank" rel="external">Major.io iptables Posts</a></li>
+<li><a href="https://wiki.debian.org/iptables" target="_blank" rel="external">Debian WIki - iptables</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Firewall/" class="post__tag__link">Firewall</a></li><li class="post__tag__item"><a href="/tags/Networking/" class="post__tag__link">Networking</a></li><li class="post__tag__item"><a href="/tags/IP/" class="post__tag__link">IP</a></li></ul><a href="/2015/05/18/iptables-ipv4/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-05-02T23:00:00.000Z" class="post__time">May 3, 2015</time><h1 class="post__title"><a href="/2015/05/03/using-cvim/">cVim Google Chrome Browser Addon</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/PgqGScb.png" alt="Google Chrome Icon"></p>
+<p>What features does cVim add to Chrome?</p>
+<ul>
+<li>Google/IMDB/Wikipedia/Amazon/Duckduckgo/Yahoo/Bing search completion.</li>
+<li>Support for custom search engines.</li>
+<li>History and Bookmark search/completion with bookmark folder support.</li>
+<li>Caret/Visual mode.</li>
+<li>Efficient link hints (with support for custom mappings).</li>
+<li>Support for custom keyboard mappings.</li>
+<li>Regex page search with highlighting.</li>
+<li>Command bar with tab-completion.</li>
+<li>Smooth scrolling.</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h1 id="Installing-cVim"><a href="#Installing-cVim" class="headerlink" title="Installing cVim"></a>Installing cVim</h1><p> <strong>Acquire it by either:</strong></p>
+<ol>
+<li><p>Installing it through the <a href="https://chrome.google.com/webstore/detail/cvim/ihlenndgcmojhcghmfjfneahoeklbjjh" target="_blank" rel="external">Chrome web store</a>.  </p>
+</li>
+<li><p>Downloading the <code>.zip</code> file <a href="https://github.com/1995eaton/chromium-vim/archive/master.zip" target="_blank" rel="external">here</a> </p>
+<ul>
+<li>Enabling it by going to the <code>chrome://extensions</code> URL. </li>
+<li>Checking developer mode.</li>
+<li>Then pointing Chrome to the unzipped folder via <code>Load unpacked extensions</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="Using-cVim"><a href="#Using-cVim" class="headerlink" title="Using cVim"></a>Using cVim</h1><p>Here’s how to use the addon including an example of the configuration settings and bindings by group. </p>
+<h2 id="Settings"><a href="#Settings" class="headerlink" title="Settings"></a>Settings</h2><p>You can sync with a Gist file in the settings of the browser addon.</p>
+<blockquote>
+<p><a href="https://gist.github.com/sleightz/01275b93fb53a5e53135" target="_blank" rel="external">https://gist.github.com/sleightz/01275b93fb53a5e53135</a></p>
+</blockquote>
+<hr>
+<h2 id="Keybindings"><a href="#Keybindings" class="headerlink" title="Keybindings"></a>Keybindings</h2><blockquote>
+<p><strong>Note:</strong> Uppercase bindings are triggered with <code>SHIFT</code> + <code>KEY</code> as normal. </p>
+</blockquote>
+<p><strong>Basic</strong></p>
+<ul>
+<li><code>j</code>,<code>s</code>  – scroll down.</li>
+<li><code>k</code>,<code>w</code>  – scroll up.</li>
+<li><code>h</code> – scroll left.</li>
+<li><code>l</code> – scroll right.</li>
+</ul>
+<p><strong>Page</strong></p>
+<ul>
+<li><code>gg</code> – scroll to top of the current page.</li>
+<li><code>G</code> – scroll to the bottom of the current page. </li>
+<li><code>zi</code> – Zoom page in.</li>
+<li><code>zo</code> – Zoom page out</li>
+<li><code>z0</code> –     Zoom page to original size.</li>
+</ul>
+<p><strong>Links</strong></p>
+<ul>
+<li><code>f</code> – open a link in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>G</code> – scroll to the bottom of the current page. (<code>SHIFT</code> + <code>g</code>)</li>
+<li><code>W</code> –  open a link in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>W</code> –  open a link in a new window by pressing the marked keys in the page elements. </li>
+<li><code>mf</code> – open multiple links in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>gy</code> – Copy a URL from a link to to the <em>clipboard</em>.</li>
+</ul>
+<p><strong>Tabs</strong></p>
+<ul>
+<li><code>x</code> – Close the current tab.</li>
+<li><code>X</code> – Open the last closed tab. </li>
+<li><code>t</code> – Alias for <code>:tabnew</code> .</li>
+<li><code>a</code> – An alias to <code>:tabnew google</code> .</li>
+<li><code>&lt;</code> – Move current tab left.</li>
+<li><code>&gt;</code> – Move current tab right.</li>
+</ul>
+<p><strong>Tab Navigation</strong></p>
+<ul>
+<li><code>gt</code>, <code>K</code>, <code>R</code> – Navigate to the next tab. </li>
+<li><code>gT</code>, <code>J</code>, <code>E</code>    – Navigate to the previous tab. </li>
+<li><code>H</code>, <code>S</code> – Go back a page in current tab. </li>
+<li><code>L</code>, <code>D</code> – Go forward a page in current tab. </li>
+</ul>
+<p><strong>Caret/Visual Mode</strong></p>
+<ul>
+<li><code>v</code> – Toggle between visual/caret mode.</li>
+<li><code>h</code>,<code>j</code>, <code>k</code>, <code>l</code>    – Move the caret position/extend the visual selection    </li>
+<li><code>y</code> – Copies the current selection.    </li>
+<li><code>ESC</code> – Exit visual mode to caret mode/exit caret mode to normal mode.</li>
+</ul>
+<hr>
+<h2 id="Keybindings-Continued"><a href="#Keybindings-Continued" class="headerlink" title="Keybindings Continued"></a>Keybindings Continued</h2><p><strong>Core</strong></p>
+<p><code>:</code> – Open the command bar. </p>
+<p><code>.</code>    – Repeat the last command entered.</p>
+<p><code>r</code> –     Reload the current tab    . </p>
+<p><code>gR</code> –     Reload the current tab + local cache.</p>
+<p><code>yy</code> –     Copy the URL of the current page to the clipboard.</p>
+<p><strong>Searching</strong></p>
+<p><code>/</code>    open search bar</p>
+<p><code>n</code> – Next search result    .</p>
+<p><code>N</code> – Previous search result.</p>
+<p><code>b</code> –    Search through bookmarks.</p>
+<p><strong>Misc</strong></p>
+<p><code>I</code> – An alias to <code>:history</code> that let’s you search through browser history. </p>
+<p><code>zr</code> – Restart Google Chrome.</p>
+<p><code>gd</code> – An alias to <code>:chrome://downloads</code></p>
+<p><code>P</code> –    Open the clipboard contents in a new tab.</p>
+<p><code>gq</code> –     Stop the current tab from loading</p>
+<hr>
+<h3 id="Command-Mode"><a href="#Command-Mode" class="headerlink" title="Command Mode"></a>Command Mode</h3><p><strong>Core</strong></p>
+<p><code>:tabnew</code>(autocomplete) – Open a new tab with the typed/completed search.</p>
+<p><code>:new</code> (autocomplete) – Open a new window with the typed/completed search.</p>
+<p><code>:open</code> (autocomplete) – Open the typed/completed URL/google search.</p>
+<p><code>:quit</code>    Close the current tab</p>
+<p><code>:qall</code> Close the current window</p>
+<p><code>:duplicate</code> – Duplicate the current tab.</p>
+<p><strong>Searching</strong></p>
+<p><code>:history</code> (autocomplete) – Search through browser history.</p>
+<p><code>:bookmarks</code> (autocomplete) –    Search through bookmarks.</p>
+<p><strong>Misc</strong></p>
+<p><code>:tabattach</code> (autocomplete) – Move the current tab to another open window.</p>
+<p><code>:tabdetach</code> – Move the current tab to a new window.</p>
+<p><code>:restore</code> (autocomplete) – Restore a previously closed tab (newer versions of Chrome only).</p>
+<p><code>:mksession</code> – Create a new session from the current tabs in the active window.</p>
+<hr>
+<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h1><ul>
+<li><p>You can use <code>@%</code> in <code>open</code> commands to specify the current URL. For example, <code>:open @%</code> would essentially refresh the current page.</p>
+</li>
+<li><p>Prepend a number to the command to repeat that command <em>N</em> times.</p>
+</li>
+<li><p>Use the up/down arrows in command/find mode to navigate through previously<br>executed commands/searches.</p>
+</li>
+<li><p>You can set directives like <code>reloadAllTabs</code> in the settings to a binding.</p>
+</li>
+</ul>
+<hr>
+<p><strong>Sources</strong></p>
+<ul>
+<li><a href="https://github.com/1995eaton/chromium-vim" target="_blank" rel="external">cVim - Vim bindings for Google Chrome</a> – cVim Github page.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Chrome/" class="post__tag__link">Chrome</a></li><li class="post__tag__item"><a href="/tags/Browser/" class="post__tag__link">Browser</a></li><li class="post__tag__item"><a href="/tags/Addon/" class="post__tag__link">Addon</a></li></ul><a href="/2015/05/03/using-cvim/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-02-18T00:00:00.000Z" class="post__time">February 18, 2015</time><h1 class="post__title"><a href="/2015/02/18/arch-vm-main/">Arch Linux VM Main System Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
+<p>This is a continuation of the previous post on installing the base components of Arch. </p>
+<p>Except this time I’m detailing the next steps of setting up the main system environment.  </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Initial-Login"><a href="#1-–-Initial-Login" class="headerlink" title="1 – Initial Login"></a>1 – Initial Login</h1><p>Log into the system we created in the previous post this time on the actual file-system we generated (i.e. without the boot media), using the one and only <em>root</em> account currently in existence. Test to see if you have a working internet connection again by using <code>ping</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If you get <code>ping: unknown host www.google.co.uk</code> or <code>connect: Network is unreachable</code> for either of these commands then you need to do the rest of this step (1). </p>
+<p>If everything looks fine and you are sending plus receiving through <code>ping</code> with a working internet connection, then move on to step 2 instead. </p>
+<p>Find your Ethernet interface name (virtual VM shared host connection interface in this case) using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>If you are unsure of the name, your Ethernet interface you are looking for is likely to start with the letter “e”, and unlikely to be “lo” or start with the letter “w”. </p>
+<p><img src="http://i.gyazo.com/2742bf027aad981b4e3af4652079026a.png" alt="Ethernet interface name"></p>
+<p>In my case my interface was named “eno167777736”. So I’ll use that as the example here.</p>
+<p>Next make sure the interface is <em>up</em> and running with this command syntax:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Substituting the interface name ID with your own.</p>
+<p>Then start and enable <code>dhcpcd.service</code> with <code>systemctl</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpcd.service</span><br></pre></td></tr></table></figure>
+<p>Attempt a <code>ping</code> once again and this time it should succeed, with the internet connection working correctly. </p>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful. Remember these links are not in the context of a VM installation however.</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="2-–-pacman-conf"><a href="#2-–-pacman-conf" class="headerlink" title="2 – pacman.conf"></a>2 – pacman.conf</h1><p><strong>If</strong> using a 64-bit system begin editing the <code>/etc/pacman.conf</code> with <code>nano</code>. </p>
+<blockquote>
+<p><strong>If not using a 64 bit system then move onto Step 3 now.</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/pacman.conf</span><br></pre></td></tr></table></figure>
+<p>Now <em>uncomment</em> the two following lines in this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[multilib]</span><br><span class="line">Include = /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>After doing this write/save to the file and exit it. </p>
+<p>When back at the shell prompt sync and refresh repositories with <code>pacman</code> by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Sy</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-User-Creation"><a href="#3-–-User-Creation" class="headerlink" title="3 – User Creation"></a>3 – User Creation</h1><p>Make another user account here so <em>root</em> isn’t the default account in use all the time (bad practice to do so), whilst at the same time adding it to some groups. </p>
+<blockquote>
+<p><strong>Note:</strong> There are no spaces present between the groups listed in this next command.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ useradd -m -g users -G wheel,storage,power,sys,adm <span class="_">-s</span> /bin/bash scarlz</span><br></pre></td></tr></table></figure>
+<p>Set the password for the new user that has just been created.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd scarlz</span><br></pre></td></tr></table></figure>
+<p>Install <code>sudo</code> with <code>pacman</code> <strong>if</strong> it did not install as part of your previous base Arch set-up. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S sudo</span><br></pre></td></tr></table></figure>
+<p>If you ever want to see a list of packages related to a search term, you could type the following command, where the package name specified at the end is the “search term”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Ss sudo</span><br></pre></td></tr></table></figure>
+<p>Now <code>sudo</code> is installed on the system we need to enable it for users belonging to the <code>wheel</code> group in the <em>sudoers</em> file to gain the privileges. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EDITOR=vi visudo</span><br></pre></td></tr></table></figure>
+<p>Find the “user privilege specification” section and <em>uncomment</em> the following line so it looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%wheel ALL=(ALL) ALL</span><br></pre></td></tr></table></figure>
+<p>After doing so hit <code>CTRL+X</code> then <code>y</code> and then  <code>ENTER</code>.</p>
+<p>I’m also going to install <em>bash completion</em> here to help out before moving onto the next step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S bash-completion</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-VMware-Tools"><a href="#4-–-VMware-Tools" class="headerlink" title="4 – VMware Tools"></a>4 – VMware Tools</h1><p>I’m using Vmware as my virtualisation software in this instance, so here’s how to install the official VMware tools. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S base-devel net-tools linux-headers</span><br></pre></td></tr></table></figure>
+<p>Press <code>ENTER</code> for the default <code>All</code> if prompted by the <code>base-devel</code> package.</p>
+<p>Some <strong>Xorg</strong> Vmware related dependencies.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xf86-input-vmmouse xf86-video-vmware mesa</span><br></pre></td></tr></table></figure>
+<p>Then, create <em>bogus</em> initialisation directories for the installer:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> x <span class="keyword">in</span> &#123;0..6&#125;; <span class="keyword">do</span> mkdir -p /etc/init.d/rc<span class="variable">$x</span>.d; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>The VMware installer then needs to be mounted in our Arch system:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
+<p>If you have errors here make sure your VMware software (Workstation in my case) has the latest tools downloaded and updated, and try running VMware “as an Administrator” if using Windows.   </p>
+<blockquote>
+<p><a href="https://communities.vmware.com/message/2303222#2303222" target="_blank" rel="external">VMware Tools Stuck Downloading in VMware</a></p>
+</blockquote>
+<p>After this is successfully mounted extract it to <code>/root</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar xf /mnt/VMwareTools*.tar.gz -C /root</span><br></pre></td></tr></table></figure>
+<p>Run the perl script to the install the extracted VMware tools.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ perl /root/vmware-tools-distrib/vmware-install.pl</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>You can safely ignore the following build failures:</p>
+<ul>
+<li>VMNEXT 3 virtual network card</li>
+<li><strong>“Warning:</strong> This script could not find mkinitrd or update-initramfs and cannot remake the initrd file!”</li>
+</ul>
+</blockquote>
+<p>Reboot the Virtual Machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>Log in and start VMware Tools:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /etc/init.d/rc6.d/K99vmware-tools start</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Xorg"><a href="#5-–-Xorg" class="headerlink" title="5 – Xorg"></a>5 – Xorg</h1><blockquote>
+<p><strong>“Xorg is the public, open-source implementation of the X window system version 11. Since Xorg is the most popular choice among Linux users, its ubiquity has led to making it an ever-present requisite for GUI applications, resulting in massive adoption from most distributions.”</strong></p>
+</blockquote>
+<p>Now comes the part where we are going to install X server.</p>
+<blockquote>
+<p><strong>Note:</strong> To use Xorg in a Virtual Machine, a minimum of 32MB VGA memory is needed.</p>
+</blockquote>
+<p>Install Xorg and some of its companion packages using <code>pacman</code> once again like so:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xorg-server xorg-xinit xorg-server-utils</span><br></pre></td></tr></table></figure>
+<p>Finally in this section install the default X environment to ensure that all the x-org components we’ve installed prior to this are functioning correctly.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xorg-twm xorg-xclock xterm</span><br></pre></td></tr></table></figure>
+<p>Type <code>startx</code> to run the X environment.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ startx</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.gyazo.com/8eafc4c84a56c06ea0ce6cbeaff63732.png" alt="Default X Environment"></p>
+<hr>
+<h1 id="Display-amp-Window-Manager"><a href="#Display-amp-Window-Manager" class="headerlink" title="Display &amp; Window Manager"></a>Display &amp; Window Manager</h1><p>Another forthcoming post will go into depth on how to install a tiling window manager (bspwm) and configure <code>.xinitrc</code> to serve as a display manager. With the exception of this being done in the context of a live system, and not a VM. </p>
+<p>Alternatively find and research another window manager/desktop environment from the Arch-wiki to setup and install. </p>
+<blockquote>
+<p><a href="https://wiki.archlinux.org/index.php/Window_manager" target="_blank" rel="external">Arch-wiki Window Managers</a><br><a href="https://wiki.archlinux.org/index.php/Desktop_environment" target="_blank" rel="external">Arch-wiki Desktop Environments</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Installing_Arch_Linux_in_VMware" target="_blank" rel="external">Arch-wiki - Installing Arch Linux in VMware</a> - From the official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/pacman#Installing_packages" target="_blank" rel="external">Arch-wiki Pacman Package Manager</a> - Example commands and switches.</li>
+<li><a href="https://wiki.archlinux.org/index.php/Systemd#Using_units" target="_blank" rel="external">Arch-wiki - systemd</a> - Using units (systemctl).</li>
+<li><a href="https://wiki.archlinux.org/index.php/Xorg" target="_blank" rel="external">Arch-wiki Xorg Server</a> - Full details on Xorg. </li>
+<li><a href="http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process" target="_blank" rel="external">Lifehacker Article on Arch Installation</a> - Not for a VM image but useful.</li>
+<li><a href="http://www.linuxveda.com/2014/06/07/arch-linux-tutorial/" target="_blank" rel="external">Linux Neda: How to install Arch Linux</a> - Similar to the previous article but also useful. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/18/arch-vm-main/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/7/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

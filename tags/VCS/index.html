@@ -1,0 +1,526 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>VCS - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-04-25T23:00:00.000Z" class="post__time">April 26, 2016</time><h1 class="post__title"><a href="/2016/04/26/github-flow/">Contributing to GitHub Projects</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/HLLz1Wv.png" alt="Octocat!"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>GitHub is one of the most popular ways to contribute to open-source projects. Many major and minor organisations keep their open-source code-base hosted there, adopting the idea that anyone who follows the rules can have their own efforts put up for consideration. This post talks about said process, which if anything is referred to as “GitHub Flow”.   </p>
+<p>This information as presented by GitHub is readily available in various forms within their <a href="https://guides.github.com/" target="_blank" rel="external">“GitHub Guides”</a> documentation. More specific links to these are listed at the end of the post. </p>
+<blockquote>
+<p><strong>“As of April 2016, GitHub reports having more than 14 million users and more than 35 million repositories, making it the largest host of source code in the world.”</strong></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Github-Flow"><a href="#Github-Flow" class="headerlink" title="Github Flow"></a>Github Flow</h1><p>Summarised, the general concept here in terms of public contributions is to:</p>
+<ol>
+<li>Fork, then create a suitable topic branch from master.</li>
+<li>Make some commits to improve the project.</li>
+<li>Push the branch to the forked GitHub project.</li>
+<li>Open a Pull Request for merging on the original GitHub repo.</li>
+<li>Discuss, and optionally continue committing.</li>
+<li>The project owner then merges or closes the Pull Request.</li>
+</ol>
+<p>The upcoming sections cover these steps in more detail.</p>
+<p>This PDF gives a loose impression of how the “flow” process would apply in the context of a formal team working on their project (i.e. the non public workflow): </p>
+<object data="https://guides.github.com/pdfs/githubflow-online.pdf#" type="application/pdf" width="100%" height="900"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="https://guides.github.com/pdfs/githubflow-online.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<h1 id="Public-Pull-Requests"><a href="#Public-Pull-Requests" class="headerlink" title="Public Pull Requests"></a>Public Pull Requests</h1><p>Outside of an internal team back in the public domain, we return to the steps summarised before. These are now covered in greater detail and do not mirror the steps above completely as these are laid out in a more practical manner. </p>
+<h2 id="1-–-Fork-Repository"><a href="#1-–-Fork-Repository" class="headerlink" title="1 – Fork Repository"></a>1 – Fork Repository</h2><p><img src="https://i.gyazo.com/7776cde860e0215dacab1fd81d53894a.png" alt="Flow - Step 1"></p>
+<p>The first step is to find the project on GitHub you want to contribute to, then read through any guidelines they may have in the <code>CONTRIBUTING</code> file, or similarly named. These guidelines are usually code conventions/syntax, feature requests, or nuances specific to the project. </p>
+<p>Project’s often have wiki’s containing information along these lines too (especially the larger ones). This can be accessed from the top of the project page tabs, if it exists. </p>
+<p>Once selected, the next step is to <em>fork</em> the repository by clicking the aptly named button. You must be signed into your GitHub account when doing this.</p>
+<p>Here’s a picture of what the button looks like:</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/forkbutton.png" alt="GitHub Fork Button"></p>
+<p>After a few seconds, you’re taken to your own forked version of the repository. In which everything you do is now separate to the original project.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/fork-a-repo/" target="_blank" rel="external">Pro Git Book - Forking Projects</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Sync-Fork"><a href="#2-–-Sync-Fork" class="headerlink" title="2 – Sync Fork"></a>2 – Sync Fork</h2><p>Any updates or commits that get added to the original repository by the maintainers won’t be included in your fork, so they need to be retrieved and merged. This is so that when it comes to offering up your own changes, they’re in the context of the up to date target project. </p>
+<p>This syncing may not be required right now, but once future commits are made to the <em>upstream</em> repository, you’ll need to pull them into your own fork so it’s kept up to date. </p>
+<p>Clone your forked repository locally then add the original upstream repository as a remote.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git</span><br></pre></td></tr></table></figure>
+<p>Confirm success with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Fetch the branches and their respective commits from the <code>upstream</code> repository. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br></pre></td></tr></table></figure>
+<p>Ensure you’re on the <code>master</code> branch.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>Upstream commits to <code>master</code> are now stored in a local branch named <code>upstream/master</code> . </p>
+<p>Merge the changes from <code>upstream/master</code> into your local <code>master</code> branch; this doesn’t automatically lose any of your own local changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge upstream/master</span><br></pre></td></tr></table></figure>
+<p>Assuming there are no merge conflicts you are then safe to push these to your own fork’s remote repo.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>This completes the syncing process, but the merge will need to be carried out each time you want to update your own fork with the original repo’s new commits. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br><span class="line">$ git checkout master</span><br><span class="line">$ git merge upstream/master</span><br><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>A secondary method where you manually <code>pull</code> in the updates is also available, and the steps for it are described <a href="https://help.github.com/articles/merging-an-upstream-repository-into-your-fork/#platform-linux" target="_blank" rel="external">here</a>.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/" target="_blank" rel="external">GitHub Help - Configuring a Remote For a Fork</a><br><a href="https://help.github.com/articles/syncing-a-fork/" target="_blank" rel="external">GitHub Help - Syncing a Fork</a></p>
+</blockquote>
+<hr>
+<h2 id="3-–-Make-Changes-on-New-Branch"><a href="#3-–-Make-Changes-on-New-Branch" class="headerlink" title="3 – Make Changes on New Branch"></a>3 – Make Changes on New Branch</h2><p><img src="https://i.gyazo.com/0e84174ca44be84d385dd7c7055d79d2.png" alt="Flow - Step 2"></p>
+<p>Creating a new branch based off of the master branch and then implementing your changes in there, is good practice when working on a project. It’s possible to make changes directly to the master branch, but even just for the sake of etiquette, avoid doing this. It also means you can push follow-up commits if you need to update the future pull request.</p>
+<p>Your branch names should be descriptive (e.g. refactor-authentication, user-content-cache-key, make-retina-avatars) etc. </p>
+<p>Create a new branch with <code>-b</code> and a suitable name.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>From here on you’re good to make the changes and improvements you need for your eventual Pull Request. </p>
+<p>Remember to add, commit, and push your branch changes to the remote version of the fork once finished. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"message"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="4-–-Create-Pull-Request"><a href="#4-–-Create-Pull-Request" class="headerlink" title="4 – Create Pull Request"></a>4 – Create Pull Request</h2><p><img src="https://i.gyazo.com/1e20c1f9ad9618972aa7e78fdbf85337.png" alt="Flow - Step 3"></p>
+<p>Pull requests allow the original project’s maintainer(s) to compare your branch to their existing master branch, and decide whether or not to incorporate (merge) your changes.</p>
+<p>You can open a Pull Request at any point during the development process, but ideally should be when you’re ready for someone to review your work. Using GitHub’s “@mention” system in your Pull Request message means you can target specific people or teams for feedback, as they’ll be individually notified. </p>
+<p>Click the green “New Pull Request” button on your GitHub fork webpage, and you’ll see a screen that compares the two target repositories. Add as much detail as possible to the Pull Request description to make clear the changes.</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/blink-03-pull-request-open.png" alt="Pro Git Book - Create Pull Request View"></p>
+<p>When you hit “Create Pull Request” to confirm - the project owners of the original repo will get a notification that someone has suggested a new changes or features, and get access to the summary of the request. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/using-pull-requests/" target="_blank" rel="external">GitHub Help - Using Pull Requests</a></p>
+</blockquote>
+<hr>
+<h2 id="5-–-Discuss-Changes"><a href="#5-–-Discuss-Changes" class="headerlink" title="5 – Discuss Changes"></a>5 – Discuss Changes</h2><p><img src="https://i.gyazo.com/48268c6e0a225557ac97ca1ca1714aee.png" alt="Flow - Step 4"></p>
+<p>Pull Requests often initiate discussion about your proposed changes. This comes in the form of he maintainer or his team asking questions and suggesting further improvements. Other users on GitHub can see the Pull Request details too, and may chime in - the review process is not limited to just official project members.</p>
+<blockquote>
+<p><strong>“Pull Requests are designed to encourage and capture this type of conversation.”</strong></p>
+</blockquote>
+<p>If you are asked to make some changes to your Pull Request, simply add new commits to your dedicated branch locally and push them again. These get automatically placed into the existing Pull Request.</p>
+<p>On a final note here user comments are written in Markdown, and you can embed images, emoji, use pre-formatted code blocks, and add other supported formatting. Remember the “@mention” system too. </p>
+<hr>
+<h2 id="6-–-Testing-Optional"><a href="#6-–-Testing-Optional" class="headerlink" title="6 – Testing (Optional)"></a>6 – Testing (Optional)</h2><p><img src="https://i.gyazo.com/01f4248fb138526a54c021a898a34069.png" alt="Flow - Step 5"></p>
+<p>This is generally not something you have to worry about; unless you’ve been asked to include/run some unit tests in your changes. Most of the other “production” tests that verify whether your changes work in a live environment or not (TravisCI, Jenkins, etc), are run by the maintainer and performed automatically. </p>
+<p>As long as these pass you’re fine. If the branch commits do causes issues you should amend your work as instructed by a maintainer - in the same manner as before. </p>
+<hr>
+<h2 id="7-–-Pull-Request-Merges-Closes"><a href="#7-–-Pull-Request-Merges-Closes" class="headerlink" title="7 – Pull Request Merges/Closes"></a>7 – Pull Request Merges/Closes</h2><p><img src="https://i.gyazo.com/098018f3096144cbc5bf434f98c4aff2.png" alt="Flow - Step 6"></p>
+<p>Now that your changes have been approved, maybe iterated on, and tested to work in production, your Pull Request <strong>may</strong> get merged. </p>
+<p>If your Pull Request gets merged by the end of it all  that’s great. If not there was probably good reason. Take any feedback you receive and don’t worry about it too much - it happens a lot. </p>
+<p>If merged successfully however, the Pull Request is preserved and a record of the changes become a part of the project’s Git history.</p>
+<hr>
+<h1 id="Collaborator-Method"><a href="#Collaborator-Method" class="headerlink" title="Collaborator Method"></a>Collaborator Method</h1><p>There are despite all the above not just one but two methods of contributing to a project. When working as part of a team on GitHub or organisation, things become a bit easier and less informal. The PDF from the “Flow” section applies more here too, but not completely as a team could still be comprised of public users. </p>
+<h2 id="1-–-Become-a-Collaborator"><a href="#1-–-Become-a-Collaborator" class="headerlink" title="1 – Become a Collaborator"></a>1 – Become a Collaborator</h2><p>Owners of a repository can add more users to work as “collaborators” for the project. Giving them read and write permissions to a repository.  Repositories owned by GitHub “organisations” have more controls over granting collaborators permissions. </p>
+<p>In general though users can be added as collaborators under your repository’s “Settings” page, by clicking the “Collaborators &amp; teams” tab. Then entering the username you wish to add into the search field.</p>
+<p><img src="https://help.github.com/assets/images/help/repository/repo-settings-collab-autofill.png" alt="Collaborators Search Field"></p>
+<p>Giving them write privileges should they need them, and clicking the “Add collaborator” button to confirm.  </p>
+<blockquote>
+<p><a href="https://help.github.com/categories/managing-repository-collaborators/" target="_blank" rel="external">GitHub Help - Managing Repository Collaborators</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Clone-Repository"><a href="#2-–-Clone-Repository" class="headerlink" title="2 – Clone Repository"></a>2 – Clone Repository</h2><p>The targeted collaborator can now clone the repo to make changes and improvements to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git</span><br></pre></td></tr></table></figure>
+<p>Notice there is no need to fork the repository like previously as any changes committed and pushed will be instantly merged and approved into the remote version on GitHub. </p>
+<hr>
+<h2 id="3-–-Make-Changes"><a href="#3-–-Make-Changes" class="headerlink" title="3 – Make Changes"></a>3 – Make Changes</h2><p>As before make your changes in the same way (still abiding by the new branch workflow). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>But remember if changing contents of the master branch, that these are merged instantly when pushed. Any errors/mistakes can be reverted or undone thanks to Git, but still be careful as the master branch is often used for live deployment setups and in conjunction with the automated CI tools mentioned earlier. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"messsage"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<p>Consider the next two options available to you after pushing. </p>
+<hr>
+<h2 id="Option-A-–-Merge-Changes"><a href="#Option-A-–-Merge-Changes" class="headerlink" title="Option A – Merge Changes"></a>Option A – Merge Changes</h2><p>There are two options on offer to you once you have your feature or fixes committed and pushed to the new remote branch. </p>
+<p>If you’re confident the work can be merged into master, and happy to fix any merge conflicts yourself (and also have the permissions). Then you can merge the changes on the command line. </p>
+<p>Before merging make sure you are on the master branch and it’s up to date locally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br><span class="line">$ git pull origin master</span><br></pre></td></tr></table></figure>
+<p>Merge the new target branch into master.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>Fix any merge conflicts and push the changes to the remote master branch on GitHub. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Option-B-–-Create-Pull-Request"><a href="#Option-B-–-Create-Pull-Request" class="headerlink" title="Option B – Create Pull Request"></a>Option B – Create Pull Request</h2><p>An alternative choice and one better suited to those who want approval or simply for other team members to first see their proposed merges - is to instead create a pull request that visualises the process, and shows up on GitHub. </p>
+<p>After pushing the branch to GitHub’s remote repo, a new “Compare &amp; pull request” button appears on the project page:</p>
+<p><img src="https://i.gyazo.com/2767fdac556f907d3bb77f0d8703415f.png" alt="Compare &amp; pull request Button"></p>
+<p>If this is not present the usual “New pull request” button is available to compare the two branches, with the view to merging.  </p>
+<p><img src="https://i.gyazo.com/cf3c19b47ab83c86bc88270b9ba57597.png" alt="New pull request Button"></p>
+<p>Either way this new request can be commented on, verified, improved further and resolved of any merge conflicts before merging. Which can be done by someone else in the team who has the permissions or power of approval. All thorough GitHub like in the case of a regular public pull request. </p>
+<p><img src="https://i.gyazo.com/84b2b2c365ee221affd3838d6bd551ab.png" alt="Merge pull request Button"></p>
+<hr>
+<h2 id="Protected-Branches"><a href="#Protected-Branches" class="headerlink" title="Protected Branches"></a>Protected Branches</h2><p>One last point worth mentioning that revolves around collaborators and teams is the concept of “Protected Branches”. This idea ensures that approved collaborators cannot make irrevocable changes to branches on repositories. This is intended to keep your project and pull requests organised and safe. </p>
+<p>Specifically these administrator designated branches cannot be force pushed, cannot be deleted, and cannot have changes merged into them until required status checks have passed. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/about-protected-branches/" target="_blank" rel="external">GitHub Help - About Protected Branches</a><br><a href="https://help.github.com/articles/configuring-protected-branches/" target="_blank" rel="external">GitHub Help - Configuring Protected Branches</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://guides.github.com/activities/contributing-to-open-source/" target="_blank" rel="external">GitHub Guides - Contributing to Open Source on GitHub</a></li>
+<li><a href="https://guides.github.com/introduction/flow/index.html" target="_blank" rel="external">GitHub Guides - Understanding the GitHub Flow</a></li>
+<li><a href="https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project" target="_blank" rel="external">Pro Git Book - Contributing to a Project</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/GitHub/" class="post__tag__link">GitHub</a></li></ul><a href="/2016/04/26/github-flow/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-09-25T23:00:00.000Z" class="post__time">September 26, 2015</time><h1 class="post__title"><a href="/2015/09/26/git-version-control-two/">Git Version Control (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a follow up from the <a href="http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/">previous Git post</a> and covers some of the areas not mentioned in the original.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-VCS-Background"><a href="#1-–-VCS-Background" class="headerlink" title="1 – VCS Background"></a>1 – VCS Background</h1><ul>
+<li><p><strong>Local Version Control</strong> – A singular database on local storage media that keeps insertions and deletions to the code-base. Very primitive and not interconnected between a team and its members.</p>
+</li>
+<li><p><strong>Centralized Version Control</strong> – The many drawbacks and limitations of local version control brought about a new practice of centralised version control. Allowing multiple developers to work on the same code or content. Progress of coding could be tracked and viewed by all involved leading to better communication as well has giving more power over access rights.</p>
+</li>
+<li><p><strong>Distributed Version Control</strong> – Instead of housing the code in a single repository like in CVS, the code-base is shared locally across all clients involved. This way if the remote central server fails or is compromised, many backups exist and developers can continue to work in the mean time. <em>Mirrored</em> backups can also be used to restore central servers if needed.</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-–-Git-Principles"><a href="#2-–-Git-Principles" class="headerlink" title="2 – Git Principles"></a>2 – Git Principles</h1><ul>
+<li><p><strong>Snapshots</strong> – Git stores data in a file-system made up of multiple snapshots. Each time you update or change your project’s content with a <em>commit</em>, Git creates a snapshot of the altered object (e.g. file) and stores a reference to it.</p>
+</li>
+<li><p><strong>Local Operations</strong> – Git is mostly designed to cache data and work with locally held information. Instead of continually going over the network to another server, to retrieve core information.</p>
+</li>
+<li><p><strong>Tracking</strong> – Anything and everything within the project’s Git repository can be tracked for changes or removal. Which makes it function as an alternate backup service if needed.</p>
+</li>
+<li><p><strong>Data Integrity</strong> – Git is designed with security and potential data corruption in mind. Making it very difficult for a third party to intefere with a commit’s contents. Whilst at the same time taking measures to ensure data that is sent is confirmed as arriving intact.</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-–-Git-Terminology"><a href="#3-–-Git-Terminology" class="headerlink" title="3 – Git Terminology"></a>3 – Git Terminology</h1><p>Files in a Git repository can exist in three main states:</p>
+<ol>
+<li><strong>Modified</strong> – The file has been altered but its changes have not been saved to anything Git related.</li>
+<li><strong>Staged</strong> – The previously changed file has had its changed tracked but not committed to the database.</li>
+<li><strong>Committed</strong> – The previously tracked file is now committed and securely stored in the local Git database.</li>
+</ol>
+<p><img src="http://i.imgur.com/DSgJ1QV.png" alt="Main States Image"></p>
+<p>A local Git repository has three main areas:</p>
+<ol>
+<li><strong>Working Directory</strong> – The current files and their local state reside here.</li>
+<li><strong>Index</strong> – The area local file changes are stored before being confirmed as valid alterations.  </li>
+<li><strong>Head</strong> – Points to the most recent commit made in the project.</li>
+</ol>
+<hr>
+<h1 id="4-–-Stashing-Changes"><a href="#4-–-Stashing-Changes" class="headerlink" title="4 – Stashing Changes"></a>4 – Stashing Changes</h1><p>If you’ve made some changes locally but need to pull, fetch, whilst still keeping your local edits, use the <em>stash</em> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash</span><br></pre></td></tr></table></figure>
+<p>This is useful for when you in general don’t want to lose any changes. All this does is temporarily hide the changes then give you a clean working directory. To retrieve the changes and apply them to your working directory use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Remotes"><a href="#5-–-Remotes" class="headerlink" title="5 – Remotes"></a>5 – Remotes</h1><p>With <em>cloned</em> repositories, Git automatically gives the name <code>origin</code> to the remote server from which you cloned. As well as the name <code>master</code> to your local default branch.</p>
+<p><strong>Remote Repositories Diagram</strong></p>
+<p><img src="http://i.imgur.com/PyWO8kj.png" alt="Remote Repositories Diagram"></p>
+<p>To see all current locally added remotes in a repository enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>The <code>-v</code> switch shows the remote’s URL’s as part of the output.</p>
+<figure class="highlight bash"><figcaption><span>Example Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remote1 https://github.com/remote1/example (fetch)</span><br><span class="line">remote1 https://github.com/remote1/example (push)</span><br><span class="line">remote2 https://github.com/remote2/example (fetch)</span><br><span class="line">remote2 https://github.com/remote2/example (push)</span><br><span class="line">remote3 https://github.com/remote3/example (fetch)</span><br><span class="line">remote3 https://github.com/remote3/example (push)</span><br></pre></td></tr></table></figure>
+<p>To add a remote to the local repository you would use the next command.</p>
+<p>The <code>remote4</code> parameter should be the <em>shortname</em> of the remote.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add remote4 https://github.com/remote4/example</span><br></pre></td></tr></table></figure>
+<p>If you need to rename a remote’s short name, make use of:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rename remote4 remote5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be aware that the <em>rename</em> command also alters the names of the respective remote branches e.g. remote4/master would change to remote5/master in the last example.</p>
+</blockquote>
+<p>To remove a remote for the local repository when contributor has left the team, or the server URL has changed use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rm remote5</span><br></pre></td></tr></table></figure>
+<h2 id="Fetching"><a href="#Fetching" class="headerlink" title="Fetching"></a>Fetching</h2><p>Fetching is the name given to pulling data you don’t currently have from a remote’s project, in order to update your local repository.</p>
+<p>Here is the command to do it, where <code>remote4</code> is the remote’s shorthand name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch remote4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You should also possess the references to all branches for that specific remote when fetching from it.</p>
+</blockquote>
+<p>For cloned repositories, you can use the command <code>git fetch origin</code> to pull down any of the new changes that were pushed to it, since you originally cloned or last issued the <code>fetch</code> command.</p>
+<h2 id="Pulling"><a href="#Pulling" class="headerlink" title="Pulling"></a>Pulling</h2><p>The <code>fetch</code> command only pulls new data to a local repository; it does not at any point <em>merge</em> changes with or attempt to modify your local work. The <code>pull</code> command however allows for both fetching and automatic merging at the same time.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull remote4</span><br></pre></td></tr></table></figure>
+<p>See the More Information Section for a more detailed thread about he differences between <code>fetch</code> and <code>pull</code> commands.</p>
+<hr>
+<h1 id="6-–-Fixing-amp-Reverting-Changes"><a href="#6-–-Fixing-amp-Reverting-Changes" class="headerlink" title="6 – Fixing &amp; Reverting Changes"></a>6 – Fixing &amp; Reverting Changes</h1><p>For editing of your last commit there’s the <code>--amend</code> parameter. This works if no file changes have been made since the last commit (the one you are wanting to change the message of).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m amend <span class="string">"The last commit message should really be this message instead."</span></span><br></pre></td></tr></table></figure>
+<p><strong>History Diagram</strong></p>
+<p><img src="http://i.imgur.com/kGHejcc.png" alt="History Diagram"></p>
+<p>This also works if you want to add more modified files to the previous commit.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git add modified-file.md</span><br><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure>
+<p>When <code>git reset --hard</code> is used, Git will overwrite any and all changes in the working directory, permanently destroying uncommitted changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br></pre></td></tr></table></figure>
+<p><strong>Reset Diagram</strong></p>
+<p><img src="http://i.imgur.com/RAf1UVE.png" alt="Reset Diagram"></p>
+<p>To get rid of changes resulting from a previous commit, we can use the <code>git revert</code> command. This command does not technically revert everything, but instead creates a new most recent commit that undoes the changes introduced in your specified past commit. Preventing Git from losing any of its history. This is in stark contrast to the <code>reset</code> command which actually alters the existing previous commit history.</p>
+<p>The hash value identifies the commit to be reverted.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert ed04fb96992698248d240ed545b104f2414a61ed</span><br></pre></td></tr></table></figure>
+<p><strong>Revert Diagram</strong></p>
+<p><img src="http://i.imgur.com/obncGjG.png?1" alt="Revert Diagram"></p>
+<p>To do the last commit you can simply provide it with <code>HEAD</code> in its place:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>Another way of resetting staged file changes back to the last commit, is to use the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout modified-file.md</span><br></pre></td></tr></table></figure>
+<p>This is different to <code>reset</code> as it mechanically erases any changes made to the file by <strong>copying</strong> HEAD’s file version over it.</p>
+<p><strong>Checkout Diagram</strong></p>
+<p><img src="http://i.imgur.com/f9sk5h8.png" alt="Checkout Diagram"></p>
+<hr>
+<h1 id="7-–-Rebasing"><a href="#7-–-Rebasing" class="headerlink" title="7 – Rebasing"></a>7 – Rebasing</h1><p>In Git, <em>Rebasing</em> is an alternative to merging.</p>
+<p>It works by using the <em>diffs</em> resulting from each last commit of your current branch and the one you want to rebase into. Both commits are stored in temporary files, and then the “current branch” gets reset to the same commit as that of the branch you are targeting. Last but not least, all the changes are then applied to the latter branch.</p>
+<p><strong>Rebasing Process Diagram</strong></p>
+<p><img src="http://i.imgur.com/fgrpfC4.png" alt="Rebasing Process Diagram"></p>
+<p>The main difference between merging is:</p>
+<blockquote>
+<p>“The rebasing process rewrites a project’s history by replaying all changes committed on one branch to another one, leading to cleaner application of commits on a remote branch and a linear history.””</p>
+</blockquote>
+<p>As an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout <span class="built_in">test</span>-branch</span><br><span class="line">$ git rebase master</span><br></pre></td></tr></table></figure>
+<p>There are opposing viewpoints regarding merging and rebasing. The general arguments and differences between the two are:</p>
+<p><strong>Merging</strong> – The true commit history of a repository should not be altered because it’s a log and record of occurrences.</p>
+<p><strong>Rebasing</strong> – Commit histories should be polished and well edited, and rebasing provides this.</p>
+<hr>
+<h1 id="8-–-Tags"><a href="#8-–-Tags" class="headerlink" title="8 – Tags"></a>8 – Tags</h1><p>Git has a feature that allows it to flag certain points in a project’s history as being significant or of some importance.</p>
+<p><strong>Tags Diagram</strong></p>
+<p><img src="http://i.imgur.com/uxjfzpe.png" alt="Tags Diagram"></p>
+<p>Listing current tags in a project is done with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag</span><br></pre></td></tr></table></figure>
+<p>There are two types of tags you can choose to create.</p>
+<p><strong>Lightweight</strong> – This type of tag points to a particular commit.</p>
+<p><strong>Annotated</strong> – These tags are kept in the Git database as a <em>full object</em>, they contain a tagging message, tagger name, email address, and tag date. Annotated Tags are also often signed and verified with GNU Privacy Guard (GPG). The best practice is to use annotated tags whenever possible.</p>
+<p>Lightweight tags only hold a checksum and the commit value it points to.</p>
+<p>To create a lightweight tag, use the command below <strong>without</strong> any extra command line options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v3.0</span><br></pre></td></tr></table></figure>
+<p>Create an annotated tag like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag <span class="_">-a</span> v3.0 -m “version 3.1”</span><br></pre></td></tr></table></figure>
+<p>The <code>-m</code> option passes a message for the tag.</p>
+<p>See the tag once it’s created via the <code>show</code> parameter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show v3.0</span><br></pre></td></tr></table></figure>
+<p>Users must explicitly push tags to remote servers after creation as by default <code>git push</code> does not send tags as part of its data.</p>
+<p>Use the <code>--tags</code> option with the git push command to include them.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push --tags</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Ignoring-Files"><a href="#9-–-Ignoring-Files" class="headerlink" title="9 – Ignoring Files"></a>9 – Ignoring Files</h1><p>At some point you’ll come across a situation where you don’t want Git to track certain files. There are a few ways to tell Git which files to <em>ignore</em> and not take into account.</p>
+<p><strong>Repository Wide .gitignore</strong></p>
+<p>Creating a file named <code>.gitignore</code> in your repository allows Git to ignore the file names it holds. They will not be included in any commits or changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim .gitignore</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>“GitHub maintains an official list of recommended <code>.gitignore</code> files for many popular operating systems, environments, and languages in the <a href="https://github.com/github/gitignore" target="_blank" rel="external">github/gitignore public repository</a>.”</p>
+</blockquote>
+<p>The <code>.gitignore</code> file itself should be tracked and committed to Git so others using the repository can incorporate the same ignore rules.</p>
+<p>This Gist has some less specific general purpose ignore rules you may want to add to your own file:</p>
+<script src="//gist.github.com/9257657.js?file=.gitignore"></script>
+<p><strong>Global Repositories .gitignore</strong></p>
+<p>It is also possible to create a global <code>.gitignore</code> file. Which differs from the above in that it is a list of rules for ignoring files in <em>every</em> Git repository on your local machine.</p>
+<p>To create this make a file at <code>~/.gitignore_global</code> and add your desired global rules to it.</p>
+<p>Afterwards run the following in your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+<p>If in either of the two main examples above (repository wide or global) you want to ignore a file that has already been checked in, and the current version is in turn kept on a remote. You must untrack the file first fully, ignoring it with this next command. Before then ignoring it as usual.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached example-file</span><br></pre></td></tr></table></figure>
+<p>This removes the file contents from the index, which means on committing the change it removes it from <code>HEAD</code> and thereby the remote upon pushing changes.</p>
+<hr>
+<p>The vast majority of the content in this post is derived from a Git guide provided by <a href="https://www.udemy.com/" target="_blank" rel="external">Udemy</a>.</p>
+<p>The Udemy post can be accessed at this link on their blog:</p>
+<blockquote>
+<p><a href="https://blog.udemy.com/git-tutorial-a-comprehensive-guide/" target="_blank" rel="external">https://blog.udemy.com/git-tutorial-a-comprehensive-guide/</a></p>
+</blockquote>
+<p>Be sure to read the rest of it for the areas of Git not covered here.</p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/292357/what-are-the-differences-between-git-pull-and-git-fetch" target="_blank" rel="external">Stack Overflow Git fetch/pull Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="http://stackoverflow.com/questions/3639342/whats-the-difference-between-git-reset-and-git-checkout" target="_blank" rel="external">Stack Overflow Git checkout/reset Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="https://www.atlassian.com/git/" target="_blank" rel="external">Getting Git Right Tutorials</a> – Very well presented Git tutorials from Atlassian, diagrams originate from here.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-08-17T23:00:00.000Z" class="post__time">August 18, 2015</time><h1 class="post__title"><a href="/2015/08/18/notes-git-version-control/">Git Version Control (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Git is an open-source version control system first released in 2005 to serve as an answer to the other proprietary based VCS solutions in existence. Since then it has enjoyed much popularity and widespread use among programmers, developers, system admins, and the like.</p>
+<p>This post contains many of the common basic commands and content you’ll encounter when first learning Git, but by no means all of them.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installing-Git"><a href="#1-–-Installing-Git" class="headerlink" title="1 – Installing Git"></a>1 – Installing Git</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Git-Configuration"><a href="#2-–-Git-Configuration" class="headerlink" title="2 – Git Configuration"></a>2 – Git Configuration</h1><p>Before beginning to use Git it’s wise to setup some standard configuration settings.</p>
+<p>The first is your system’s global username:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"Scarlz"</span></span><br></pre></td></tr></table></figure>
+<p>The second is your global email address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.email <span class="string">"count.elmsley@protonmail.ch"</span></span><br></pre></td></tr></table></figure>
+<p>For those who have a Github account your username for their service can be added here too with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global github.user <span class="string">"5car1z"</span></span><br></pre></td></tr></table></figure>
+<p>To set a default text editor, enter the next command where <code>vim</code> is kept or replaced with your editor of choice.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.editor vim</span><br></pre></td></tr></table></figure>
+<p>Most repositories you’ll end up cloning will transmit via HTTPS and require you to authenticate every time you interact with them. To make this easier you can set Git to remember your authentication credentials for 15 minutes after every successful authentication.</p>
+<p>Here’s the config command to enable it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global credential.helper cache</span><br></pre></td></tr></table></figure>
+<p>Then finally setting your push default is set by choosing either the <code>simple</code> or <code>matching</code> options.</p>
+<p>Go with the “simple” option if you are unsure which you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  git config --global push.default simple</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>The <code>simple</code> option means <code>git push</code> will push only the <strong>current</strong> branch to the one that git pull would normally pull from, and also ensures that their names match.  The <code>matching</code> option pushes all branches to their respective remote counter-parts.</p>
+</blockquote>
+<p>These settings can be listed at any time by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --list</span><br></pre></td></tr></table></figure>
+<p>These configuration settings when marked with <code>--global</code> are stored in your Linux user’s home directory inside:  <code>~/.gitconfig</code></p>
+<hr>
+<h1 id="3-–-Creating-Repositories"><a href="#3-–-Creating-Repositories" class="headerlink" title="3 – Creating Repositories"></a>3 – Creating Repositories</h1><p>A repository contains the files and code base of the project you’re maintaining.</p>
+<p>Initialising a repository with Git for the current working directory is done via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p>To specify a new directory you can pass a name and init will use it to create one:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init project_directory</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Cloning-Repositories"><a href="#4-–-Cloning-Repositories" class="headerlink" title="4 – Cloning Repositories"></a>4 – Cloning Repositories</h1><p>Cloning a pre-existing repository can be done whether it exists on the local file-system, or on a remote one.</p>
+<p>Locally the command for this is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> /path/to/repository</span><br></pre></td></tr></table></figure>
+<p>For a remote repository an address is used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> username@host:/path/to/repository.git</span><br></pre></td></tr></table></figure>
+<p>With a <strong>public</strong> web repository such as in the context of Github, it is possible to use the command with a URL instead.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/dotfiles.git</span><br></pre></td></tr></table></figure>
+<p><strong>Work-flow Theory</strong></p>
+<p><img src="http://i.imgur.com/RXaFboU.png" alt="Work-flow Theory"></p>
+<hr>
+<h1 id="5-–-Committing-Changes"><a href="#5-–-Committing-Changes" class="headerlink" title="5 – Committing Changes"></a>5 – Committing Changes</h1><p>When changes are made by yourself to the local copy of a repository, you can propose these changes be applied to the <em>index</em> by using the <code>add</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be added in this manner:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>Or for every file the <code>*</code> symbol can be used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add *</span><br></pre></td></tr></table></figure>
+<p>To remove any files you added to the index with the previous commands, thereby discarding them from any further actions in this step. Use <code>rm</code> and then the file names in question:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name</span><br></pre></td></tr></table></figure>
+<p>Or with multiple files.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>This can work recursively with directories/folders also by adding the <code>-r</code> option into the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r directory_1 directory_2</span><br></pre></td></tr></table></figure>
+<p>Once the changes in files added via <code>git add</code> have been proposed, you can confirm them and <em>commit</em> them to the <em>HEAD</em> using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m <span class="string">"A commit messages goes here."</span></span><br></pre></td></tr></table></figure>
+<p>The changes are not however active and made to the remote repository yet until they are pushed to it (see the next section). This is as they are now only in the HEAD of your local working copy.</p>
+<hr>
+<h1 id="6-–-Pushing-Changes"><a href="#6-–-Pushing-Changes" class="headerlink" title="6 – Pushing Changes"></a>6 – Pushing Changes</h1><p>If you did not clone an <strong>existing</strong> repository and created a new one, then you’’ll need to connect your local repository to a remote server.</p>
+<p>To do this enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add remote origin &lt;server&gt;</span><br></pre></td></tr></table></figure>
+<p>Remember that any active commits made in the previous section do not get applied to the remote repository code-base until you <em>push</em> them to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The parameter <code>master</code> can be changed to any remote <em>branch</em> you want the alterations pushed to.</p>
+</blockquote>
+<hr>
+<h1 id="7-–-Using-Branches"><a href="#7-–-Using-Branches" class="headerlink" title="7 – Using Branches"></a>7 – Using Branches</h1><p>Branches are used to segregate and split up different versions of the code-base. For example one branch could contain the main content of project, and another the same content, except with an extra set of features currently being tested and developed. Either way code and changes can be separated into two different paths or strands (branches in this case).</p>
+<p>To create a new branch in a project use the next command, where <code>-b</code> creates a new branch, and <code>new_feature</code> is the name of the branch to be created:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b new_feature</span><br></pre></td></tr></table></figure>
+<p>The <code>new_feature</code> branch is now our active branch.</p>
+<p>Be aware though that a newly created branch is not available to others, nor does it exist on the remote repository until you push the branch to it i.e.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin new_feature</span><br></pre></td></tr></table></figure>
+<p>To change back to the default <code>master</code> branch use the <code>checkout</code> command again like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>To delete a branch use the <code>-d</code> option like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch <span class="_">-d</span> new_feature</span><br></pre></td></tr></table></figure>
+<p><strong>Branching Theory</strong></p>
+<p><img src="http://i.imgur.com/i7n14d2.png" alt="Branches Theory"></p>
+<hr>
+<h1 id="8-–-Updating-Repositories"><a href="#8-–-Updating-Repositories" class="headerlink" title="8 – Updating Repositories"></a>8 – Updating Repositories</h1><p>In order to keep your repositories up to date with others changes (their commits) it’s necessary to <em>pull</em> said changes with the simple command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull</span><br></pre></td></tr></table></figure>
+<p>It’s common place to run this command as frequently as possible in order to stay up to date with other people’s additions or changes. The same goes for pushing your own commits to the remote server.</p>
+<p>To check whether you’re up to date with the remote server or not query Git via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<p>Also when editing files if you are unhappy with the local changes you made, you can replace the local changes using the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be specified in this last command. The way this works is by replacing the changes in your working tree with the state of the most up to date content in HEAD.</p>
+<p>Changes already added to the rest of the index, as well as any new files, is left untouched and is retained.</p>
+<p>If instead you know you want to discard all your local changes and un-pushed commits.</p>
+<p>Fetch the latest history from the remote server through:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch origin</span><br></pre></td></tr></table></figure>
+<p>Then point your local master branch to it like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be careful with using these two commands and only use them if you know what you are doing is what you want to achieve.</p>
+</blockquote>
+<p>See section “<strong>9 – Conflicts</strong>“ for difficulties that can arise during a <code>pull</code> request.</p>
+<hr>
+<h1 id="9-–-Merging-Branches"><a href="#9-–-Merging-Branches" class="headerlink" title="9 – Merging Branches"></a>9 – Merging Branches</h1><p>In most instances at some point it will be desirable to merge another branch into your active branch e.g. <code>new_feature</code> into <code>master</code> and so on.</p>
+<p>To achieve this we make use of the <code>merge</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>See the next section for difficulties that can arise during this process.</p>
+<h1 id="10-–-Merge-Conflicts"><a href="#10-–-Merge-Conflicts" class="headerlink" title="10 – Merge Conflicts"></a>10 – Merge Conflicts</h1><p>In both cases of <code>pull</code> and <code>merge</code> Git will try to auto-merge the necessary changes. Unfortunately though this is not always possible and can result in conflicts. You are then the one responsible to solve these conflicts by manually editing the files as shown and indicated by Git.</p>
+<p>After changing them as requested, you then need to mark them as successfully merged with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add merge_conflicted_file</span><br></pre></td></tr></table></figure>
+<p>Before merging changes, you can preview them by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</span><br></pre></td></tr></table></figure>
+<p>In our example from before we’d substitute in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff new_feature master</span><br></pre></td></tr></table></figure>
+<p>It’s also worth noting that the <code>diff</code>command has many other applications. For example, to see the current differences you’ve made between the local directory and the last commit use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-Log-History"><a href="#11-–-Log-History" class="headerlink" title="11 – Log History"></a>11 – Log History</h1><p>Most transactions that are carried in a repository are logged (mainly commits). To see the complete log unfiltered use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<p>There are thankfully a lot of parameters you can make use of to display the log in a variety of different ways.</p>
+<p>To see only the commits of a certain author enter the next command, substituting <code>scarlz</code> for the username of the author in question.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --author=scarlz</span><br></pre></td></tr></table></figure>
+<p>To see a truncated and compressed log where each commit is only one line enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br></pre></td></tr></table></figure>
+<p>Or to see an ASCII art tree of all branches, decorated with the names of tags and branches in a very readable style, type in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --graph --oneline --decorate --all</span><br></pre></td></tr></table></figure>
+<p>Picking out only which files have changed per commit is useful too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --name-status</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-Tagging"><a href="#12-–-Tagging" class="headerlink" title="12 – Tagging"></a>12 – Tagging</h1><p>As certain milestones are reached during software development, or programs are defined as stable, it is useful to create a <em>tag</em> for the project’s current state. This is referred to more commonly as a software release or version number.</p>
+<p>An example of this would be take the first 10 characters of a commit ID you want the release to correspond to, and give it a version number.</p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag 1.0.0 1b2e1d63ff</span><br></pre></td></tr></table></figure>
+<p>The <code>1b2e1d63ff</code> being the 10 commit ID characters and <code>1.0.0</code> being the assigned version number.</p>
+<hr>
+<h1 id="13-–-Git-Aliases"><a href="#13-–-Git-Aliases" class="headerlink" title="13 – Git Aliases"></a>13 – Git Aliases</h1><p><img src="https://i.imgur.com/9Tpg6sP.jpg" alt="Git Aliases Example"></p>
+<p>Much like any other shell aliasing (Bash, Zsh, etc) Git has its own built in functionality for creating these incredibly useful shortcuts.</p>
+<h2 id="Built-in-Git-Alias-Support"><a href="#Built-in-Git-Alias-Support" class="headerlink" title="Built-in Git Alias Support"></a>Built-in Git Alias Support</h2><p>Adding them on the command line is the automated method of doing this. In the next code snippet <code>git co</code> is aliased and made synonymous to the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global alias.co checkout</span><br></pre></td></tr></table></figure>
+<p>These aliases are stored in the main “Global” Git configuration file in: <code>~/.gitconfig</code></p>
+<p>To make things easier you can manually add in and edit these aliases with a text editor:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.gitconfig</span><br></pre></td></tr></table></figure>
+<p>In this format:</p>
+<figure class="highlight bash"><figcaption><span>~/.gitconfig</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">alias</span>]</span><br><span class="line">	co = checkout</span><br></pre></td></tr></table></figure>
+<p>This process gives you however many aliases you define, so that you can type: <code>git co</code> or whatever the alias is to run a certain command sequence.</p>
+<h2 id="Bash-Shell-Git-Aliasing"><a href="#Bash-Shell-Git-Aliasing" class="headerlink" title="Bash Shell Git Aliasing"></a>Bash Shell Git Aliasing</h2><p>To use Bash or shell aliasing and get rid of the <code>git</code> prefix altogether, add aliases into your <code>~/.bashrc</code> file, or sub-sequential <code>~/.alias</code> file. </p>
+<p>As an example here is my list of Bash Git aliases. These are up to date as of October 2015, taken from my own <code>~/.alias</code> file: </p>
+<script src="//gist.github.com/c9af258fd1f9f328c83c.js?file=bash-git-aliases"></script>
+<p>Unfortunately the usual Git Bash auto-completion won’t function with these aliases, like it does with the <code>~/.gitconfig</code> file method.</p>
+<p>Here is my workaround for this. </p>
+<p>Download this file to your Linux user’s home directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Change the file name to include a <code>.</code> so it’s classified as a hidden config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv git-completion.bash .git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Then source it into shell session on start up by placing the following line into your <code>~/.bashrc</code> file:</p>
+<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. ~/.git-completion.bash</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> if you separate your aliases into a separate file like I do, and don’t store them directly into your <code>~/.bashrc</code> file. Make sure you source the <code>~/.git-completion.bash</code> file first before your alias file.</p>
+</blockquote>
+<p>Lastly you need to add the relevant Git auto-completion functions for each Git related alias into your <code>bashrc</code> or <code>alias</code> file, like so:</p>
+<figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__git_complete g __git_main</span><br><span class="line">__git_complete ga _git_add</span><br><span class="line">__git_complete gb _git_branch</span><br><span class="line">__git_complete gc _git_commit</span><br><span class="line">__git_complete gcl _git_clone</span><br><span class="line">__git_complete gco _git_checkout</span><br><span class="line">__git_complete gd _git_diff</span><br><span class="line">__git_complete gl _git_pull</span><br><span class="line">__git_complete glg _git_log</span><br><span class="line">__git_complete gm _git_merge</span><br><span class="line">__git_complete gp _git_push</span><br><span class="line">__git_complete gsps _git_show</span><br></pre></td></tr></table></figure>
+<p>If you use oh-my-Zsh this support and aliasing comes by default, same with Prezto.</p>
+<hr>
+<h1 id="14-–-Misc"><a href="#14-–-Misc" class="headerlink" title="14 – Misc"></a>14 – Misc</h1><h2 id="HTTPS-amp-SSH-Clone-URL’s"><a href="#HTTPS-amp-SSH-Clone-URL’s" class="headerlink" title="HTTPS &amp; SSH Clone URL’s"></a>HTTPS &amp; SSH Clone URL’s</h2><p><img src="https://help.github.com/assets/images/help/repository/remotes-url.png" alt="Clone Image"></p>
+<p>There are several options on offer when cloning a repository that dictate what method in which it will get created, updated, and merged. The main two choices are HTTPS or SSH.</p>
+<p>Github recommends using the HTTPS method which looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>The advantages of this first method are the security and compatibility of its network transactions, and its awareness of the access rights on offer.</p>
+<p>The second method is more suited to nodes and production servers that have automation in place. This SSH method also allows the use of SSH keys to authenticate instead of user &amp; pass credentials.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>To change and re-set the method in use for an existing repository enter this command to go from HTTPS to SSH:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Or this command to go from SSH to HTTPS:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<h2 id="The-Git-Repository-Browser"><a href="#The-Git-Repository-Browser" class="headerlink" title="The Git Repository Browser"></a>The Git Repository Browser</h2><p>A built-in Git GUI dubbed “The Git Repository Browser” is available on most systems, here’s how to acquire and run it:</p>
+<figure class="highlight bash"><figcaption><span>Arch Linux</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><figcaption><span>Debian / Ubuntu</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<h2 id="Coloured-Git-Output"><a href="#Coloured-Git-Output" class="headerlink" title="Coloured Git Output"></a>Coloured Git Output</h2><p>To use coloured Git output enter the following into a command prompt, or add the equivalent to your <code>~/.git</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config color.ui <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Git-Flow-Cheat-Sheet"><a href="#Git-Flow-Cheat-Sheet" class="headerlink" title="Git Flow Cheat Sheet"></a>Git Flow Cheat Sheet</h2><object data="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf#" type="application/pdf" width="100%" height="1200"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<p><strong>Alias Sources</strong></p>
+<ul>
+<li><a href="https://www.reddit.com/r/git/comments/3dbd6y/lazy_or_productive/" target="_blank" rel="external">Lazy or Productive?</a> – /r/git Reddit thread.</li>
+<li><a href="http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/" target="_blank" rel="external">Must Have Git Aliases: Advanced Examples</a> – Blog post mostly for inbuilt Git support aliases.</li>
+<li><a href="https://git.wiki.kernel.org/index.php/Aliases" target="_blank" rel="external">git-kernel-org Aliases Page</a> - Based around in-built Git support aliases.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Lab Aliases Page</a> - Interactive step by step tutorial for learning Git.</li>
+<li><a href="http://haacked.com/archive/2014/07/28/github-flow-aliases/" target="_blank" rel="external">Github Flow Like a Pro with these 13 Git Aliases</a> - Theory and complex aliasing blog post.</li>
+<li><a href="https://gist.github.com/mwhite/6887990" target="_blank" rel="external">The Ultimate Git Alias Setup</a> - Github markdown on shell Git aliasing.</li>
+</ul>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://rogerdudler.github.io/git-guide/" target="_blank" rel="external">Git - The Simple Guide</a> – “Just a simple guide for getting started with Git.”</li>
+<li><a href="http://marklodato.github.io/visual-git-guide/index-en.html" target="_blank" rel="external">Visual Git Guide</a> – This page gives brief, visual reference for the most common commands in Git.</li>
+<li><a href="http://git-scm.com/book/en/v2" target="_blank" rel="external">Pro Git Book</a> – Available as an E-book too.</li>
+<li><a href="http://www-cs-students.stanford.edu/~blynn/gitmagic/index.html" target="_blank" rel="external">Git Magic Guide</a> – Personal favourite.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Aliases</a> – Good starting point for Aliases.</li>
+<li><a href="http://stackoverflow.com/questions/14762034/push-to-github-without-password-using-ssh-key" target="_blank" rel="external">Stack Overflow Question</a> – Push to Github Without a Password Using an SSH key.</li>
+<li><a href="https://help.github.com/articles/which-remote-url-should-i-use/" target="_blank" rel="external">Github Page on Remote URL Types</a> – Official page on which remote URL you should use.</li>
+<li><a href="https://help.github.com/articles/caching-your-github-password-in-git/" target="_blank" rel="external">Github Page on Caching Credentials</a> – Caching your GitHub password in Git.</li>
+<li><a href="https://help.github.com/articles/changing-a-remote-s-url/" target="_blank" rel="external">Github Page on Changing Remote URL’s</a> – Changing a remote’s URL.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/Alias/" class="post__tag__link">Alias</a></li></ul><a href="/2015/08/18/notes-git-version-control/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

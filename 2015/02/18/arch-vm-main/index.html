@@ -1,0 +1,127 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Arch Linux VM Main System Installation - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-02-18T00:00:00.000Z" class="post__time">February 18, 2015</time><h1 class="post__title"><a href="/2015/02/18/arch-vm-main/">Arch Linux VM Main System Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
+<p>This is a continuation of the previous post on installing the base components of Arch. </p>
+<p>Except this time I’m detailing the next steps of setting up the main system environment.  </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Initial-Login"><a href="#1-–-Initial-Login" class="headerlink" title="1 – Initial Login"></a>1 – Initial Login</h1><p>Log into the system we created in the previous post this time on the actual file-system we generated (i.e. without the boot media), using the one and only <em>root</em> account currently in existence. Test to see if you have a working internet connection again by using <code>ping</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If you get <code>ping: unknown host www.google.co.uk</code> or <code>connect: Network is unreachable</code> for either of these commands then you need to do the rest of this step (1). </p>
+<p>If everything looks fine and you are sending plus receiving through <code>ping</code> with a working internet connection, then move on to step 2 instead. </p>
+<p>Find your Ethernet interface name (virtual VM shared host connection interface in this case) using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>If you are unsure of the name, your Ethernet interface you are looking for is likely to start with the letter “e”, and unlikely to be “lo” or start with the letter “w”. </p>
+<p><img src="http://i.gyazo.com/2742bf027aad981b4e3af4652079026a.png" alt="Ethernet interface name"></p>
+<p>In my case my interface was named “eno167777736”. So I’ll use that as the example here.</p>
+<p>Next make sure the interface is <em>up</em> and running with this command syntax:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Substituting the interface name ID with your own.</p>
+<p>Then start and enable <code>dhcpcd.service</code> with <code>systemctl</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpcd.service</span><br></pre></td></tr></table></figure>
+<p>Attempt a <code>ping</code> once again and this time it should succeed, with the internet connection working correctly. </p>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful. Remember these links are not in the context of a VM installation however.</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="2-–-pacman-conf"><a href="#2-–-pacman-conf" class="headerlink" title="2 – pacman.conf"></a>2 – pacman.conf</h1><p><strong>If</strong> using a 64-bit system begin editing the <code>/etc/pacman.conf</code> with <code>nano</code>. </p>
+<blockquote>
+<p><strong>If not using a 64 bit system then move onto Step 3 now.</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/pacman.conf</span><br></pre></td></tr></table></figure>
+<p>Now <em>uncomment</em> the two following lines in this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[multilib]</span><br><span class="line">Include = /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>After doing this write/save to the file and exit it. </p>
+<p>When back at the shell prompt sync and refresh repositories with <code>pacman</code> by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Sy</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-User-Creation"><a href="#3-–-User-Creation" class="headerlink" title="3 – User Creation"></a>3 – User Creation</h1><p>Make another user account here so <em>root</em> isn’t the default account in use all the time (bad practice to do so), whilst at the same time adding it to some groups. </p>
+<blockquote>
+<p><strong>Note:</strong> There are no spaces present between the groups listed in this next command.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ useradd -m -g users -G wheel,storage,power,sys,adm <span class="_">-s</span> /bin/bash scarlz</span><br></pre></td></tr></table></figure>
+<p>Set the password for the new user that has just been created.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd scarlz</span><br></pre></td></tr></table></figure>
+<p>Install <code>sudo</code> with <code>pacman</code> <strong>if</strong> it did not install as part of your previous base Arch set-up. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S sudo</span><br></pre></td></tr></table></figure>
+<p>If you ever want to see a list of packages related to a search term, you could type the following command, where the package name specified at the end is the “search term”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Ss sudo</span><br></pre></td></tr></table></figure>
+<p>Now <code>sudo</code> is installed on the system we need to enable it for users belonging to the <code>wheel</code> group in the <em>sudoers</em> file to gain the privileges. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EDITOR=vi visudo</span><br></pre></td></tr></table></figure>
+<p>Find the “user privilege specification” section and <em>uncomment</em> the following line so it looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%wheel ALL=(ALL) ALL</span><br></pre></td></tr></table></figure>
+<p>After doing so hit <code>CTRL+X</code> then <code>y</code> and then  <code>ENTER</code>.</p>
+<p>I’m also going to install <em>bash completion</em> here to help out before moving onto the next step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S bash-completion</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-VMware-Tools"><a href="#4-–-VMware-Tools" class="headerlink" title="4 – VMware Tools"></a>4 – VMware Tools</h1><p>I’m using Vmware as my virtualisation software in this instance, so here’s how to install the official VMware tools. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S base-devel net-tools linux-headers</span><br></pre></td></tr></table></figure>
+<p>Press <code>ENTER</code> for the default <code>All</code> if prompted by the <code>base-devel</code> package.</p>
+<p>Some <strong>Xorg</strong> Vmware related dependencies.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xf86-input-vmmouse xf86-video-vmware mesa</span><br></pre></td></tr></table></figure>
+<p>Then, create <em>bogus</em> initialisation directories for the installer:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> x <span class="keyword">in</span> &#123;0..6&#125;; <span class="keyword">do</span> mkdir -p /etc/init.d/rc<span class="variable">$x</span>.d; <span class="keyword">done</span></span><br></pre></td></tr></table></figure>
+<p>The VMware installer then needs to be mounted in our Arch system:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/cdrom /mnt</span><br></pre></td></tr></table></figure>
+<p>If you have errors here make sure your VMware software (Workstation in my case) has the latest tools downloaded and updated, and try running VMware “as an Administrator” if using Windows.   </p>
+<blockquote>
+<p><a href="https://communities.vmware.com/message/2303222#2303222" target="_blank" rel="external">VMware Tools Stuck Downloading in VMware</a></p>
+</blockquote>
+<p>After this is successfully mounted extract it to <code>/root</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar xf /mnt/VMwareTools*.tar.gz -C /root</span><br></pre></td></tr></table></figure>
+<p>Run the perl script to the install the extracted VMware tools.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ perl /root/vmware-tools-distrib/vmware-install.pl</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>You can safely ignore the following build failures:</p>
+<ul>
+<li>VMNEXT 3 virtual network card</li>
+<li><strong>“Warning:</strong> This script could not find mkinitrd or update-initramfs and cannot remake the initrd file!”</li>
+</ul>
+</blockquote>
+<p>Reboot the Virtual Machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl reboot</span><br></pre></td></tr></table></figure>
+<p>Log in and start VMware Tools:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /etc/init.d/rc6.d/K99vmware-tools start</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Xorg"><a href="#5-–-Xorg" class="headerlink" title="5 – Xorg"></a>5 – Xorg</h1><blockquote>
+<p><strong>“Xorg is the public, open-source implementation of the X window system version 11. Since Xorg is the most popular choice among Linux users, its ubiquity has led to making it an ever-present requisite for GUI applications, resulting in massive adoption from most distributions.”</strong></p>
+</blockquote>
+<p>Now comes the part where we are going to install X server.</p>
+<blockquote>
+<p><strong>Note:</strong> To use Xorg in a Virtual Machine, a minimum of 32MB VGA memory is needed.</p>
+</blockquote>
+<p>Install Xorg and some of its companion packages using <code>pacman</code> once again like so:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xorg-server xorg-xinit xorg-server-utils</span><br></pre></td></tr></table></figure>
+<p>Finally in this section install the default X environment to ensure that all the x-org components we’ve installed prior to this are functioning correctly.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S xorg-twm xorg-xclock xterm</span><br></pre></td></tr></table></figure>
+<p>Type <code>startx</code> to run the X environment.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ startx</span><br></pre></td></tr></table></figure>
+<p><img src="http://i.gyazo.com/8eafc4c84a56c06ea0ce6cbeaff63732.png" alt="Default X Environment"></p>
+<hr>
+<h1 id="Display-amp-Window-Manager"><a href="#Display-amp-Window-Manager" class="headerlink" title="Display &amp; Window Manager"></a>Display &amp; Window Manager</h1><p>Another forthcoming post will go into depth on how to install a tiling window manager (bspwm) and configure <code>.xinitrc</code> to serve as a display manager. With the exception of this being done in the context of a live system, and not a VM. </p>
+<p>Alternatively find and research another window manager/desktop environment from the Arch-wiki to setup and install. </p>
+<blockquote>
+<p><a href="https://wiki.archlinux.org/index.php/Window_manager" target="_blank" rel="external">Arch-wiki Window Managers</a><br><a href="https://wiki.archlinux.org/index.php/Desktop_environment" target="_blank" rel="external">Arch-wiki Desktop Environments</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Installing_Arch_Linux_in_VMware" target="_blank" rel="external">Arch-wiki - Installing Arch Linux in VMware</a> - From the official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/pacman#Installing_packages" target="_blank" rel="external">Arch-wiki Pacman Package Manager</a> - Example commands and switches.</li>
+<li><a href="https://wiki.archlinux.org/index.php/Systemd#Using_units" target="_blank" rel="external">Arch-wiki - systemd</a> - Using units (systemctl).</li>
+<li><a href="https://wiki.archlinux.org/index.php/Xorg" target="_blank" rel="external">Arch-wiki Xorg Server</a> - Full details on Xorg. </li>
+<li><a href="http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process" target="_blank" rel="external">Lifehacker Article on Arch Installation</a> - Not for a VM image but useful.</li>
+<li><a href="http://www.linuxveda.com/2014/06/07/arch-linux-tutorial/" target="_blank" rel="external">Linux Neda: How to install Arch Linux</a> - Similar to the previous article but also useful. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/18/arch-vm-main/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><div class="comments"><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript></div></div></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2015/04/23/eve-has-sound/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/2015/02/16/arch-vm-base/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","embed");
+</script></body></html>

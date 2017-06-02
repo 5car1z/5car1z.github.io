@@ -1,0 +1,142 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Addon - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-05-02T23:00:00.000Z" class="post__time">May 3, 2015</time><h1 class="post__title"><a href="/2015/05/03/using-cvim/">cVim Google Chrome Browser Addon</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/PgqGScb.png" alt="Google Chrome Icon"></p>
+<p>What features does cVim add to Chrome?</p>
+<ul>
+<li>Google/IMDB/Wikipedia/Amazon/Duckduckgo/Yahoo/Bing search completion.</li>
+<li>Support for custom search engines.</li>
+<li>History and Bookmark search/completion with bookmark folder support.</li>
+<li>Caret/Visual mode.</li>
+<li>Efficient link hints (with support for custom mappings).</li>
+<li>Support for custom keyboard mappings.</li>
+<li>Regex page search with highlighting.</li>
+<li>Command bar with tab-completion.</li>
+<li>Smooth scrolling.</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h1 id="Installing-cVim"><a href="#Installing-cVim" class="headerlink" title="Installing cVim"></a>Installing cVim</h1><p> <strong>Acquire it by either:</strong></p>
+<ol>
+<li><p>Installing it through the <a href="https://chrome.google.com/webstore/detail/cvim/ihlenndgcmojhcghmfjfneahoeklbjjh" target="_blank" rel="external">Chrome web store</a>.  </p>
+</li>
+<li><p>Downloading the <code>.zip</code> file <a href="https://github.com/1995eaton/chromium-vim/archive/master.zip" target="_blank" rel="external">here</a> </p>
+<ul>
+<li>Enabling it by going to the <code>chrome://extensions</code> URL. </li>
+<li>Checking developer mode.</li>
+<li>Then pointing Chrome to the unzipped folder via <code>Load unpacked extensions</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h1 id="Using-cVim"><a href="#Using-cVim" class="headerlink" title="Using cVim"></a>Using cVim</h1><p>Here’s how to use the addon including an example of the configuration settings and bindings by group. </p>
+<h2 id="Settings"><a href="#Settings" class="headerlink" title="Settings"></a>Settings</h2><p>You can sync with a Gist file in the settings of the browser addon.</p>
+<blockquote>
+<p><a href="https://gist.github.com/sleightz/01275b93fb53a5e53135" target="_blank" rel="external">https://gist.github.com/sleightz/01275b93fb53a5e53135</a></p>
+</blockquote>
+<hr>
+<h2 id="Keybindings"><a href="#Keybindings" class="headerlink" title="Keybindings"></a>Keybindings</h2><blockquote>
+<p><strong>Note:</strong> Uppercase bindings are triggered with <code>SHIFT</code> + <code>KEY</code> as normal. </p>
+</blockquote>
+<p><strong>Basic</strong></p>
+<ul>
+<li><code>j</code>,<code>s</code>  – scroll down.</li>
+<li><code>k</code>,<code>w</code>  – scroll up.</li>
+<li><code>h</code> – scroll left.</li>
+<li><code>l</code> – scroll right.</li>
+</ul>
+<p><strong>Page</strong></p>
+<ul>
+<li><code>gg</code> – scroll to top of the current page.</li>
+<li><code>G</code> – scroll to the bottom of the current page. </li>
+<li><code>zi</code> – Zoom page in.</li>
+<li><code>zo</code> – Zoom page out</li>
+<li><code>z0</code> –     Zoom page to original size.</li>
+</ul>
+<p><strong>Links</strong></p>
+<ul>
+<li><code>f</code> – open a link in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>G</code> – scroll to the bottom of the current page. (<code>SHIFT</code> + <code>g</code>)</li>
+<li><code>W</code> –  open a link in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>W</code> –  open a link in a new window by pressing the marked keys in the page elements. </li>
+<li><code>mf</code> – open multiple links in a new tab by pressing the marked keys in the page elements. </li>
+<li><code>gy</code> – Copy a URL from a link to to the <em>clipboard</em>.</li>
+</ul>
+<p><strong>Tabs</strong></p>
+<ul>
+<li><code>x</code> – Close the current tab.</li>
+<li><code>X</code> – Open the last closed tab. </li>
+<li><code>t</code> – Alias for <code>:tabnew</code> .</li>
+<li><code>a</code> – An alias to <code>:tabnew google</code> .</li>
+<li><code>&lt;</code> – Move current tab left.</li>
+<li><code>&gt;</code> – Move current tab right.</li>
+</ul>
+<p><strong>Tab Navigation</strong></p>
+<ul>
+<li><code>gt</code>, <code>K</code>, <code>R</code> – Navigate to the next tab. </li>
+<li><code>gT</code>, <code>J</code>, <code>E</code>    – Navigate to the previous tab. </li>
+<li><code>H</code>, <code>S</code> – Go back a page in current tab. </li>
+<li><code>L</code>, <code>D</code> – Go forward a page in current tab. </li>
+</ul>
+<p><strong>Caret/Visual Mode</strong></p>
+<ul>
+<li><code>v</code> – Toggle between visual/caret mode.</li>
+<li><code>h</code>,<code>j</code>, <code>k</code>, <code>l</code>    – Move the caret position/extend the visual selection    </li>
+<li><code>y</code> – Copies the current selection.    </li>
+<li><code>ESC</code> – Exit visual mode to caret mode/exit caret mode to normal mode.</li>
+</ul>
+<hr>
+<h2 id="Keybindings-Continued"><a href="#Keybindings-Continued" class="headerlink" title="Keybindings Continued"></a>Keybindings Continued</h2><p><strong>Core</strong></p>
+<p><code>:</code> – Open the command bar. </p>
+<p><code>.</code>    – Repeat the last command entered.</p>
+<p><code>r</code> –     Reload the current tab    . </p>
+<p><code>gR</code> –     Reload the current tab + local cache.</p>
+<p><code>yy</code> –     Copy the URL of the current page to the clipboard.</p>
+<p><strong>Searching</strong></p>
+<p><code>/</code>    open search bar</p>
+<p><code>n</code> – Next search result    .</p>
+<p><code>N</code> – Previous search result.</p>
+<p><code>b</code> –    Search through bookmarks.</p>
+<p><strong>Misc</strong></p>
+<p><code>I</code> – An alias to <code>:history</code> that let’s you search through browser history. </p>
+<p><code>zr</code> – Restart Google Chrome.</p>
+<p><code>gd</code> – An alias to <code>:chrome://downloads</code></p>
+<p><code>P</code> –    Open the clipboard contents in a new tab.</p>
+<p><code>gq</code> –     Stop the current tab from loading</p>
+<hr>
+<h3 id="Command-Mode"><a href="#Command-Mode" class="headerlink" title="Command Mode"></a>Command Mode</h3><p><strong>Core</strong></p>
+<p><code>:tabnew</code>(autocomplete) – Open a new tab with the typed/completed search.</p>
+<p><code>:new</code> (autocomplete) – Open a new window with the typed/completed search.</p>
+<p><code>:open</code> (autocomplete) – Open the typed/completed URL/google search.</p>
+<p><code>:quit</code>    Close the current tab</p>
+<p><code>:qall</code> Close the current window</p>
+<p><code>:duplicate</code> – Duplicate the current tab.</p>
+<p><strong>Searching</strong></p>
+<p><code>:history</code> (autocomplete) – Search through browser history.</p>
+<p><code>:bookmarks</code> (autocomplete) –    Search through bookmarks.</p>
+<p><strong>Misc</strong></p>
+<p><code>:tabattach</code> (autocomplete) – Move the current tab to another open window.</p>
+<p><code>:tabdetach</code> – Move the current tab to a new window.</p>
+<p><code>:restore</code> (autocomplete) – Restore a previously closed tab (newer versions of Chrome only).</p>
+<p><code>:mksession</code> – Create a new session from the current tabs in the active window.</p>
+<hr>
+<h1 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h1><ul>
+<li><p>You can use <code>@%</code> in <code>open</code> commands to specify the current URL. For example, <code>:open @%</code> would essentially refresh the current page.</p>
+</li>
+<li><p>Prepend a number to the command to repeat that command <em>N</em> times.</p>
+</li>
+<li><p>Use the up/down arrows in command/find mode to navigate through previously<br>executed commands/searches.</p>
+</li>
+<li><p>You can set directives like <code>reloadAllTabs</code> in the settings to a binding.</p>
+</li>
+</ul>
+<hr>
+<p><strong>Sources</strong></p>
+<ul>
+<li><a href="https://github.com/1995eaton/chromium-vim" target="_blank" rel="external">cVim - Vim bindings for Google Chrome</a> – cVim Github page.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Chrome/" class="post__tag__link">Chrome</a></li><li class="post__tag__item"><a href="/tags/Browser/" class="post__tag__link">Browser</a></li><li class="post__tag__item"><a href="/tags/Addon/" class="post__tag__link">Addon</a></li></ul><a href="/2015/05/03/using-cvim/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><span title="Previous" class="page-menu__link icon-arrow-left page-menu__link--disabled"></span></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

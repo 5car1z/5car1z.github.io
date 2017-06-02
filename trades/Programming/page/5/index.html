@@ -1,0 +1,1031 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-08-17T23:00:00.000Z" class="post__time">August 18, 2015</time><h1 class="post__title"><a href="/2015/08/18/notes-git-version-control/">Git Version Control (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Git is an open-source version control system first released in 2005 to serve as an answer to the other proprietary based VCS solutions in existence. Since then it has enjoyed much popularity and widespread use among programmers, developers, system admins, and the like.</p>
+<p>This post contains many of the common basic commands and content you’ll encounter when first learning Git, but by no means all of them.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installing-Git"><a href="#1-–-Installing-Git" class="headerlink" title="1 – Installing Git"></a>1 – Installing Git</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Git-Configuration"><a href="#2-–-Git-Configuration" class="headerlink" title="2 – Git Configuration"></a>2 – Git Configuration</h1><p>Before beginning to use Git it’s wise to setup some standard configuration settings.</p>
+<p>The first is your system’s global username:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"Scarlz"</span></span><br></pre></td></tr></table></figure>
+<p>The second is your global email address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.email <span class="string">"count.elmsley@protonmail.ch"</span></span><br></pre></td></tr></table></figure>
+<p>For those who have a Github account your username for their service can be added here too with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global github.user <span class="string">"5car1z"</span></span><br></pre></td></tr></table></figure>
+<p>To set a default text editor, enter the next command where <code>vim</code> is kept or replaced with your editor of choice.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.editor vim</span><br></pre></td></tr></table></figure>
+<p>Most repositories you’ll end up cloning will transmit via HTTPS and require you to authenticate every time you interact with them. To make this easier you can set Git to remember your authentication credentials for 15 minutes after every successful authentication.</p>
+<p>Here’s the config command to enable it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global credential.helper cache</span><br></pre></td></tr></table></figure>
+<p>Then finally setting your push default is set by choosing either the <code>simple</code> or <code>matching</code> options.</p>
+<p>Go with the “simple” option if you are unsure which you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  git config --global push.default simple</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>The <code>simple</code> option means <code>git push</code> will push only the <strong>current</strong> branch to the one that git pull would normally pull from, and also ensures that their names match.  The <code>matching</code> option pushes all branches to their respective remote counter-parts.</p>
+</blockquote>
+<p>These settings can be listed at any time by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --list</span><br></pre></td></tr></table></figure>
+<p>These configuration settings when marked with <code>--global</code> are stored in your Linux user’s home directory inside:  <code>~/.gitconfig</code></p>
+<hr>
+<h1 id="3-–-Creating-Repositories"><a href="#3-–-Creating-Repositories" class="headerlink" title="3 – Creating Repositories"></a>3 – Creating Repositories</h1><p>A repository contains the files and code base of the project you’re maintaining.</p>
+<p>Initialising a repository with Git for the current working directory is done via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p>To specify a new directory you can pass a name and init will use it to create one:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init project_directory</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Cloning-Repositories"><a href="#4-–-Cloning-Repositories" class="headerlink" title="4 – Cloning Repositories"></a>4 – Cloning Repositories</h1><p>Cloning a pre-existing repository can be done whether it exists on the local file-system, or on a remote one.</p>
+<p>Locally the command for this is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> /path/to/repository</span><br></pre></td></tr></table></figure>
+<p>For a remote repository an address is used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> username@host:/path/to/repository.git</span><br></pre></td></tr></table></figure>
+<p>With a <strong>public</strong> web repository such as in the context of Github, it is possible to use the command with a URL instead.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/dotfiles.git</span><br></pre></td></tr></table></figure>
+<p><strong>Work-flow Theory</strong></p>
+<p><img src="http://i.imgur.com/RXaFboU.png" alt="Work-flow Theory"></p>
+<hr>
+<h1 id="5-–-Committing-Changes"><a href="#5-–-Committing-Changes" class="headerlink" title="5 – Committing Changes"></a>5 – Committing Changes</h1><p>When changes are made by yourself to the local copy of a repository, you can propose these changes be applied to the <em>index</em> by using the <code>add</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be added in this manner:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>Or for every file the <code>*</code> symbol can be used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add *</span><br></pre></td></tr></table></figure>
+<p>To remove any files you added to the index with the previous commands, thereby discarding them from any further actions in this step. Use <code>rm</code> and then the file names in question:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name</span><br></pre></td></tr></table></figure>
+<p>Or with multiple files.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>This can work recursively with directories/folders also by adding the <code>-r</code> option into the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r directory_1 directory_2</span><br></pre></td></tr></table></figure>
+<p>Once the changes in files added via <code>git add</code> have been proposed, you can confirm them and <em>commit</em> them to the <em>HEAD</em> using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m <span class="string">"A commit messages goes here."</span></span><br></pre></td></tr></table></figure>
+<p>The changes are not however active and made to the remote repository yet until they are pushed to it (see the next section). This is as they are now only in the HEAD of your local working copy.</p>
+<hr>
+<h1 id="6-–-Pushing-Changes"><a href="#6-–-Pushing-Changes" class="headerlink" title="6 – Pushing Changes"></a>6 – Pushing Changes</h1><p>If you did not clone an <strong>existing</strong> repository and created a new one, then you’’ll need to connect your local repository to a remote server.</p>
+<p>To do this enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add remote origin &lt;server&gt;</span><br></pre></td></tr></table></figure>
+<p>Remember that any active commits made in the previous section do not get applied to the remote repository code-base until you <em>push</em> them to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The parameter <code>master</code> can be changed to any remote <em>branch</em> you want the alterations pushed to.</p>
+</blockquote>
+<hr>
+<h1 id="7-–-Using-Branches"><a href="#7-–-Using-Branches" class="headerlink" title="7 – Using Branches"></a>7 – Using Branches</h1><p>Branches are used to segregate and split up different versions of the code-base. For example one branch could contain the main content of project, and another the same content, except with an extra set of features currently being tested and developed. Either way code and changes can be separated into two different paths or strands (branches in this case).</p>
+<p>To create a new branch in a project use the next command, where <code>-b</code> creates a new branch, and <code>new_feature</code> is the name of the branch to be created:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b new_feature</span><br></pre></td></tr></table></figure>
+<p>The <code>new_feature</code> branch is now our active branch.</p>
+<p>Be aware though that a newly created branch is not available to others, nor does it exist on the remote repository until you push the branch to it i.e.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin new_feature</span><br></pre></td></tr></table></figure>
+<p>To change back to the default <code>master</code> branch use the <code>checkout</code> command again like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>To delete a branch use the <code>-d</code> option like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch <span class="_">-d</span> new_feature</span><br></pre></td></tr></table></figure>
+<p><strong>Branching Theory</strong></p>
+<p><img src="http://i.imgur.com/i7n14d2.png" alt="Branches Theory"></p>
+<hr>
+<h1 id="8-–-Updating-Repositories"><a href="#8-–-Updating-Repositories" class="headerlink" title="8 – Updating Repositories"></a>8 – Updating Repositories</h1><p>In order to keep your repositories up to date with others changes (their commits) it’s necessary to <em>pull</em> said changes with the simple command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull</span><br></pre></td></tr></table></figure>
+<p>It’s common place to run this command as frequently as possible in order to stay up to date with other people’s additions or changes. The same goes for pushing your own commits to the remote server.</p>
+<p>To check whether you’re up to date with the remote server or not query Git via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<p>Also when editing files if you are unhappy with the local changes you made, you can replace the local changes using the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be specified in this last command. The way this works is by replacing the changes in your working tree with the state of the most up to date content in HEAD.</p>
+<p>Changes already added to the rest of the index, as well as any new files, is left untouched and is retained.</p>
+<p>If instead you know you want to discard all your local changes and un-pushed commits.</p>
+<p>Fetch the latest history from the remote server through:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch origin</span><br></pre></td></tr></table></figure>
+<p>Then point your local master branch to it like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be careful with using these two commands and only use them if you know what you are doing is what you want to achieve.</p>
+</blockquote>
+<p>See section “<strong>9 – Conflicts</strong>“ for difficulties that can arise during a <code>pull</code> request.</p>
+<hr>
+<h1 id="9-–-Merging-Branches"><a href="#9-–-Merging-Branches" class="headerlink" title="9 – Merging Branches"></a>9 – Merging Branches</h1><p>In most instances at some point it will be desirable to merge another branch into your active branch e.g. <code>new_feature</code> into <code>master</code> and so on.</p>
+<p>To achieve this we make use of the <code>merge</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>See the next section for difficulties that can arise during this process.</p>
+<h1 id="10-–-Merge-Conflicts"><a href="#10-–-Merge-Conflicts" class="headerlink" title="10 – Merge Conflicts"></a>10 – Merge Conflicts</h1><p>In both cases of <code>pull</code> and <code>merge</code> Git will try to auto-merge the necessary changes. Unfortunately though this is not always possible and can result in conflicts. You are then the one responsible to solve these conflicts by manually editing the files as shown and indicated by Git.</p>
+<p>After changing them as requested, you then need to mark them as successfully merged with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add merge_conflicted_file</span><br></pre></td></tr></table></figure>
+<p>Before merging changes, you can preview them by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</span><br></pre></td></tr></table></figure>
+<p>In our example from before we’d substitute in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff new_feature master</span><br></pre></td></tr></table></figure>
+<p>It’s also worth noting that the <code>diff</code>command has many other applications. For example, to see the current differences you’ve made between the local directory and the last commit use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-Log-History"><a href="#11-–-Log-History" class="headerlink" title="11 – Log History"></a>11 – Log History</h1><p>Most transactions that are carried in a repository are logged (mainly commits). To see the complete log unfiltered use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<p>There are thankfully a lot of parameters you can make use of to display the log in a variety of different ways.</p>
+<p>To see only the commits of a certain author enter the next command, substituting <code>scarlz</code> for the username of the author in question.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --author=scarlz</span><br></pre></td></tr></table></figure>
+<p>To see a truncated and compressed log where each commit is only one line enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br></pre></td></tr></table></figure>
+<p>Or to see an ASCII art tree of all branches, decorated with the names of tags and branches in a very readable style, type in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --graph --oneline --decorate --all</span><br></pre></td></tr></table></figure>
+<p>Picking out only which files have changed per commit is useful too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --name-status</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-Tagging"><a href="#12-–-Tagging" class="headerlink" title="12 – Tagging"></a>12 – Tagging</h1><p>As certain milestones are reached during software development, or programs are defined as stable, it is useful to create a <em>tag</em> for the project’s current state. This is referred to more commonly as a software release or version number.</p>
+<p>An example of this would be take the first 10 characters of a commit ID you want the release to correspond to, and give it a version number.</p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag 1.0.0 1b2e1d63ff</span><br></pre></td></tr></table></figure>
+<p>The <code>1b2e1d63ff</code> being the 10 commit ID characters and <code>1.0.0</code> being the assigned version number.</p>
+<hr>
+<h1 id="13-–-Git-Aliases"><a href="#13-–-Git-Aliases" class="headerlink" title="13 – Git Aliases"></a>13 – Git Aliases</h1><p><img src="https://i.imgur.com/9Tpg6sP.jpg" alt="Git Aliases Example"></p>
+<p>Much like any other shell aliasing (Bash, Zsh, etc) Git has its own built in functionality for creating these incredibly useful shortcuts.</p>
+<h2 id="Built-in-Git-Alias-Support"><a href="#Built-in-Git-Alias-Support" class="headerlink" title="Built-in Git Alias Support"></a>Built-in Git Alias Support</h2><p>Adding them on the command line is the automated method of doing this. In the next code snippet <code>git co</code> is aliased and made synonymous to the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global alias.co checkout</span><br></pre></td></tr></table></figure>
+<p>These aliases are stored in the main “Global” Git configuration file in: <code>~/.gitconfig</code></p>
+<p>To make things easier you can manually add in and edit these aliases with a text editor:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.gitconfig</span><br></pre></td></tr></table></figure>
+<p>In this format:</p>
+<figure class="highlight bash"><figcaption><span>~/.gitconfig</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">alias</span>]</span><br><span class="line">	co = checkout</span><br></pre></td></tr></table></figure>
+<p>This process gives you however many aliases you define, so that you can type: <code>git co</code> or whatever the alias is to run a certain command sequence.</p>
+<h2 id="Bash-Shell-Git-Aliasing"><a href="#Bash-Shell-Git-Aliasing" class="headerlink" title="Bash Shell Git Aliasing"></a>Bash Shell Git Aliasing</h2><p>To use Bash or shell aliasing and get rid of the <code>git</code> prefix altogether, add aliases into your <code>~/.bashrc</code> file, or sub-sequential <code>~/.alias</code> file. </p>
+<p>As an example here is my list of Bash Git aliases. These are up to date as of October 2015, taken from my own <code>~/.alias</code> file: </p>
+<script src="//gist.github.com/c9af258fd1f9f328c83c.js?file=bash-git-aliases"></script>
+<p>Unfortunately the usual Git Bash auto-completion won’t function with these aliases, like it does with the <code>~/.gitconfig</code> file method.</p>
+<p>Here is my workaround for this. </p>
+<p>Download this file to your Linux user’s home directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Change the file name to include a <code>.</code> so it’s classified as a hidden config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv git-completion.bash .git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Then source it into shell session on start up by placing the following line into your <code>~/.bashrc</code> file:</p>
+<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. ~/.git-completion.bash</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> if you separate your aliases into a separate file like I do, and don’t store them directly into your <code>~/.bashrc</code> file. Make sure you source the <code>~/.git-completion.bash</code> file first before your alias file.</p>
+</blockquote>
+<p>Lastly you need to add the relevant Git auto-completion functions for each Git related alias into your <code>bashrc</code> or <code>alias</code> file, like so:</p>
+<figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__git_complete g __git_main</span><br><span class="line">__git_complete ga _git_add</span><br><span class="line">__git_complete gb _git_branch</span><br><span class="line">__git_complete gc _git_commit</span><br><span class="line">__git_complete gcl _git_clone</span><br><span class="line">__git_complete gco _git_checkout</span><br><span class="line">__git_complete gd _git_diff</span><br><span class="line">__git_complete gl _git_pull</span><br><span class="line">__git_complete glg _git_log</span><br><span class="line">__git_complete gm _git_merge</span><br><span class="line">__git_complete gp _git_push</span><br><span class="line">__git_complete gsps _git_show</span><br></pre></td></tr></table></figure>
+<p>If you use oh-my-Zsh this support and aliasing comes by default, same with Prezto.</p>
+<hr>
+<h1 id="14-–-Misc"><a href="#14-–-Misc" class="headerlink" title="14 – Misc"></a>14 – Misc</h1><h2 id="HTTPS-amp-SSH-Clone-URL’s"><a href="#HTTPS-amp-SSH-Clone-URL’s" class="headerlink" title="HTTPS &amp; SSH Clone URL’s"></a>HTTPS &amp; SSH Clone URL’s</h2><p><img src="https://help.github.com/assets/images/help/repository/remotes-url.png" alt="Clone Image"></p>
+<p>There are several options on offer when cloning a repository that dictate what method in which it will get created, updated, and merged. The main two choices are HTTPS or SSH.</p>
+<p>Github recommends using the HTTPS method which looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>The advantages of this first method are the security and compatibility of its network transactions, and its awareness of the access rights on offer.</p>
+<p>The second method is more suited to nodes and production servers that have automation in place. This SSH method also allows the use of SSH keys to authenticate instead of user &amp; pass credentials.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>To change and re-set the method in use for an existing repository enter this command to go from HTTPS to SSH:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Or this command to go from SSH to HTTPS:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<h2 id="The-Git-Repository-Browser"><a href="#The-Git-Repository-Browser" class="headerlink" title="The Git Repository Browser"></a>The Git Repository Browser</h2><p>A built-in Git GUI dubbed “The Git Repository Browser” is available on most systems, here’s how to acquire and run it:</p>
+<figure class="highlight bash"><figcaption><span>Arch Linux</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><figcaption><span>Debian / Ubuntu</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<h2 id="Coloured-Git-Output"><a href="#Coloured-Git-Output" class="headerlink" title="Coloured Git Output"></a>Coloured Git Output</h2><p>To use coloured Git output enter the following into a command prompt, or add the equivalent to your <code>~/.git</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config color.ui <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Git-Flow-Cheat-Sheet"><a href="#Git-Flow-Cheat-Sheet" class="headerlink" title="Git Flow Cheat Sheet"></a>Git Flow Cheat Sheet</h2><object data="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf#" type="application/pdf" width="100%" height="1200"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<p><strong>Alias Sources</strong></p>
+<ul>
+<li><a href="https://www.reddit.com/r/git/comments/3dbd6y/lazy_or_productive/" target="_blank" rel="external">Lazy or Productive?</a> – /r/git Reddit thread.</li>
+<li><a href="http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/" target="_blank" rel="external">Must Have Git Aliases: Advanced Examples</a> – Blog post mostly for inbuilt Git support aliases.</li>
+<li><a href="https://git.wiki.kernel.org/index.php/Aliases" target="_blank" rel="external">git-kernel-org Aliases Page</a> - Based around in-built Git support aliases.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Lab Aliases Page</a> - Interactive step by step tutorial for learning Git.</li>
+<li><a href="http://haacked.com/archive/2014/07/28/github-flow-aliases/" target="_blank" rel="external">Github Flow Like a Pro with these 13 Git Aliases</a> - Theory and complex aliasing blog post.</li>
+<li><a href="https://gist.github.com/mwhite/6887990" target="_blank" rel="external">The Ultimate Git Alias Setup</a> - Github markdown on shell Git aliasing.</li>
+</ul>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://rogerdudler.github.io/git-guide/" target="_blank" rel="external">Git - The Simple Guide</a> – “Just a simple guide for getting started with Git.”</li>
+<li><a href="http://marklodato.github.io/visual-git-guide/index-en.html" target="_blank" rel="external">Visual Git Guide</a> – This page gives brief, visual reference for the most common commands in Git.</li>
+<li><a href="http://git-scm.com/book/en/v2" target="_blank" rel="external">Pro Git Book</a> – Available as an E-book too.</li>
+<li><a href="http://www-cs-students.stanford.edu/~blynn/gitmagic/index.html" target="_blank" rel="external">Git Magic Guide</a> – Personal favourite.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Aliases</a> – Good starting point for Aliases.</li>
+<li><a href="http://stackoverflow.com/questions/14762034/push-to-github-without-password-using-ssh-key" target="_blank" rel="external">Stack Overflow Question</a> – Push to Github Without a Password Using an SSH key.</li>
+<li><a href="https://help.github.com/articles/which-remote-url-should-i-use/" target="_blank" rel="external">Github Page on Remote URL Types</a> – Official page on which remote URL you should use.</li>
+<li><a href="https://help.github.com/articles/caching-your-github-password-in-git/" target="_blank" rel="external">Github Page on Caching Credentials</a> – Caching your GitHub password in Git.</li>
+<li><a href="https://help.github.com/articles/changing-a-remote-s-url/" target="_blank" rel="external">Github Page on Changing Remote URL’s</a> – Changing a remote’s URL.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/Alias/" class="post__tag__link">Alias</a></li></ul><a href="/2015/08/18/notes-git-version-control/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-07-26T23:00:00.000Z" class="post__time">July 27, 2015</time><h1 class="post__title"><a href="/2015/07/27/notes-vim-pathogen-plugins/">Vim Plugins and Pathogen</a></h1></header><div class="post__main echo"><p><img src="http://www.catonmat.net/blog/wp-content/uploads/2008/12/vim-plugins-surround-vim.gif" alt="Vim Plugins Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Vim does a lot with its base install and provides everything you’d expect from a CLI text editor, but to unlock even further awesomeness one needs to delve into the vast libraries of plugins on offer.</p>
+<p>One such site that aims to index these plugins is:</p>
+<blockquote>
+<p><a href="http://vimawesome.com/" target="_blank" rel="external">http://vimawesome.com/</a></p>
+</blockquote>
+<p>Which is awesome in its own right.</p>
+<p>To install said plugins there are several varying install solutions on offer (Vundle, NeoBundle, VimPlug, Pathogen, etc). In this post I’ll follow the most basic method of using Pathogen to install Vim plugins, whilst highlighting and describing a list of my own thus far installed and used plugins.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Install-Pathogen"><a href="#1-–-Install-Pathogen" class="headerlink" title="1 – Install Pathogen"></a>1 – Install Pathogen</h1><p>Start by making the two configuration directories in your user’s home directory, here’s how to do this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir -p ~/.vim/<span class="built_in">autoload</span> ~/.vim/bundle &amp;&amp; \</span><br></pre></td></tr></table></figure>
+<p>Now in the prompt that’s initiated from the last command retrieve the contents of the two new folders with Curl:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; curl -LSso ~/.vim/<span class="built_in">autoload</span>/pathogen.vim https://tpo.pe/pathogen.vim</span><br></pre></td></tr></table></figure>
+<p>Install Curl first if you don’t have it install it on Debian/Ubuntu with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install curl</span><br></pre></td></tr></table></figure>
+<p>Or on Arch Linux with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S curl</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-pathogen" target="_blank" rel="external">Pathogen Plugin Manager on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="2-–-Edit-vimrc"><a href="#2-–-Edit-vimrc" class="headerlink" title="2 – Edit .vimrc"></a>2 – Edit .vimrc</h1><p>After returning to the command line continue by opening your <code>~/.vimrc</code> file for writing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.vimrc</span><br></pre></td></tr></table></figure>
+<p>Then add these two lines to run Pathogen and enable plugins:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">execute</span> pathogen#infect()</span><br><span class="line"><span class="keyword">filetype</span> plugin <span class="built_in">indent</span> <span class="keyword">on</span></span><br></pre></td></tr></table></figure>
+<p><strong>Save</strong> and quit.</p>
+<hr>
+<h1 id="3-–-Install-Plugins"><a href="#3-–-Install-Plugins" class="headerlink" title="3 – Install Plugins"></a>3 – Install Plugins</h1><p>Any plugins I use I’ll add details about here in this section.</p>
+<h1 id="vim-markdown"><a href="#vim-markdown" class="headerlink" title="vim-markdown"></a>vim-markdown</h1><p>To install vim-markdown use these two commands on your system (with Git installed):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/.vim/bundle &amp;&amp; \</span><br><span class="line">&gt; git <span class="built_in">clone</span> git://github.com/plasticboy/vim-markdown.git</span><br></pre></td></tr></table></figure>
+<p>To disable the “folding” in markdown files provided by <code>vim-markdown</code> add this line to your <code>~/.vimrc</code> config file:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:vim_markdown_folding_disabled</span>=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><strong>Commands</strong></p>
+<p><code>:Toc</code> create a quickfix vertical window navigable table of contents with the headers.</p>
+<p><code>:Toch</code> Same as <code>:Toc</code> but in an horizontal window.</p>
+<p><code>:Toct</code> Same as <code>:Toc</code> but in a new tab.</p>
+<p><code>:Tocv:</code> Same as :<code>Toc</code> for symmetry with <code>:Toch</code> and <code>:Tocv</code> .</p>
+<blockquote>
+<p><strong>Note:</strong> <a href="https://github.com/plasticboy/vim-markdown" target="_blank" rel="external">vim-markdown Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="SuperTab"><a href="#SuperTab" class="headerlink" title="SuperTab"></a>SuperTab</h1><p>SuperTab is an auto-completion plugin that allows extra <strong>insert mode</strong> completion using the <tab> key.</tab></p>
+<p>After typing a few letters of a word that exists within the current open buffer (vim session) SuperTab will list the auto-completion options it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/ervandew/supertab.git ~/.vim/bundle/supertab</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> <a href="https://github.com/ervandew/supertab" target="_blank" rel="external">SuperTab Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="NERD-Tree"><a href="#NERD-Tree" class="headerlink" title="NERD Tree"></a>NERD Tree</h1><p>NERD tree allows you to explore your filesystem in order to easily open files and directories. It takes the form of a tree which you manipulate with the keyboard and/or mouse. It also supports basic filesystem operations.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/scrooloose/nerdtree ~/.vim/bundle/supertab</span><br></pre></td></tr></table></figure>
+<p>Include this next line in your <code>~/.vimrc</code> to stop garbled characters and broken directory traversing in your NERDTree.:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> NERDTreeDirArrows = <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<h2 id="Running-NERD-Tree"><a href="#Running-NERD-Tree" class="headerlink" title="Running NERD Tree"></a>Running NERD Tree</h2><p>To start a tree in the currently opened file’s directory type this into Vim:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree</span><br></pre></td></tr></table></figure>
+<p>To do the same but commence the tree in a separate directory, specify the directory path like this:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree /etc/X11/Xresources/</span><br></pre></td></tr></table></figure>
+<p>To close the tree in the current tab use:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTreeClose</span><br></pre></td></tr></table></figure>
+<p>To quickly find the current file in the tree:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NERDTreeFind</span><br></pre></td></tr></table></figure>
+<h2 id="Bookmarks"><a href="#Bookmarks" class="headerlink" title="Bookmarks"></a>Bookmarks</h2><p>When the NERD Tree window/tab is active you can type the next command in the current buffer, to bookmark a file or directory that is currently highlighted by the tree.</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Bookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<p>Opening bookmark is done with:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:OpenBookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<p>If you need to remove a bookmark then use</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:ClearBookmarks bookmark_name bookmark_name bookmark_name</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> If no bookmark names are passed then this will remove all bookmarks on the current node.</p>
+</blockquote>
+<p>Any previous bookmarks made with NERDTree can be used to start the tree by providing the bookmark name. The second command in this next example provides auto-completion when typing out the bookmark name, both commands have the same result however:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:NERDTree bookmark_name</span><br><span class="line">:NERDTreeFromBookmark bookmark_name</span><br></pre></td></tr></table></figure>
+<h2 id="NERD-tree-Mappings"><a href="#NERD-tree-Mappings" class="headerlink" title="NERD tree Mappings"></a>NERD tree Mappings</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line">-----------------------------------------------------------------------------</span><br><span class="line"><span class="number">2.3</span>. NERD tree Mappings                                     *NERDTreeMappings*</span><br><span class="line"></span><br><span class="line">Default  Description~                                             <span class="keyword">help</span>-<span class="keyword">tag</span>~</span><br><span class="line">Key~</span><br><span class="line"></span><br><span class="line"><span class="keyword">o</span>.......Open <span class="keyword">files</span>, directories <span class="built_in">and</span> bookmarks....................|NERDTree-<span class="keyword">o</span>|</span><br><span class="line"><span class="keyword">go</span>......Open selected <span class="keyword">file</span>, but leave <span class="built_in">cursor</span> in the NERDTree.....|NERDTree-<span class="keyword">go</span>|</span><br><span class="line">t.......Open selected node/bookmark in <span class="keyword">a</span> <span class="keyword">new</span> <span class="keyword">tab</span>.................|NERDTree-t|</span><br><span class="line">T.......Same <span class="keyword">as</span> <span class="string">'t'</span> but keep the focus <span class="keyword">on</span> the current <span class="keyword">tab</span>........|NERDTree-T|</span><br><span class="line">i.......Open selected <span class="keyword">file</span> in <span class="keyword">a</span> <span class="keyword">split</span> window.....................|NERDTree-i|</span><br><span class="line">gi......Same <span class="keyword">as</span> i, but leave the <span class="built_in">cursor</span> <span class="keyword">on</span> the NERDTree..........|NERDTree-gi|</span><br><span class="line">s.......Open selected <span class="keyword">file</span> in <span class="keyword">a</span> <span class="keyword">new</span> <span class="keyword">vsplit</span>.......................|NERDTree-s|</span><br><span class="line">gs......Same <span class="keyword">as</span> s, but leave the <span class="built_in">cursor</span> <span class="keyword">on</span> the NERDTree..........|NERDTree-gs|</span><br><span class="line">O.......Recursively <span class="keyword">open</span> the selected directory..................|NERDTree-O|</span><br><span class="line"><span class="keyword">x</span>.......Close the current nodes parent...........................|NERDTree-<span class="keyword">x</span>|</span><br><span class="line"><span class="keyword">X</span>.......Recursively <span class="keyword">close</span> <span class="keyword">all</span> children of the current node.......|NERDTree-<span class="keyword">X</span>|</span><br><span class="line"><span class="keyword">e</span>.......Edit the current dir.....................................|NERDTree-<span class="keyword">e</span>|</span><br><span class="line"></span><br><span class="line"><span class="symbol">&lt;CR&gt;</span>...............same <span class="keyword">as</span> |NERDTree-<span class="keyword">o</span>|.</span><br><span class="line">double-click.......same <span class="keyword">as</span> the |NERDTree-<span class="keyword">o</span>| <span class="keyword">map</span>.</span><br><span class="line">middle-click.......same <span class="keyword">as</span> |NERDTree-i| <span class="keyword">for</span> <span class="keyword">files</span>, same <span class="keyword">as</span></span><br><span class="line">                   |NERDTree-<span class="keyword">e</span>| <span class="keyword">for</span> dirs.</span><br><span class="line"></span><br><span class="line">D.......Delete the current bookmark .............................|NERDTree-D|</span><br><span class="line"></span><br><span class="line"><span class="keyword">P</span>.......Jump <span class="keyword">to</span> the root node....................................|NERDTree-<span class="keyword">P</span>|</span><br><span class="line"><span class="keyword">p</span>.......Jump <span class="keyword">to</span> current nodes parent.............................|NERDTree-<span class="keyword">p</span>|</span><br><span class="line">K.......Jump <span class="keyword">up</span> inside directories at the current tree depth.....|NERDTree-K|</span><br><span class="line">J.......Jump down inside directories at the current tree depth...|NERDTree-J|</span><br><span class="line"><span class="symbol">&lt;C-J&gt;</span>...Jump down <span class="keyword">to</span> the <span class="keyword">next</span> sibling of the current directory...|NERDTree-C-J|</span><br><span class="line"><span class="symbol">&lt;C-K&gt;</span>...Jump <span class="keyword">up</span> <span class="keyword">to</span> the <span class="keyword">previous</span> sibling of the current directory.|NERDTree-C-K|</span><br><span class="line"></span><br><span class="line">C.......Change the tree root <span class="keyword">to</span> the selected dir.................|NERDTree-C|</span><br><span class="line"><span class="keyword">u</span>.......Move the tree root <span class="keyword">up</span> one directory......................|NERDTree-<span class="keyword">u</span>|</span><br><span class="line">U.......Same <span class="keyword">as</span> <span class="string">'u'</span> except the old root node <span class="keyword">is</span> <span class="keyword">left</span> <span class="keyword">open</span>........|NERDTree-U|</span><br><span class="line">r.......Recursively refresh the current directory................|NERDTree-r|</span><br><span class="line">R.......Recursively refresh the current root.....................|NERDTree-R|</span><br><span class="line"><span class="keyword">m</span>.......Display the NERD tree <span class="keyword">menu</span>...............................|NERDTree-<span class="keyword">m</span>|</span><br><span class="line"><span class="keyword">cd</span>......Change the CWD <span class="keyword">to</span> the dir of the selected node...........|NERDTree-<span class="keyword">cd</span>|</span><br><span class="line">CD......Change tree root <span class="keyword">to</span> the CWD..............................|NERDTree-CD|</span><br><span class="line"></span><br><span class="line">I.......Toggle whether hidden <span class="keyword">files</span> displayed....................|NERDTree-I|</span><br><span class="line"><span class="keyword">f</span>.......Toggle whether the <span class="keyword">file</span> filters are used.................|NERDTree-<span class="keyword">f</span>|</span><br><span class="line">F.......Toggle whether <span class="keyword">files</span> are displayed.......................|NERDTree-F|</span><br><span class="line">B.......Toggle whether the bookmark table <span class="keyword">is</span> displayed...........|NERDTree-B|</span><br><span class="line"></span><br><span class="line">q.......Close the NERDTree window................................|NERDTree-q|</span><br><span class="line">A.......Zoom (maximize/minimize) the NERDTree window.............|NERDTree-A|</span><br><span class="line">?.......Toggle the <span class="keyword">display</span> of the quick <span class="keyword">help</span>.....................|NERDTree-?|</span><br><span class="line"></span><br><span class="line">-----------------------------------------------------------------------------</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/scrooloose/nerdtree" target="_blank" rel="external">NERDTree Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h2 id="Syntastic"><a href="#Syntastic" class="headerlink" title="Syntastic"></a>Syntastic</h2><p>This is a syntax checking plugin for Vim that runs files through various external syntax checkers to display any resulting errors to the user. This can be done on demand if needed, or automatically as files are saved. If syntax errors are detected, the user is notified and is happy because they didn’t have to compile their code or execute their script to find them!</p>
+<p>Here are the languages it has built in support for:</p>
+<p><strong>“ActionScript, Ada, API Blueprint, AppleScript, AsciiDoc, ASM, BEMHTML, Bro, Bourne shell, C, C++, C#, Cabal, Chef, CoffeeScript, Coco, Coq, CSS, Cucumber, CUDA, D, Dart, DocBook, Dust, Elixir, Erlang, eRuby, Fortran, Gentoo metadata, GLSL, Go, Haml, Haskell, Haxe, Handlebars, HSS, HTML, Java, JavaScript, JSON, JSX, LESS, Lex, Limbo, LISP, LLVM intermediate language, Lua, Markdown, MATLAB, Mercury, NASM, Nix, Objective-C, Objective-C++, OCaml, Perl, Perl POD, PHP, gettext Portable Object, OS X and iOS property lists, Puppet, Python, R, Racket, Relax NG, reStructuredText, RPM spec, Ruby, SASS/SCSS, Scala, Slim, SML, Sphinx, Tcl, TeX, Texinfo, Twig, TypeScript, Vala, Verilog, VHDL, VimL, xHtml, XML, XSLT, YACC, YAML, z80, Zope Page Templates, and Zsh.”</strong></p>
+<p>Install the plugin with Pathogen as usual via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic</span><br></pre></td></tr></table></figure>
+<p>Include these new lines in your <code>~/.vimrc</code> to ensure Syntastic works and displays its content properly:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_always_populate_loc_list</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_auto_loc_list</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_check_on_open</span> = <span class="number">1</span></span><br><span class="line"><span class="keyword">let</span> <span class="variable">g:syntastic_check_on_wq</span> = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%#warningmsg#</span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%&#123;SyntasticStatuslineFlag()&#125;</span><br><span class="line"><span class="keyword">set</span> statusline+=\ %=%*</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/scrooloose/syntastic" target="_blank" rel="external">Syntastic Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="fugitive-vim"><a href="#fugitive-vim" class="headerlink" title="fugitive.vim"></a>fugitive.vim</h1><p><strong>“Fugitive.vim may very well be the best Git wrapper of all time.”</strong></p>
+<p>This plugin adds a whole new set of commands to Vim to make using Git smoother, flexible, more varied, and all from within the Vim session in question.</p>
+<p>Install it as usual with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tpope/vim-fugitive.git ~/.vim/bundle/vim-fugitive</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The percent symbol (<code>%</code>) is short-hand for the path of the current file.</p>
+</blockquote>
+<h2 id="Base-Fugitive-Commands"><a href="#Base-Fugitive-Commands" class="headerlink" title="Base Fugitive Commands"></a>Base Fugitive Commands</h2><table>
+<thead>
+<tr>
+<th>Git</th>
+<th>fugitive.vim</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>:Git add %</td>
+<td>:Gwrite</td>
+<td>Stage the current file to the index</td>
+</tr>
+<tr>
+<td>:Git checkout %</td>
+<td>:Gread</td>
+<td>Revert current file to last checked in version</td>
+</tr>
+<tr>
+<td>:Git rm %</td>
+<td>:Gremove</td>
+<td>Delete the current file and the corresponding Vim buffer</td>
+</tr>
+<tr>
+<td>:Git mv %</td>
+<td>:Gmove</td>
+<td>Rename the current file and the corresponding Vim buffer</td>
+</tr>
+<tr>
+<td>:Git commit</td>
+<td>:Gcommit</td>
+<td>Opens up a split window to enter a commit message and features Vim’s auto-completion functionality (<code>CTRL</code> + <code>N</code>). <code>:wq</code> and <code>ENTER</code> to confirm.</td>
+</tr>
+<tr>
+<td>:Git blame %</td>
+<td>:Gblame</td>
+<td>Opens a vertically split window containing annotations for each line of the file: the last commit reference, with author and timestamp. When you scroll one, the other window follows.</td>
+</tr>
+<tr>
+<td>:Git status</td>
+<td>:Gstatus</td>
+<td>Opens a split window with status, that is interact-able. <code>CNTRL</code>+<code>N</code> &amp; <code>CNTRL</code> + <code>P</code> moves between files names listed, pressing <code>-</code> minus whilst untracked files are highlighted will add it to the index, <code>-</code> on the added modified files will remove them from the index. You can highlight multiple files with visual mode. <code>p</code> on a highlighted file opens up the specific file changes. <code>ENTER</code> opens the highlighted file in the window beneath</td>
+</tr>
+<tr>
+<td>:Git diff %</td>
+<td>:Gdiff</td>
+<td>Shows current individual file’s insertions or removals in comparison to indexed version.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-fugitive" target="_blank" rel="external">fugitive.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="goyo-vim"><a href="#goyo-vim" class="headerlink" title="goyo.vim"></a>goyo.vim</h1><p>Distraction free writing tool that sets the writing dimensions suitable for non technical and non programming contexts. Also removes any unnecessary interface elements from the Vim UI. Works well with the limelight.vim plugin shown after this one.</p>
+<p><img src="https://camo.githubusercontent.com/58569256e607d63a1c6c930d64d80b8d93e8e8c1/68747470733a2f2f7261772e6769746875622e636f6d2f6a756e6567756e6e2f692f6d61737465722f676f796f2e706e67" alt="Goyo Vim Image"></p>
+<p>Install it from Github with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/junegunn/goyo.vim.git ~/.vim/bundle/goyo.vim</span><br></pre></td></tr></table></figure>
+<p>Toggle Goyo on:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo</span><br></pre></td></tr></table></figure>
+<p>Turn Goyo off:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo!</span><br></pre></td></tr></table></figure>
+<p>Toggle Goyo on but with a specific width:</p>
+<figure class="highlight vim"><figcaption><span>Width</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo <span class="number">120</span></span><br></pre></td></tr></table></figure>
+<p>Or with a specific height:</p>
+<figure class="highlight vim"><figcaption><span>Height</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Goyo x30</span><br></pre></td></tr></table></figure>
+<p>Both a specific width and height work too:</p>
+<figure class="highlight vim"><figcaption><span>Both</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Goyo <span class="number">120</span>x30</span><br></pre></td></tr></table></figure>
+<p>Percentages can be passed instead:</p>
+<figure class="highlight vim"><figcaption><span>Percentage</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Goyo <span class="number">120</span>x50%</span><br></pre></td></tr></table></figure>
+<p>Defaults can be set in your <code>~/.vimrc</code> file via:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">g:goyo_width</span> (defaul<span class="variable">t:</span> <span class="number">80</span>)</span><br><span class="line"><span class="variable">g:goyo_height</span> (defaul<span class="variable">t:</span> <span class="number">85</span>%)</span><br><span class="line"><span class="variable">g:goyo_linenr</span> (defaul<span class="variable">t:</span> <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/junegunn/goyo.vim" target="_blank" rel="external">goyo.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="limelight-vim"><a href="#limelight-vim" class="headerlink" title="limelight.vim"></a>limelight.vim</h1><p>Allows you to focus and highlight blocks of text and content dynamically, useful for writing oriented environments. Works well with the previous Goyo plugin.</p>
+<p><img src="https://camo.githubusercontent.com/fa4e9321be0b4a565ae84a66bae36e97545c101b/68747470733a2f2f7261772e6769746875622e636f6d2f6a756e6567756e6e2f692f6d61737465722f6c696d656c696768742e676966" alt="Limelight Examples Video"></p>
+<p>Install with Pathogen as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/junegunn/limelight.vim.git ~/.vim/bundle/limelight.vim</span><br></pre></td></tr></table></figure>
+<p>Turn Limelight on:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight</span><br></pre></td></tr></table></figure>
+<p>Turn Limelight on at a specific brightness, can use any value between <code>0.0</code> ~ <code>1.0</code> where the higher the value the brighter/darker it is:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight0.<span class="number">3</span></span><br></pre></td></tr></table></figure>
+<p>Turn Limelight off:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Limelight!</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/junegunn/limelight.vim" target="_blank" rel="external">limelight.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="vim-startify"><a href="#vim-startify" class="headerlink" title="vim-startify"></a>vim-startify</h1><p>This plugin provides an awesome start menu that can be seen whenever Vim is called on its own without any arguments or piped text.</p>
+<p>Install with Pathogen as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mhinz/vim-startify.git ~/.vim/bundle/vim-startify.vim</span><br></pre></td></tr></table></figure>
+<p>Run Vim in a terminal to see the plugin:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim</span><br></pre></td></tr></table></figure>
+<p><img src="https://raw.githubusercontent.com/mhinz/vim-startify/102aa438b2d2a88e2b4e331d8ff5320eed52f0c4/startify.png" alt="Startify Example"></p>
+<h2 id="Startify-Layout"><a href="#Startify-Layout" class="headerlink" title="Startify Layout"></a>Startify Layout</h2><p>This is the layout of Startify and how it organises its content by default:</p>
+<p><strong>Custom header</strong> – How about some ASCII art action? Perhaps even dynamically generated?</p>
+<p>Default: <code>&lt;empty&gt;</code></p>
+<p><strong>Recently used files from directory</strong> – List recently modified files from the current directory recursively. The list can also be filtered.</p>
+<p>Default: <code>&lt;enabled&gt;</code></p>
+<p><strong>Recently used files</strong>: List recently used files. The list can also be filtered.</p>
+<p>Default: <code>&lt;enabled&gt;</code></p>
+<p><strong>Sessions:</strong> List all your sessions from a certain directory, when you’ve made them with the in-built session commands.</p>
+<p>Default:  <code>~/.vim/session</code></p>
+<p><strong>Bookmarks</strong> – Define bookmarks, thus entries for files that will always be listed. Again appears when you define them.</p>
+<p>Default:  <code>&lt;empty&gt;</code></p>
+<p><strong>Custom footer:</strong> Same as the custom header.. but at the bottom.</p>
+<p>Default:  <code>&lt;empty&gt;</code></p>
+<h2 id="Navigating-Startify"><a href="#Navigating-Startify" class="headerlink" title="Navigating Startify"></a>Navigating Startify</h2><p>Navigating the menu can be done by using the usual Vim keys <code>j</code> <code>k</code> or just by keying in whatever is written between the square brackets on that line. You can also double-click anywhere on a line to highlight the paths.</p>
+<p>Moreover, you can open several files at once if needed.</p>
+<p>Whilst the cursor is on an entry hit either:</p>
+<ul>
+<li><code>b</code> – Opens in same window,</li>
+<li><code>s</code> – Open in a split window.</li>
+<li><code>t</code> – Open in a tab.</li>
+</ul>
+<p>There is also <code>e</code> for creating an empty buffer (new file), and <code>i</code> for creating an empty buffer <strong>and</strong> jumping into insert mode straight away, and then <code>q</code> for quitting the menu.</p>
+<p>You can always reopen the Stratify screen via <code>:Startify</code> inside a Vim session.</p>
+<p>##Startify Sessions<br>Using <code>:mksession</code> in Vim to save a <code>Session.vim</code> file to the current directory will show the session as an option in the Startify menu. It will be shown at the top of all lists as entry <code>[0]</code> .</p>
+<p>The vim-startify inbuilt session commands can also be used to place saved session files in the <code>~/.vim/sessions/</code> folder.</p>
+<p>These inbuilt session commands are:</p>
+<ul>
+<li><code>:SLoad</code> – Load a session.</li>
+<li><code>:SSave</code> –  Save a session.</li>
+<li><code>:Delete</code> – Delete a session.</li>
+</ul>
+<p>##Startify Custom Header<br>Add this line to your <code>~/.vimrc</code> file to generate an ASCII art cow displaying random both serious and humorous quotes in the Startify page:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_custom_header</span> =</span><br><span class="line">                         \ <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'fortune | cowthink '</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>,<span class="string">''</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You must have <code>cowsay</code> and <code>fortune</code> installed for this to work.</p>
+</blockquote>
+<p>Instead hardcoded ASCII art or any other message can be set like so:</p>
+<figure class="highlight"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">let g:startify_custom_header = [</span><br><span class="line">            \ '                                 ________  __ __        ',</span><br><span class="line">            \ '            __                  /\_____  \/\ \\ \       ',</span><br><span class="line">            \ '    __  __ /\_\    ___ ___      \/___//''/''\ \ \\ \    ',  </span><br><span class="line">            \ '   /\ \/\ \\/\ \ /'' __` __`\        /'' /''  \ \ \\ \_ ',</span><br><span class="line">            \ '   \ \ \_/ |\ \ \/\ \/\ \/\ \      /'' /''__  \ \__ ,__\',</span><br><span class="line">            \ '    \ \___/  \ \_\ \_\ \_\ \_\    /\_/ /\_\  \/_/\_\_/  ',  </span><br><span class="line">            \ '     \/__/    \/_/\/_/\/_/\/_/    \//  \/_/     \/_/    ',  </span><br><span class="line">            \ '',</span><br><span class="line">            \ '',</span><br><span class="line">            \ ]</span><br></pre></td></tr></table></figure>
+<h2 id="Startify-Custom-Footer"><a href="#Startify-Custom-Footer" class="headerlink" title="Startify Custom Footer"></a>Startify Custom Footer</h2><p>Similar to the Header except appears at the bottom of the menu. This example in the next code snippet displays the date and time in the machine’s local format, and the operating system’s name and version number:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_custom_footer</span> =</span><br><span class="line">                       \ [<span class="string">''</span>] + <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'date -R'</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>] + <span class="keyword">map</span>(<span class="keyword">split</span>(<span class="built_in">system</span>(<span class="string">'lsb_release -a | tail -n 3'</span>), <span class="string">'\n'</span>), <span class="string">'"   ". v:val'</span>) + [<span class="string">''</span>]</span><br></pre></td></tr></table></figure>
+<h2 id="Extra-Startify-Variables"><a href="#Extra-Startify-Variables" class="headerlink" title="Extra Startify Variables"></a>Extra Startify Variables</h2><p>There are more variables that can be defined and are documented in:</p>
+<p><code>~/.vim/bundle/vim-startify/doc/startify.txt</code></p>
+<p>Here are two more that set up the hard coded bookmarks, and another that deletes session file buffers:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:startify_bookmarks</span> = [ <span class="string">'/etc/apache2/apache2.conf'</span>,<span class="string">'~/.vimrc'</span>]                       <span class="comment">"Hard-coded vim-startify bookmarks.</span></span><br><span class="line"> <span class="number">20</span> <span class="keyword">let</span> <span class="variable">g:startify_session_delete_buffers</span> = <span class="number">1</span>                                       <span class="comment">"Deletes any session file buffers when a session is loaded.</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/mhinz/vim-startify" target="_blank" rel="external">vim-startify Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="eunuch-vim"><a href="#eunuch-vim" class="headerlink" title="eunuch-vim"></a>eunuch-vim</h1><p>This strangely named plugin adds some much appreciated Unix command functionality into Vim.</p>
+<p>Install it in Pathogen as usual by cloning the repository with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/tpope/vim-eunuch.git ~/.vim/bundle/vim-eunuch</span><br></pre></td></tr></table></figure>
+<p>The features of eunuch-vim include:</p>
+<ul>
+<li><code>:Remove</code> – Delete a buffer and the file on disk simultaneously.</li>
+<li><code>:Unlink</code> – Like <code>:Remove</code>, but keeps the now empty buffer.</li>
+<li><code>:Move</code> – Rename a buffer and the file on disk simultaneously.</li>
+<li><code>:Rename</code> – Like <code>:Move</code>, but relative to the current file’s containing directory.</li>
+<li><code>:Chmod</code> – Change the permissions of the current file.</li>
+<li><code>:Mkdir</code> – Create a directory, defaulting to the parent of the current file.</li>
+<li><code>:Find</code> – Run <code>find</code> and load the results into the quickfix list.</li>
+<li><code>:Locate</code> – Run <code>locate</code> and load the results into the quickfix list.</li>
+<li><code>:Wall</code> – Write every open window. Handy for kicking off tools like <a href="https://github.com/guard/guard" target="_blank" rel="external">guard</a>.</li>
+<li><code>:SudoWrite</code> – Write a privileged file with <code>sudo</code>.</li>
+<li><p><code>:SudoEdit</code> – Edit a privileged file with <code>sudo</code>.</p>
+</li>
+<li><p>File type detection for <code>sudo -e</code> is based on original file name.</p>
+</li>
+<li>New files created with a <em>shebang</em> line are automatically made executable.</li>
+<li>New <em>init</em> scripts are automatically pre-populated with the <code>/etc/init.d/skeleton</code> file.</li>
+</ul>
+<blockquote>
+<p><a href="https://github.com/tpope/vim-eunuch" target="_blank" rel="external">vim-eunuch Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="vim-wordy"><a href="#vim-wordy" class="headerlink" title="vim-wordy"></a>vim-wordy</h1><blockquote>
+<p>“Wordy is not a grammar checker. Nor is it a guide to proper word usage. Rather, wordy is a lightweight tool to assist you in identifying those words and phrases known for their history of misuse, abuse, and overuse, at least according to usage experts. For example, if wordy highlights moreover in your document, a word for which no good usage exists, you should consider a rewrite to eliminate it. But if wordy highlights therefore in a sentence where you can demonstrate the usage is sound, you can elect to keep it —wordy be damned.”</p>
+</blockquote>
+<p>Still not sure how this works?</p>
+<p>See the gif below:</p>
+<p><img src="https://camo.githubusercontent.com/93ca72de04ae43e6a9f58e431189afde58d86da7/687474703a2f2f692e696d6775722e636f6d2f447a666a4568342e676966" alt="vim-wordy demo"></p>
+<p>Install it with this line:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/reedes/vim-wordy.git ~/.vim/bundle/vim-wordy</span><br></pre></td></tr></table></figure>
+<p>To disable it and restore your previous Vim environment after using one of the below options, enter the command:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:NoWordy</span><br></pre></td></tr></table></figure>
+<p>Use Vim’s <em>Normal</em> mode commands for navigating misspelled words to go to those words flagged by <em>wordy</em>.</p>
+<ul>
+<li><code>]s</code>    – Move to next misspelled word after the cursor.</li>
+<li><code>[s</code>    – Like <code>]s</code> but search backwards.</li>
+</ul>
+<h2 id="Weak-amp-Lazy-Usage"><a href="#Weak-amp-Lazy-Usage" class="headerlink" title="Weak &amp; Lazy Usage"></a>Weak &amp; Lazy Usage</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Wordy weak</span><br></pre></td></tr></table></figure>
+<h2 id="Redundant-amp-Problematic-Usage"><a href="#Redundant-amp-Problematic-Usage" class="headerlink" title="Redundant &amp; Problematic Usage"></a>Redundant &amp; Problematic Usage</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Wordy redundant</span><br><span class="line">:Wordy problematic</span><br></pre></td></tr></table></figure>
+<h2 id="Puffery-amp-Jargon"><a href="#Puffery-amp-Jargon" class="headerlink" title="Puffery &amp; Jargon"></a>Puffery &amp; Jargon</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Wordy puffery</span><br><span class="line">:Wordy business-jargon</span><br><span class="line">:Wordy art-jargon</span><br></pre></td></tr></table></figure>
+<h2 id="Manipulative-Language"><a href="#Manipulative-Language" class="headerlink" title="Manipulative Language"></a>Manipulative Language</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Wordy weasel</span><br></pre></td></tr></table></figure>
+<h2 id="To-Be-amp-The-Passive-Voice"><a href="#To-Be-amp-The-Passive-Voice" class="headerlink" title="To Be &amp; The Passive Voice"></a>To Be &amp; The Passive Voice</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Wordy being</span><br><span class="line">:Wordy passive-voice</span><br></pre></td></tr></table></figure>
+<h2 id="Colloquialisms-Idioms-and-Similies"><a href="#Colloquialisms-Idioms-and-Similies" class="headerlink" title="Colloquialisms, Idioms, and Similies"></a>Colloquialisms, Idioms, and Similies</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">:Wordy colloquial</span><br><span class="line">:Wordy idiomatic</span><br><span class="line">:Wordy similies</span><br></pre></td></tr></table></figure>
+<h2 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h2><figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">:Wordy said-synonyms</span><br><span class="line">:Wordy opinion</span><br><span class="line">:Wordy contractions</span><br><span class="line">:Wordy vague-time</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="http://vimawesome.com/plugin/vim-wordy" target="_blank" rel="external">vim-wordy Plugin on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="gist-vim"><a href="#gist-vim" class="headerlink" title="gist-vim"></a>gist-vim</h1><p>This is a plugin for creating and pushing Gists – <a href="http://gist.github.com" target="_blank" rel="external">http://gist.github.com</a></p>
+<h2 id="gist-vim-Setup"><a href="#gist-vim-Setup" class="headerlink" title="gist-vim Setup"></a>gist-vim Setup</h2><p>Install the plugin by cloning the gist-vim repository:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mattn/gist-vim.git ~/.vim/bundle/gist-vim</span><br></pre></td></tr></table></figure>
+<p>Then also install the webapi-vim plugin as gist-vim requires it to authenticate to Github:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/mattn/webapi-vim.git ~/.vim/bundle/webapi-vim</span><br></pre></td></tr></table></figure>
+<p>Now ensure your username is set in Git’s global config file with the next command, where <code>5car1z</code> is replaced with your own Git username:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global github.user 5car1z</span><br></pre></td></tr></table></figure>
+<p>Open a blank Vim file and enter the basic command to begin authenticating with Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist</span><br></pre></td></tr></table></figure>
+<p>Enter your Github account password:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Gist.<span class="keyword">vim</span> requires authorization <span class="keyword">to</span> use the Github API. These settings are stored in <span class="string">"~/.gist-vim"</span>. If you want <span class="keyword">to</span> revoke, <span class="keyword">do</span> <span class="string">"rm ~/.gist-vim"</span>.</span><br><span class="line">Github Password <span class="keyword">for</span> <span class="number">5</span>car1z:</span><br></pre></td></tr></table></figure>
+<p>Now the token file is created in your user’s <em>home</em> directory you can continue onto using the plugin. If you stop using the plugin, remember to remove this file. Or to revoke the associated Github token, go to the list of “Authorised applications” on Github’s “Account Settings” through their website.</p>
+<h2 id="gist-vim-Commands"><a href="#gist-vim-Commands" class="headerlink" title="gist-vim Commands"></a>gist-vim Commands</h2><p>Post the current buffer (file) to Github Gists using the default privacy option:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist</span><br></pre></td></tr></table></figure>
+<p>Create a private Gist:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">p</span></span><br></pre></td></tr></table></figure>
+<p>Create a public Gist - Only relevant if you’ve set Gists to be private by default:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">P</span></span><br></pre></td></tr></table></figure>
+<p>Create a Gist anonymously:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">a</span></span><br></pre></td></tr></table></figure>
+<p>Create a Gist with all open buffers:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">m</span></span><br></pre></td></tr></table></figure>
+<p>Edit the Gist (you need to have opened the gist buffer first). You can update the Gist with the <code>:w</code> command within the Gist buffer:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">e</span></span><br></pre></td></tr></table></figure>
+<p>Edit the Gist with the name <code>example.sh</code> (you need to have opened the Gist buffer first):</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">e</span> example.<span class="keyword">sh</span></span><br></pre></td></tr></table></figure>
+<p>Post/Edit the Gist with an added description (you need to have opened the Gist buffer first):</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">:Gist -s Add words here <span class="keyword">for</span> <span class="keyword">a</span> description of the gist.</span><br><span class="line">:Gist -<span class="keyword">e</span> -s Add words here <span class="keyword">for</span> <span class="keyword">a</span> description of the gist after editing.</span><br></pre></td></tr></table></figure>
+<p>Delete the Gist (you need to have opened the Gist buffer first) and password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -d</span><br></pre></td></tr></table></figure>
+<p>Fork the Gist (you need to have opened the Gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">f</span></span><br></pre></td></tr></table></figure>
+<p>Star the Gist (you need to have opened the Gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist +<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Unstar the Gist (you need to have opened the gist buffer first).</p>
+<p>Password authentication is required:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>Get gist <code>example-name</code> from Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist example-name</span><br></pre></td></tr></table></figure>
+<p>Get gist <code>example-name</code> and add it to the clipboard:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">c</span> example-name</span><br></pre></td></tr></table></figure>
+<p>List your public Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">l</span></span><br></pre></td></tr></table></figure>
+<p>List Gists from user <code>5car1z</code> on Github:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">l</span> <span class="number">5</span>car1z</span><br></pre></td></tr></table></figure>
+<p>List everyone’s Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">la</span></span><br></pre></td></tr></table></figure>
+<p>List Gists only from your starred Gists:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">ls</span></span><br></pre></td></tr></table></figure>
+<p>Open the Gist in a web browser after you post or update it.</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">:Gist -<span class="keyword">b</span></span><br></pre></td></tr></table></figure>
+<h2 id="gist-vim-Variables"><a href="#gist-vim-Variables" class="headerlink" title="gist-vim Variables"></a>gist-vim Variables</h2><p>To make gist-vim detect filetypes from the filename enable:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_detect_filetype</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to set it to open your web browser along with a Gist post:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_open_browser_after_post</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to set or change the browser in question, where <code>firefox</code> is the name of the browser’s command line program:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_browser_command</span> = <span class="string">'firefox %URL% &amp;'</span></span><br></pre></td></tr></table></figure>
+<p>If you want to show your private Gists  as part of the <code>:Gist -l</code> command:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_show_privates</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want all your Gist posts to be private by default:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_post_private</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want all your Gist posts to be anonymous by default:</p>
+<figure class="highlight vim"><figcaption><span>~/.vimrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_post_anonymous</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to manipulate multiple files in a gist:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_get_multiplefile</span> = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>If you want to use gist-vim with Github Enterprise instead:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> <span class="variable">g:gist_api_url</span> = <span class="string">'http://your-github-enterprise-domain/api/v3'</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://github.com/mattn/gist-vim" target="_blank" rel="external">gist.vim Plugin on Github</a></p>
+</blockquote>
+<hr>
+<p><strong>To Be Added!</strong></p>
+<ul>
+<li><a href="https://github.com/godlygeek/tabular" target="_blank" rel="external">Tabular Plugin on Github</a> – Plugin for automagically lining up text.</li>
+<li><a href="https://github.com/MattesGroeger/vim-bookmarks" target="_blank" rel="external">vim-bookmarks Plugin on Github</a> – Plugin for creating in file bookmark points.</li>
+<li><a href="https://github.com/xolox/vim-notes" target="_blank" rel="external">vim-notes Plugin on Github</a> – Plugin for taking notes.</li>
+<li><a href="https://github.com/suan/vim-instant-markdown" target="_blank" rel="external">vim-instant-markdown on Github</a> – Markdown preview for Vim. </li>
+<li>Pathogen Plugin Management with Git Submodules.</li>
+</ul>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://mirnazim.org/writings/vim-plugins-i-use/" target="_blank" rel="external">Blog Post on Pathogen &amp; Vim Plugins</a> – One of several good posts on the subject.</li>
+<li><a href="http://vimdoc.sourceforge.net/htmldoc/filetype.html" target="_blank" rel="external">Vim Documentation for “filetype”</a> - Explains in detail how the filetype command in Vim works.</li>
+<li><a href="http://vimcasts.org/blog/2011/05/the-fugitive-series/" target="_blank" rel="external">vimcasts.org - fugitive.vim Video Series</a> – Really in-depth video tutorials for fugitive.vim.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/Vim/" class="post__tag__link">Vim</a></li><li class="post__tag__item"><a href="/tags/Pathogen/" class="post__tag__link">Pathogen</a></li><li class="post__tag__item"><a href="/tags/Markdown/" class="post__tag__link">Markdown</a></li></ul><a href="/2015/07/27/notes-vim-pathogen-plugins/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-07-13T23:00:00.000Z" class="post__time">July 14, 2015</time><h1 class="post__title"><a href="/2015/07/14/notes-arch-system-install/">Arch Linux System Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>These are my notes on installing an Arch Linux system that begin at the initial shell prompt after booting from the installation media, and end with the configuring of the live partition. </p>
+<p>There is no coverage of installing the desktop environment or window manager as I’ll be looking to document this in another post.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Initial-Shell-Prompt"><a href="#1-–-Initial-Shell-Prompt" class="headerlink" title="1 – Initial Shell Prompt"></a>1 – Initial Shell Prompt</h1><p>After booting into the installation media load the key layout for your language. </p>
+<blockquote>
+<p><a href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes#/Partial_ISO_639_table" target="_blank" rel="external">ISO 639-1 Two Digit Language Codes </a></p>
+</blockquote>
+<p>In my case this is with the <code>uk</code> initials: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ loadkeys uk</span><br></pre></td></tr></table></figure>
+<p>Test to see if you have a working internet connection by using <code>ping</code> in either of the below two forms:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If you get <code>ping: unknown host www.google.co.uk</code> or <code>connect: Network is unreachable</code> for either of these commands then you need to do the rest of this step. </p>
+<p>If everything looks fine and you are sending plus receiving through <code>ping</code> with a working internet connection, then move on to step 2 instead. </p>
+<p>Find your Ethernet interface name using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>If you are unsure of the name, your Ethernet interface you are looking for is likely to start with the letter “e”, and unlikely to be “lo” or start with the letter “w”. </p>
+<p><img src="http://i.gyazo.com/2742bf027aad981b4e3af4652079026a.png" alt="Ethernet interface name"></p>
+<p>In my case my interface was named “eno167777736”. So I’ll use that as the example here.</p>
+<p>Next make sure the interface is <em>up</em> and running with this command structure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Substituting the interface name ID with your own.</p>
+<p>Then start and enable <code>dhcpcd.service</code> with <code>systemctl</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpcd.service</span><br></pre></td></tr></table></figure>
+<p>Attempt a <code>ping</code> once again and this time it should succeed, with the internet connection working correctly. </p>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful:</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh Arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="2-–-Partitioning"><a href="#2-–-Partitioning" class="headerlink" title="2 – Partitioning"></a>2 – Partitioning</h1><p>There are a quite a number of programs you can choose from when setting up the partition table. I’m using <code>cfdisk</code> for simplicity and clarity. </p>
+<p>Run it to see your disk’s current partitions and installed file systems and their labels. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cfdisk</span><br></pre></td></tr></table></figure>
+<p>With this you can manage the system’s partitions and delete or create them as needed. </p>
+<hr>
+<h1 id="3-–-Filesystems"><a href="#3-–-Filesystems" class="headerlink" title="3 – Filesystems"></a>3 – Filesystems</h1><p>Back outside of <code>cfdisk</code> you can begin to create your main file system for Arch on a suitable free partition. </p>
+<p>I’m using <em>ext4</em> and in this example not choosing to split system directories over different partitions. i.e. <code>boot</code> , <code>home</code> , <code>root</code> , <code>swap</code> , etc.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.ext4 /dev/sda3</span><br></pre></td></tr></table></figure>
+<p>Where <code>3</code> is the number of the partition you want to install Arch on. </p>
+<hr>
+<h1 id="4-–-Mounting"><a href="#4-–-Mounting" class="headerlink" title="4 – Mounting"></a>4 – Mounting</h1><p>Mount the new <em>ext4</em> partition into <code>/mnt/</code> via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda3 /mnt/</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Mirrors-amp-System-Packages"><a href="#5-–-Mirrors-amp-System-Packages" class="headerlink" title="5 – Mirrors &amp; System Packages"></a>5 – Mirrors &amp; System Packages</h1><p>Append and rename the <em>mirrorlist</em> with <code>.orig</code> so we can create a new file with it’s original name to replace it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig</span><br></pre></td></tr></table></figure>
+<p>Run <code>rankmirrors</code> on the file and redirect the output to create the new mirrorlist file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig &gt;/etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>Sync and refresh the system packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Syy</span><br></pre></td></tr></table></figure>
+<p>Build the new file system’s core directories and structures in the mounted partition using <code>pacstrap</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacstrap /mnt/ base base-devel</span><br></pre></td></tr></table></figure>
+<p>Copy the mirrorlist files across into the new partition also:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-fstab"><a href="#6-–-fstab" class="headerlink" title="6 – fstab"></a>6 – fstab</h1><p>Generate the necessary directories and files Arch needs to mount at boot on the hard drive, inside of the new partition:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ genfstab -p /mnt/ &gt;&gt; /mnt/etc/fstab</span><br></pre></td></tr></table></figure>
+<p>Next begin a new Bash shell session inside of our formed Arch partition:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ arch-chroot /mnt/ /bin/bash</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-GRUB-Bootloader"><a href="#7-–-GRUB-Bootloader" class="headerlink" title="7 – GRUB Bootloader"></a>7 – GRUB Bootloader</h1><p>Inside the bash shell install the <em>GRUB Bootloader</em> through <code>pacman</code> . This is required to select which operating system to run on boot, as in my case we are installing alongside other systems. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S grub</span><br></pre></td></tr></table></figure>
+<p>Run Grub’s install routine onto the hard drive that the computer’s BIOS boots from first upon start up.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-install /dev/sda</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Warning:</strong> Change /dev/sda to reflect your hard drive if needed. Do not append a partition number, and do not replace it with “sdax” either.</p>
+</blockquote>
+<p>Before generating a configuration profile for Grub to use when booting, install and run the <code>os-prober</code> program, so the other operating systems on the hard drive are picked up and provided as an option in the boot menu. </p>
+<p>Here’s how to install it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S os-prober</span><br></pre></td></tr></table></figure>
+<p>Run it like any other installed program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ os-prober</span><br></pre></td></tr></table></figure>
+<p>Now we can generate the config file mentioned before and place it in its correct location: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<hr>
+<p>#8 – hostname</p>
+<p>Set the <code>hostname</code> to today’s date, or whatever you prefer. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"archlinux-desktop"</span> &gt; /etc/hostname</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-localtime"><a href="#9-–-localtime" class="headerlink" title="9 – localtime"></a>9 – localtime</h1><p>Set the <code>localtime</code> to London’s current time (obviously change this in relation to your own timezone.) </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ln <span class="_">-s</span> /usr/share/zoneinfo/Europe/London /etc/localtime</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="10-–-locale"><a href="#10-–-locale" class="headerlink" title="10 – locale"></a>10 – locale</h1><p><em>Locales</em> define which language the system uses and other regional considerations like currency denomination, numerology and character sets. </p>
+<p>Using <code>vi</code> do this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/locale.gen</span><br></pre></td></tr></table></figure>
+<p>Uncomment the relevant language you wish to use (UTF-8 support recommended):</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en_GB.UTF-8 UTF-8</span><br></pre></td></tr></table></figure>
+<p>Write and save to the file, then exit back to the command line.</p>
+<p>Then generate the <em>locales</em>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ locale-gen</span><br></pre></td></tr></table></figure>
+<p>The <code>/etc/locale.conf</code> file does not exist by default. Create it, where <code>LANG</code> refers to the first uncommented entry in <code>/etc/locale.gen</code> from earlier. </p>
+<p>See the next command for an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> LANG=en_GB.UTF-8 &gt; /etc/locale.conf</span><br></pre></td></tr></table></figure>
+<p>Lastly export the chosen <em>locale</em>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> LANG=en_GB.UTF-8</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-passwd"><a href="#11-–-passwd" class="headerlink" title="11 – passwd"></a>11 – passwd</h1><p>Change the root user’s password for the system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-unmount-amp-reboot"><a href="#12-–-unmount-amp-reboot" class="headerlink" title="12 – unmount &amp; reboot"></a>12 – unmount &amp; reboot</h1><p>Exit from the <em>chrooted</em> shell environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>While partitions are unmounted automatically by <em>systemd</em> on shutdown, you may do so manually with the next command as a safety measure. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umount -R /mnt/</span><br></pre></td></tr></table></figure>
+<p>Remove your Arch installation boot media (CD, USB, etc) after rebooting.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ reboot now</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="13-–-First-Live-Login"><a href="#13-–-First-Live-Login" class="headerlink" title="13 – First Live Login"></a>13 – First Live Login</h1><p>Log into the system we created in the previous post this time on the actual file-system we generated (i.e. without the boot media), using the one and only <em>root</em> account currently in existence. </p>
+<p>Make your console keyboard settings permanent this time on system reboot/boot by opening this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/vconsole.conf</span><br></pre></td></tr></table></figure>
+<p>Then add the line in the next code block, where <code>uk</code> is replaced by your own countries keyboard initials:</p>
+<figure class="highlight bash"><figcaption><span>/etc/vconsole.conf </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">KEYMAP=uk</span><br></pre></td></tr></table></figure>
+<p>Save and exit the file.</p>
+<p>This next set of command refers to the base console font setting. This is nothing to do with X server, which we haven’t even installed yet!</p>
+<p>To change the default font of the console you can move to the below directory and see some compressed font packages. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /usr/share/kbd/consolefonts/</span><br><span class="line">$ ls</span><br></pre></td></tr></table></figure>
+<p>To test them use <code>setfont</code> followed by the compressed file name. </p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ setfont iso01.14.gz</span><br></pre></td></tr></table></figure>
+<p>To make this persistent between boots, once again open the previous <code>vconsole.conf</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/vconsole.conf</span><br></pre></td></tr></table></figure>
+<p>Insert a new line that specifies the font file you want to use in console sessions:</p>
+<figure class="highlight bash"><figcaption><span>/etc/vconsole.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">KEYMAP=uk</span><br><span class="line">FONT=iso1.16.gz</span><br></pre></td></tr></table></figure>
+<p>Save the changes and exit back to the command line.</p>
+<hr>
+<h1 id="14-–-Internet-Connection"><a href="#14-–-Internet-Connection" class="headerlink" title="14 – Internet Connection"></a>14 – Internet Connection</h1><p>Test internet connectivity once again with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>Move onto step 15 if this is successful, if not use <code>iplink</code> to see your network interfaces:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link</span><br></pre></td></tr></table></figure>
+<p>Then use it again to enable your Ethernet device:</p>
+<blockquote>
+<p><strong>Note:</strong>  “eno16777736” is my example Ethernet device name, substitute it for your own like in the earlier example. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ip link <span class="built_in">set</span> eno16777736 up</span><br></pre></td></tr></table></figure>
+<p>Ensure the <code>dhcpd</code> service from <em>systemd</em> is enabled and running by starting it with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd.service</span><br><span class="line">$ systemctl start dhcpd.service</span><br></pre></td></tr></table></figure>
+<p>Test network connectivity again with <code>ping</code> and this time it should be successful. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br><span class="line">$ ping -c 5 8.8.8.8</span><br></pre></td></tr></table></figure>
+<p>If despite this there’s no change, try the previous commands again, but this time specifying the interface name in the command like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br><span class="line">$ systemctl <span class="built_in">enable</span> dhcpcd@eno16777736.service</span><br></pre></td></tr></table></figure>
+<p>If still no joy here are some resources that might prove useful:</p>
+<ul>
+<li><a href="https://bbs.archlinux.org/viewtopic.php?id=141420" target="_blank" rel="external">No wired internet after fresh Arch install.</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/beginners%27_guide#Establish_an_internet_connection" target="_blank" rel="external">Arch Linux Beginner’s Guide - Establishing an internet connection</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Network_configuration#Static_IP_address" target="_blank" rel="external">Arch Linux Beginner’s Guide - Network Configuration</a></li>
+</ul>
+<hr>
+<h1 id="15-–-pacman-conf"><a href="#15-–-pacman-conf" class="headerlink" title="15 – pacman.conf"></a>15 – pacman.conf</h1><p><strong>If</strong> using a 64-bit system begin editing the <code>/etc/pacman.conf</code> file:   </p>
+<blockquote>
+<p><strong>If not using a 64 bit system then move onto Step 16 now.</strong></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/pacman.conf</span><br></pre></td></tr></table></figure>
+<p>Now <em>uncomment</em> the two following lines in this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[multilib]</span><br><span class="line">Include = /etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<p>After doing this write/save to the file and exit it. </p>
+<p>When back at the shell prompt update repositories with <code>pacman</code> by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Sy</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="16-–-User-Creation"><a href="#16-–-User-Creation" class="headerlink" title="16 – User Creation"></a>16 – User Creation</h1><p>Make another user account here so <em>root</em> isn’t the default account in use all the time (bad practice to do so), whilst at the same time adding it to some groups. </p>
+<blockquote>
+<p><strong>Note:</strong> There are no spaces present between the groups listed in this next command.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ useradd -m -g users -G wheel,storage,power,sys,adm <span class="_">-s</span> /bin/bash scarlz</span><br></pre></td></tr></table></figure>
+<p>Set the password for the new user that has just been created.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd scarlz</span><br></pre></td></tr></table></figure>
+<p>Install <code>sudo</code> with <code>pacman</code> <strong>if</strong> it did not install as part of your previous base Arch set-up. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S sudo</span><br></pre></td></tr></table></figure>
+<p>If you ever want to see a list of packages related to a search term, you could type the following command, where the package name specified at the end is the “search term”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Ss sudo</span><br></pre></td></tr></table></figure>
+<p>Now <code>sudo</code> is installed on the system we need to enable it for users belonging to the <code>wheel</code> group in the <em>sudoers</em> file to gain the privileges. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EDITOR=vi visudo</span><br></pre></td></tr></table></figure>
+<p>Find the “user privilege specification” section and <em>uncomment</em> the following line so it looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%wheel ALL=(ALL) ALL</span><br></pre></td></tr></table></figure>
+<p>After doing so save/write to the file, and exit. </p>
+<p>I’m also going to install <em>bash completion</em> here.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S bash-completion</span><br></pre></td></tr></table></figure>
+<p>The operating system installation is now mostly complete. </p>
+<hr>
+<h1 id="Display-amp-Window-Manager"><a href="#Display-amp-Window-Manager" class="headerlink" title="Display &amp; Window Manager"></a>Display &amp; Window Manager</h1><p>Another forthcoming post will go into depth on how to install a tiling window manager (bspwm) and configure <code>.xinitrc</code> to serve as a display manager. </p>
+<p>Or to continue you can find and research a window manager/desktop environment from the Arch-wiki to setup and install. </p>
+<blockquote>
+<p><a href="https://wiki.archlinux.org/index.php/Window_manager" target="_blank" rel="external">Arch-wiki Window Managers</a><br><a href="https://wiki.archlinux.org/index.php/Desktop_environment" target="_blank" rel="external">Arch-wiki Desktop Environments</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Beginners%27_guide" target="_blank" rel="external">Arch Linux Beginner’s Guide</a> - From the official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/Systemd#Using_units" target="_blank" rel="external">Arch-wiki - systemd</a> - Using units (systemctl).</li>
+<li><a href="http://lifehacker.com/5680453/build-a-killer-customized-arch-linux-installation-and-learn-all-about-linux-in-the-process" target="_blank" rel="external">Lifehacker Article on Arch Installation</a>  - Useful article that covers the same process. </li>
+<li><a href="http://www.linuxveda.com/2014/06/07/arch-linux-tutorial/" target="_blank" rel="external">Linux Neda: How to install Arch Linux</a> - Similar to the previous article but also useful. </li>
+<li><a href="https://wiki.archlinux.org/index.php/GRUB" target="_blank" rel="external">Arch Linux GRUB Article</a> - For more information on configuring and using GRUB.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/Pacman/" class="post__tag__link">Pacman</a></li><li class="post__tag__item"><a href="/tags/GRUB/" class="post__tag__link">GRUB</a></li></ul><a href="/2015/07/14/notes-arch-system-install/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-07-11T23:00:00.000Z" class="post__time">July 12, 2015</time><h1 class="post__title"><a href="/2015/07/12/pwgen-unix-password-generator/">pwgen Unix Password Generator</a></h1></header><div class="post__main echo"><p><img src="http://worm.org.ua/wp-content/uploads/pwgen-logo.png" alt="pwgen Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>The shell program <code>pwgen</code> is one of a number of password generation tools that creates both human readable and machine formatted random passwords. It achieves this using <code>/dev/urandom</code> and like any of these password solution programs attempts to make passwords as secure as possible, within the given parameters. </p>
+<p>Here’s a seemingly safe password strength checker where you can gauge how secure any existing or generated passwords are: </p>
+<blockquote>
+<p><a href="https://howsecureismypassword.net/" target="_blank" rel="external">https://howsecureismypassword.net/</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Install-pwgen"><a href="#1-–-Install-pwgen" class="headerlink" title="1 – Install pwgen"></a>1 – Install pwgen</h1><p>You can usually find <code>pwgen</code> in your distribution’s repositories through its package manager. </p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using Pacman this acquires and installs the program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S pwgen</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>Using Apt this acquires and installs the program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install pwgen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Letters-amp-Numbers"><a href="#2-–-Letters-amp-Numbers" class="headerlink" title="2 – Letters &amp; Numbers"></a>2 – Letters &amp; Numbers</h1><p>Will generate a one line password consisting of only letters and numbers, with a total of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Secure"><a href="#3-–-Secure" class="headerlink" title="3 –  Secure"></a>3 –  Secure</h1><p>Generate a one line password with hard to memorize random characters (<code>-s</code>), that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 <span class="_">-s</span> 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Symbols"><a href="#4-–-Symbols" class="headerlink" title="4 – Symbols"></a>4 – Symbols</h1><p>Generate a one line password inclusive of at least one symbol <code>-y</code> that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -y 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Secure-amp-Symbols"><a href="#5-–-Secure-amp-Symbols" class="headerlink" title="5 – Secure &amp; Symbols"></a>5 – Secure &amp; Symbols</h1><p>Generate a one line password with hard to memorize random characters (<code>-s</code>), inclusive of at least one symbol (<code>-y</code>) that has a total overall of 16 characters:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -sy 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Extra-Options"><a href="#6-–-Extra-Options" class="headerlink" title="6 – Extra Options"></a>6 – Extra Options</h1><p>Don’t include numbers in the generated password with <code>-0</code> and consist of 8 characters overall:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -0 8</span><br></pre></td></tr></table></figure>
+<p>Don’t use characters that could be confused by the user when printed, such as <code>l</code> and <code>1</code>, or <code>0</code> or <code>O</code>‘, and consist of 8 characters overall:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -B 8</span><br></pre></td></tr></table></figure>
+<p>Don’t include capitals in the generated password and consist of 8 characters overall::</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pwgen -1 -A 8</span><br></pre></td></tr></table></figure>
+<p>For everything else there’s <code>man</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ man pwgen</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>More Information</strong> </p>
+<ul>
+<li><a href="http://www.maketecheasier.com/password-generators-for-linux/" target="_blank" rel="external">Password Generators for Linux</a> - Other similar password generators.</li>
+<li><a href="http://linux.die.net/man/1/pwgen" target="_blank" rel="external">pwgen(1) - Linux man page</a> - Online Manual Page.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</blockquote>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Security/" class="post__tag__link">Security</a></li><li class="post__tag__item"><a href="/tags/Passwords/" class="post__tag__link">Passwords</a></li></ul><a href="/2015/07/12/pwgen-unix-password-generator/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-07-03T23:00:00.000Z" class="post__time">July 4, 2015</time><h1 class="post__title"><a href="/2015/07/04/notes-pass-unix-password-manager/">Pass Unix Password Manager</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/wMHZ8Jm.png" alt="GPG Lock"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Pass is a command line password manager that follows the Unix philosopy of being small, simple, efficient, and compatible. It works by storing machine generated or user generated passwords in an encrypted GPG file. Each of which are organised into a named folder hierarchy. It can be manipulated through other command line tools if needed, and its contents easily transferred from system to system.</p>
+<p>As indicated Pass operates with traditional command line options and arguments, and has commands for adding, editing, generating, and retrieving specific passwords. It also has built in features such as the ability to temporarily load passwords onto your system clipboard, and track password changes using version control such as Git.</p>
+<p>All passwords expand from a root folder created with the path; <code>~/.password-store</code> and the hierarchy of descending passwords expands from there. You can if preferred interact with the password store using other ordinary Linux/Unix shell commands instead. Furthermore there’s provided Bash completion so that you can hit <code>TAB</code> to fill in paths and file names (Zsh completion is also available).</p>
+<a id="more"></a>
+<hr>
+<h1 id="Step-1-–-Create-A-GPG-Key"><a href="#Step-1-–-Create-A-GPG-Key" class="headerlink" title="Step 1 – Create A GPG Key"></a>Step 1 – Create A GPG Key</h1><p>To begin using Pass you first need a GPG key.</p>
+<p>You can create one by issuing the following command in a Linux Bash terminal on most distributions:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --gen-key</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> On Arch Linux Install GPG first with: <code>sudo pacman -S gpg</code></p>
+</blockquote>
+<p>The initial prompt will appear and looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Please select what kind of key you want:</span><br><span class="line">   (1) RSA and RSA (default)</span><br><span class="line">   (2) DSA and Elgamal</span><br><span class="line">   (3) DSA (sign only)</span><br><span class="line">   (4) RSA (sign only)</span><br><span class="line">Your selection?</span><br></pre></td></tr></table></figure>
+<p>Choose <code>1</code>  which will enable both encryption and signing.</p>
+<p>The next prompt asks for the keysize:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RSA keys may be between 1024 and 4096 bits long.</span><br><span class="line">What keysize <span class="keyword">do</span> you want? (2048)</span><br></pre></td></tr></table></figure>
+<p>Enter <code>2048</code> for the keysize. </p>
+<p>Then read the next set of output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Please specify how long the key should be valid.</span><br><span class="line">         0 = key does not expire</span><br><span class="line">      &lt;n&gt;  = key expires <span class="keyword">in</span> n days</span><br><span class="line">      &lt;n&gt;w = key expires <span class="keyword">in</span> n weeks</span><br><span class="line">      &lt;n&gt;m = key expires <span class="keyword">in</span> n months</span><br><span class="line">      &lt;n&gt;y = key expires <span class="keyword">in</span> n years</span><br><span class="line">Key is valid <span class="keyword">for</span>? (0)</span><br></pre></td></tr></table></figure>
+<p>Most people make their keys valid until infinity, which is the default option. If you do this don’t forget to revoke the key when you no longer use it.</p>
+<p>Enter <code>0</code> for infinity, or however long you wish.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">You need a user ID to identify your key; the software constructs the user ID</span><br><span class="line">from the Real Name, Comment and E-mail Address <span class="keyword">in</span> this form:</span><br><span class="line">    <span class="string">"Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"</span></span><br></pre></td></tr></table></figure>
+<p>Your next input from here should be your real name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Real name:</span><br></pre></td></tr></table></figure>
+<p>Followed by your email address you wish to associate the key with (you can add more later!) : </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">E-mail address:</span><br></pre></td></tr></table></figure>
+<p>Here you can give the key a description that fits its purpose:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Comment:</span><br></pre></td></tr></table></figure>
+<p>This part is important and is the passphrase that you’ll use to open/decrypt your key that is generated. You can make it memorable but it’s essential that this follows a few precepts to make it strong and considered “secure”.</p>
+<blockquote>
+<p><strong>For Example:</strong> Contains symbols, contains upper &amp; lower case characters, some numbers, no dictionary words, etc.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">You need a Passphrase to protect your secret key.</span><br><span class="line"></span><br><span class="line">Enter passphrase:</span><br></pre></td></tr></table></figure>
+<p>As the next prompt says type on the keyboard, move the mouse, and perform some actions that read/write to the machine’s hard drives. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">We need to generate a lot of random bytes. It is a good idea to perform</span><br><span class="line">some other action (<span class="built_in">type</span> on the keyboard, move the mouse, use the</span><br><span class="line">disks) during the prime generation; this gives the random number</span><br><span class="line">generator a better chance to gain enough entropy.</span><br></pre></td></tr></table></figure>
+<p>If this is not enough or does not seem to update and complete after sometime, open up a new shell session and carry out these commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install rng-tools</span><br><span class="line">$ sudo rngd -r /dev/urandom</span><br></pre></td></tr></table></figure>
+<p>The process should now continue and include your new key’s location, value, and details. </p>
+<p>With the main line reading:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public and secret key created and signed.</span><br></pre></td></tr></table></figure>
+<p>One more step you can complete <strong>locally</strong> is to set your key as the default key by entering this line in your <code>~/.bashrc</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> GPGKEY=&lt;key value&gt;</span><br></pre></td></tr></table></figure>
+<p>Now restart the <code>gpg-agent</code> with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ killall -q gpg-agent</span><br><span class="line">$ <span class="built_in">eval</span> $(gpg-agent --daemon)</span><br></pre></td></tr></table></figure>
+<p>Then source your <code>.bashrc</code> again via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-2-–-Creating-A-Revocation-Certificate"><a href="#Step-2-–-Creating-A-Revocation-Certificate" class="headerlink" title="Step 2 – Creating A Revocation Certificate"></a>Step 2 – Creating A Revocation Certificate</h1><p>A revocation certificate must be generated to revoke your public key if your private key becomes compromised in any way.</p>
+<p>It is recommended to create a revocation certificate when you create your key. </p>
+<blockquote>
+<p><strong>Note:</strong> Keep your revocation certificate on a medium that you can safely secure, like a thumb drive in a locked box. The revocation key may be printed and/or stored as a file. Take care to safeguard your revocation key.</p>
+</blockquote>
+<p>To create a revocation certificate for your key carry out these two commands. </p>
+<p>This first statement will create an environment variable in Bash containing the GPG key value you just created. Note that if you have other keys previously generated the value extracted with this command may be of a different key, this filters on the first key listed by the <code>gpg</code> program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> GPGKEY=<span class="string">"<span class="variable">$(gpg -K | awk 'NR==3 &#123;print $2&#125;' | sed 's/2048R\///g')</span>"</span></span><br></pre></td></tr></table></figure>
+<p>Now we create the revocation certificate by passing the <code>$GPGKEY</code> variable we defined:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --output revoke.asc --gen-revoke <span class="variable">$GPGKEY</span></span><br></pre></td></tr></table></figure>
+<p>Enter <code>0</code> for this multiple choice list.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Create a revocation certificate <span class="keyword">for</span> this key? (y/N) y</span><br><span class="line">Please select the reason <span class="keyword">for</span> the revocation:</span><br><span class="line">  0 = No reason specified</span><br><span class="line">  1 = Key has been compromised</span><br><span class="line">  2 = Key is superseded</span><br><span class="line">  3 = Key is no longer used</span><br><span class="line">  Q = Cancel</span><br><span class="line">(Probably you want to select 1 here)</span><br></pre></td></tr></table></figure>
+<p>Enter something along the lines of - “Will be used if/when this key is ever compromised.”</p>
+<p>This also needs ending with a new line.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Enter an optional description; end it with an empty line:</span><br><span class="line">&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+<p>Now enter your key’s passphrase </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">You need a passphrase to unlock the secret key <span class="keyword">for</span></span><br><span class="line">user:</span><br></pre></td></tr></table></figure>
+<p>The resultant message seen here means you successfully created your revocation certificate. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ASCII armoured output forced.</span><br><span class="line">Revocation certificate created.</span><br><span class="line"></span><br><span class="line">Please move it to a medium <span class="built_in">which</span> you can hide away; <span class="keyword">if</span> Mallory gets</span><br><span class="line">access to this certificate he can use it to make your key unusable.</span><br><span class="line">It is smart to <span class="built_in">print</span> this certificate and store it away, just <span class="keyword">in</span> <span class="keyword">case</span></span><br><span class="line">your media become unreadable.  But have some caution:  The <span class="built_in">print</span> system of</span><br><span class="line">your machine might store the data and make it available to others!</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Mallory being a malicious attacker (less commonly called Trudy, an intruder.); unlike the passive Eve, this one is the active man-in-the-middle attacker who can modify messages, substitute his/her own messages, replay old messages, and so on. – <a href="https://en.wikipedia.org/wiki/Alice_and_Bob#Cast_of_characters" target="_blank" rel="external">Source</a></p>
+</blockquote>
+<p>As indicated backup somewhere safe the <code>revoke.asc</code> file, in case you should ever need it in the future to invalidate your private key.  </p>
+<p>It can be found in your current working directory where you executed the initial <code>gpg --output</code> command. </p>
+<hr>
+<h1 id="Step-3-–-Installing-Pass"><a href="#Step-3-–-Installing-Pass" class="headerlink" title="Step 3 – Installing Pass"></a>Step 3 – Installing Pass</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S pass</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install pass</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-4-–-Initialising-Pass"><a href="#Step-4-–-Initialising-Pass" class="headerlink" title="Step 4 – Initialising Pass"></a>Step 4 – Initialising Pass</h1><p>After installing Pass you need to initialise it with your GPG key from the previous steps.</p>
+<p>In the same shell session as earlier use the environment variable <code>$GPGKEY</code> and supply it to Pass via the <code>init</code> parameter: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass init <span class="variable">$GPGKEY</span></span><br></pre></td></tr></table></figure>
+<p>This message will follow:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir: created directory ‘/home/scarlz/.password-store’</span><br><span class="line">Password store initialized <span class="keyword">for</span> &lt;KEYVALUE&gt;.</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-5-–-Adding-Password-Entries"><a href="#Step-5-–-Adding-Password-Entries" class="headerlink" title="Step 5 – Adding Password Entries"></a>Step 5 – Adding Password Entries</h1><p>To add a new password entry to Pass, follow this next code snippet’s syntax:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass insert email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<p>This example was for an entry of an email address account in a descriptive hierarchy.</p>
+<p>The prompt generated asks for the password that is to be associated and stored with this entry</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mkdir: created directory ‘/home/scarlz/.password-store/email’</span><br><span class="line">mkdir: created directory ‘/home/scarlz/.password-store/email/gmail’</span><br><span class="line">Enter password <span class="keyword">for</span> email/proton-mail/count.elmsley@protonmail.com:</span><br><span class="line">Retype password <span class="keyword">for</span> email/proton-mail/count.elmsley@protonmail.com:</span><br></pre></td></tr></table></figure>
+<p>The password is then read encrypted, and placed in <code>~/.password-store</code> .</p>
+<p>As the data stored in the encrypted files are plain text you can add any other details that go with an entry using the <code>-m</code> parameter. This creates the password with a multi-line entry where the first field is usually the password and the rest of the lines are the extra details such as usernames, emails addresses, etc. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass insert -m email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<p>Press <code>CTRL</code> + <code>D</code> to quit and confirm the entry when in multi-line mode. </p>
+<p>To use Pass to generate a password for an entry on your behalf, use the <code>generate</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass generate archlinux.org/wiki/username &lt;n&gt;</span><br></pre></td></tr></table></figure>
+<p>The <code>&lt;n&gt;</code> represents the number of characters you want the password to be in total. Replace it with a value like <code>16</code> to make the password lengthy enough. </p>
+<p>There are some other options you can toggle like <code>-n</code> to exclude symbols from the password, and <code>-c</code> to send the password straight to the clipboard, and not print it to standard out once it’s created. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass generate -n -c archlinux.org/wiki/username 16</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-6-–-Displaying-amp-Accessing-Passwords"><a href="#Step-6-–-Displaying-amp-Accessing-Passwords" class="headerlink" title="Step 6 – Displaying &amp; Accessing Passwords"></a>Step 6 – Displaying &amp; Accessing Passwords</h1><p>The most basic and easiest way of displaying your password hierarchy tree is by running the program without any extra options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Password Store</span><br><span class="line">├── Business</span><br><span class="line">│   ├── some-silly-business-site.com</span><br><span class="line">│   └── another-business-site.net</span><br><span class="line">├── Email</span><br><span class="line">│   ├── user@gmail.com</span><br><span class="line">│   └── zx2c4.com</span><br><span class="line">└── France</span><br><span class="line">    ├── banking</span><br><span class="line">    ├── freebox</span><br><span class="line">    └── mobilephone</span><br></pre></td></tr></table></figure>
+<p>If you want to single out certain categories or sections of the tree use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass ls Email/</span><br></pre></td></tr></table></figure>
+<p>Which shows only:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">├── Email</span><br><span class="line">│   ├── user@gmail.com</span><br><span class="line">│   └── zx2c4.com</span><br></pre></td></tr></table></figure>
+<p>To actually decrypt and retrieve a password, call the program and provide the path to the password:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass Email/user@gmail.com</span><br></pre></td></tr></table></figure>
+<p>You will now have to enter or unlock your GPG key to see and display the password.</p>
+<p>Instead of displaying the password in the terminal you can copy it to the clipboard for 45 seconds via <code>-c</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass -c Email/user@gmail.com</span><br></pre></td></tr></table></figure>
+<p>Which gives the message below and let’s you paste the password into any websites, forms, etc:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Copied Email/user@gmail.com to clipboard. Will clear <span class="keyword">in</span> 45 seconds.</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-7-–-Removing-amp-Editing-Password-Entries"><a href="#Step-7-–-Removing-amp-Editing-Password-Entries" class="headerlink" title="Step 7 – Removing &amp; Editing Password Entries"></a>Step 7 – Removing &amp; Editing Password Entries</h1><p>You many need to remove passwords in the manager from time to time. This is done with the familiarly named <code>rm</code> and the path to the password file you want to remove. </p>
+<p>Here an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass rm email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<p>To remove the folders in the process of the deletion include <code>-r</code> (recursively) in the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass rm -r email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<p>Normally there is a prompt to make sure you are certain you want to delete the password, this can be removed by using <code>-f</code> which is short for ‘force” :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass rm <span class="_">-f</span> email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<p>To change an existing password and edit it replace <code>rm</code> with <code>edit</code> like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass edit email/proton-mail/count.elmsley@protonmail.com</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-8-–-Git-Version-Control"><a href="#Step-8-–-Git-Version-Control" class="headerlink" title="Step 8 – Git Version Control"></a>Step 8 – Git Version Control</h1><p>Pass has support for Git tracking which would be ideal for private Git repositories but also in theory “safe” to put on a public service like Github, as the files are of course encrypted with GPG. Depending upon the strength of your passphrase too.</p>
+<p>Make sure you have <code>git</code> installed on your system for this next section:</p>
+<h2 id="Arch-Linux-1"><a href="#Arch-Linux-1" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu-1"><a href="#Debian-Ubuntu-1" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<p>Here’s how the Git functionality works with pass:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /<span class="variable">$USER</span>/.password-store</span><br></pre></td></tr></table></figure>
+<p>Initialise the repository through pass:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass git init</span><br></pre></td></tr></table></figure>
+<p>Add your remote repo address and name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass git remote add origin git-repo-address.com:repo-name</span><br></pre></td></tr></table></figure>
+<p>Set Git to push with these options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass git push -u --all</span><br></pre></td></tr></table></figure>
+<p>You can now add, edit, remove, and make changes then push them to your remote repository with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pass git push</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Step-9-–-Shell-Environment-Variables"><a href="#Step-9-–-Shell-Environment-Variables" class="headerlink" title="Step 9 – Shell Environment Variables"></a>Step 9 – Shell Environment Variables</h1><p>Here are three variables I found that seem potentially the most useful, should you ever need to fiddle with their functionality (there are others though).</p>
+<p><code>PASSWORD_STORE_DIR</code><br>Overrides the default password storage directory.</p>
+<p><code>$PASSWORD_STORE_GIT</code><br>Overrides the default root of the git repository, which is helpful if PASSWORD_STORE_DIR is temporarily set to a sub-directory of the default password store.</p>
+<p><code>$PASSWORD_STORE_CLIP_TIME</code><br>Specifies the number of seconds to wait before restoring the clipboard, by default 45 seconds.</p>
+<hr>
+<h1 id="Step-10-–-Exporting-amp-Importing-Keys"><a href="#Step-10-–-Exporting-amp-Importing-Keys" class="headerlink" title="Step 10 – Exporting &amp; Importing Keys"></a>Step 10 – Exporting &amp; Importing Keys</h1><p>To transfer and move around a pass GPG key to other systems, follow these steps for a rudimentary solution.</p>
+<h2 id="Public-Key"><a href="#Public-Key" class="headerlink" title="Public Key"></a>Public Key</h2><p>To see the current public GPG keys you have setup and active use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --list-keys</span><br></pre></td></tr></table></figure>
+<p>One of these will show the ID and details of your Pass key, use the key ID value to export the public key into a file with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg -ao pass_public.key --export &lt;key ID value&gt;</span><br></pre></td></tr></table></figure>
+<p>Then transfer the generated <code>pass_public.key</code> onto your new system, and use the <code>--import</code> option to add it to GPG.</p>
+<p>This is done with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --import pass_public.key</span><br></pre></td></tr></table></figure>
+<h2 id="Private-Key"><a href="#Private-Key" class="headerlink" title="Private Key"></a>Private Key</h2><p>To see the current private GPG keys you have setup and active use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --list-secret-keys</span><br></pre></td></tr></table></figure>
+<p>Like in the public key section, export the private key into a file with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg -ao pass_private.key --export-secret-keys</span><br></pre></td></tr></table></figure>
+<p>Then transfer the generated <code>pass_private.key</code> onto your new system, and use the <code>--import</code> option to add it to GPG.</p>
+<p>This is done with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --import pass_private.key</span><br></pre></td></tr></table></figure>
+<h2 id="Trust-Error"><a href="#Trust-Error" class="headerlink" title="Trust Error"></a>Trust Error</h2><p>Sometimes after importing the key onto a new system you may get an error message similiar to:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gpg: There is no assurance this key belongs to the named user</span><br></pre></td></tr></table></figure>
+<p>Which appers when trying to encrypt a new file or edit an existing Pass entry.</p>
+<p>If so use GPG to edit the key.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gpg --edit-key &lt;Key Value&gt;</span><br></pre></td></tr></table></figure>
+<p>At the prompt type:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; trust</span><br></pre></td></tr></table></figure>
+<p>Then from the numerical choices displayed enter a suitable value. The highest option <code>5</code> is fine if you know that this key is definetly your own and not a potentially unsafe key.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Please decide how far you trust this user to correctly verify other users<span class="string">' keys</span><br><span class="line">(by looking at passports, checking fingerprints from different sources, etc.)</span><br><span class="line"></span><br><span class="line">1 = I don'</span>t know or won<span class="string">'t say</span><br><span class="line">2 = I do NOT trust</span><br><span class="line">3 = I trust marginally</span><br><span class="line">4 = I trust fully</span><br><span class="line">5 = I trust ultimately</span><br><span class="line">m = back to the main menu</span><br><span class="line"></span><br><span class="line">Your decision?</span></span><br></pre></td></tr></table></figure>
+<p>The operation you were trying to perform with Pass should now work as they key is trusted. Enter <code>quit</code> to leave the gpg prompt.</p>
+<hr>
+<p>On a final note the community around Pass has produced a cross-platform GUI client, an Android app, an iOS app, a Firefox plugin, a Windows client, a dmenu script, OS X integration, and even an emacs package.</p>
+<p>So look into these if they sound interesting: </p>
+<blockquote>
+<p><a href="https://github.com/zx2c4/password-store" target="_blank" rel="external">Pass on Github</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/GnuPG" target="_blank" rel="external">ArchWiki - GPG Page</a> - ArchWiki details for Pass.</li>
+<li><a href="https://help.ubuntu.com/community/GnuPrivacyGuardHowto" target="_blank" rel="external">GNU Privacy Guard How To</a> – An Ubuntu community guide on setting up GPG keys. </li>
+<li><a href="http://www.passwordstore.org/" target="_blank" rel="external">Official Password Store Page</a> – The official site dedicated to Pass.</li>
+<li><a href="https://www.gnupg.org/gph/en/manual.html#AEN26" target="_blank" rel="external">GPG Official Manual</a> - The manual provided from the offical GNU website. </li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-use-gpg-to-encrypt-and-sign-messages-on-an-ubuntu-12-04-vps" target="_blank" rel="external">How To Use GPG to Encrypt and Sign Messages on an Ubuntu 12.04 VPS</a> - A Digital Ocean tutorial on using GPG to send encrypted messages. </li>
+<li><a href="http://serverfault.com/questions/214605/gpg-not-enough-entropy" target="_blank" rel="external">Not Enough Entropy Error</a> - A thread around generating entropy.  </li>
+<li><a href="http://blog.sanctum.geek.nz/linux-crypto-passwords/" target="_blank" rel="external">Blog - Linux Crypto Passwords</a> - Another similar blog post on Pass. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/Pass/" class="post__tag__link">Pass</a></li><li class="post__tag__item"><a href="/tags/GPG/" class="post__tag__link">GPG</a></li></ul><a href="/2015/07/04/notes-pass-unix-password-manager/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/4/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/6/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

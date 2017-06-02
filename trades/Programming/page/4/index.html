@@ -1,0 +1,626 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-11-16T00:00:00.000Z" class="post__time">November 16, 2015</time><h1 class="post__title"><a href="/2015/11/16/hexo-tag-plugins/">Hexo Tag Plugins and Packages</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/1EHS2qR.png" alt="Hexo Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Tag plugins are ported from Octopress and provide a useful way for you to quickly add specific content to your Hexo posts. I don’t use all of these in my own posts but they do come in useful on the odd occasion. </p>
+<blockquote>
+<p><a href="https://hexo.io/docs/tag-plugins.html" target="_blank" rel="external">Official Hexo Documentation - Tag Plugins</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Quotes"><a href="#Quotes" class="headerlink" title="Quotes"></a>Quotes</h1><h2 id="1-–-Plain-Quote"><a href="#1-–-Plain-Quote" class="headerlink" title="1 – Plain Quote"></a>1 – Plain Quote</h2><p>Useful for adding quotations to your post that need an author, source, or title. The two spaces between the comma were needed in my case to get these quotes to display correctly. </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> author , source link source_link_title %&#125;</span><span class="xml"></span><br><span class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque hendrerit lacus ut purus iaculis feugiat. Sed nec tempor elit, quis aliquam neque. Curabitur sed diam eget dolor fermentum semper at eu lorem.</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<blockquote><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque hendrerit lacus ut purus iaculis feugiat. Sed nec tempor elit, quis aliquam neque. Curabitur sed diam eget dolor fermentum semper at eu lorem.</p>
+<footer><strong>author </strong><cite>source link source_link_title</cite></footer></blockquote>
+<hr>
+<h2 id="2-–-Book-Quote"><a href="#2-–-Book-Quote" class="headerlink" title="2 –  Book Quote"></a>2 –  Book Quote</h2><p>Same as the previous step but in the context of a book quote. Another space on both sides of the comma was required for me when trying to get the book name plus author to display properly. </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> S.W. Erdnase , The Expert at the Card Table %&#125;</span><span class="xml"></span><br><span class="line">"The slightest action that appears irregular, the least effort to distract attention, or the first unnatural movement, will create suspicion; and mere suspicion will deplete the company..." </span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<blockquote><p>“The slightest action that appears irregular, the least effort to distract attention, or the first unnatural movement, will create suspicion; and mere suspicion will deplete the company…” </p>
+<footer><strong>S.W. Erdnase </strong><cite>The Expert at the Card Table</cite></footer></blockquote>
+<hr>
+<h2 id="3-–-Twitter-Quote"><a href="#3-–-Twitter-Quote" class="headerlink" title="3 – Twitter Quote"></a>3 – Twitter Quote</h2><p>Tweets can be used to create a quote using the same format, in my case <strong>two</strong> spaces were needed to separate the twitter handle and URL. </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> @climagic  https://twitter.com/climagic/status/633643481081249792 %&#125;</span><span class="xml"></span><br><span class="line">The reason English is used so much in computers is because this rich language allows for the creation of so many damn acronyms.</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<blockquote><p>The reason English is used so much in computers is because this rich language allows for the creation of so many damn acronyms.</p>
+<footer><strong>@climagic</strong><cite><a href="https://twitter.com/climagic/status/633643481081249792" target="_blank" rel="external">twitter.com/climagic/status/633643481081249792</a></cite></footer></blockquote>
+<hr>
+<h2 id="4-–-Web-Article-Quote"><a href="#4-–-Web-Article-Quote" class="headerlink" title="4 – Web Article Quote"></a>4 – Web Article Quote</h2><p>This quote is sourced from a web page still using the same formatting as before.  Once again two spaces had to be inserted between the author name and web address to make the formatting work (for myself at least). </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> Azual Skoll  https://www.themittani.com/features/history-npsi %&#125;</span><span class="xml"> "We do not take PVP personally, and have no problem whatsoever with being shot at […] by you or your corporation. This has no effect on our attitude towards you or your access to our classes and services. We enjoy fights, and we'll actually be much more offended if you don't shoot us! Similarly, if we engage you without provocation (which we will) this doesn't mean we don't like you, it just means we like to PvP. This is true regardless of how friendly we are with you and whether or not you've taken classes with us in the past. We observe the Class Peace but after that you're fair game."</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<blockquote><p>“We do not take PVP personally, and have no problem whatsoever with being shot at […] by you or your corporation. This has no effect on our attitude towards you or your access to our classes and services. We enjoy fights, and we’ll actually be much more offended if you don’t shoot us! Similarly, if we engage you without provocation (which we will) this doesn’t mean we don’t like you, it just means we like to PvP. This is true regardless of how friendly we are with you and whether or not you’ve taken classes with us in the past. We observe the Class Peace but after that you’re fair game.”</p>
+<footer><strong>Azual Skoll</strong><cite><a href="https://www.themittani.com/features/history-npsi" target="_blank" rel="external">www.themittani.com/features/history-npsi</a></cite></footer></blockquote>
+<hr>
+<h1 id="Code-Snippets"><a href="#Code-Snippets" class="headerlink" title="Code Snippets"></a>Code Snippets</h1><h2 id="1-–-Plain-Code-Snippet"><a href="#1-–-Plain-Code-Snippet" class="headerlink" title="1 – Plain Code Snippet"></a>1 – Plain Code Snippet</h2><p>Here’s another way of inserting a code block into a post:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> title lang:language url link text %&#125;</span><span class="xml"></span><br><span class="line">System.out.print("Hello World!");</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<figure class="highlight plain"><figcaption><span>title url link text</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.print(&quot;Hello World!&quot;);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="2-–-Language-Code-Snippet"><a href="#2-–-Language-Code-Snippet" class="headerlink" title="2 – Language Code Snippet"></a>2 – Language Code Snippet</h2><p>This is the same method as in the last step but with a language (Java) included:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> title lang:java url link text %&#125;</span><span class="xml"></span><br><span class="line">System.out.print("Hello World!");</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<figure class="highlight java"><figcaption><span>title url link text</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.print(<span class="string">"Hello World!"</span>);</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="3-–-Caption-Code-Snippet"><a href="#3-–-Caption-Code-Snippet" class="headerlink" title="3 – Caption Code Snippet"></a>3 – Caption Code Snippet</h2><p>Same again but with an added caption.</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> lang:java import calendar class %&#125;</span><span class="xml"></span><br><span class="line">import java.util.Calendar;</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<figure class="highlight java"><figcaption><span>import calendar class</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="4-–-Caption-URL-Code-Snippet"><a href="#4-–-Caption-URL-Code-Snippet" class="headerlink" title="4 – Caption URL Code Snippet"></a>4 – Caption URL Code Snippet</h2><p>A URL can be added to the caption to provide an external link to the code source. </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> lang:java _.compact http://underscorejs.org/#compact Underscore.js %&#125;</span><span class="xml"></span><br><span class="line">_.compact([0, 1, false, 2, '', 3]);</span><br><span class="line">=&gt; [1, 2, 3]</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<figure class="highlight java"><figcaption><span>_.compact</span><a href="http://underscorejs.org/#compact" target="_blank" rel="external">Underscore.js</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_.compact([<span class="number">0</span>, <span class="number">1</span>, <span class="keyword">false</span>, <span class="number">2</span>, <span class="string">''</span>, <span class="number">3</span>]);</span><br><span class="line">=&gt; [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="External"><a href="#External" class="headerlink" title="External"></a>External</h1><h2 id="1-–-jsFiddle"><a href="#1-–-jsFiddle" class="headerlink" title="1 – jsFiddle"></a>1 – jsFiddle</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">jsfiddle</span> shorttag [tabs] [skin] [width] [height] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>With actual values substituted in e.g.</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">jsfiddle</span> ccWP7 js,html,result %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<iframe scrolling="no" width="100%" height="300" src="http://jsfiddle.net/ccWP7/embedded/js,html,result/light" frameborder="0" allowfullscreen></iframe>
+<hr>
+<h2 id="2-–-Gist"><a href="#2-–-Gist" class="headerlink" title="2 – Gist"></a>2 – Gist</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">gist</span> gist_id [filename] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>When actual values are substituted in it becomes:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">gist</span> 1027674 gist_tag.rb %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<script src="//gist.github.com/1027674.js?file=gist_tag.rb"></script>
+<hr>
+<h2 id="3-–-YouTube-Video-Embeds"><a href="#3-–-YouTube-Video-Embeds" class="headerlink" title="3 – YouTube Video Embeds"></a>3 – YouTube Video Embeds</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">youtube</span> 640 360 video_id %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>Once the <code>video_id</code> is added (this should be the embed code not the usual sharing code) the video is embedded into the page:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">youtube</span> AdfFnTt2UT0 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<div class="video-container"><iframe src="//www.youtube.com/embed/AdfFnTt2UT0" frameborder="0" allowfullscreen></iframe></div>
+<p>I would suggest using a “raw” tag or an iframe instead so you can specify the dimensions for the video. Unless your Hexo theme sizes the embedded video properly. No extra parameters for the YouTube tag seem to work that I have tried - in my case. </p>
+<hr>
+<h2 id="4-–-Vimeo-Video-Embed"><a href="#4-–-Vimeo-Video-Embed" class="headerlink" title="4 – Vimeo Video Embed"></a>4 – Vimeo Video Embed</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">vimeo</span> video_id %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>This uses the “video ID” that comes from the base URL of a vimeo video page e.g.</p>
+<p><a href="https://vimeo.com/96896680" target="_blank" rel="external">https://vimeo.com/96896680</a></p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">vimeo</span> 96896680 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<div class="video-container"><iframe src="//player.vimeo.com/video/96896680" frameborder="0" allowfullscreen></iframe></div>
+<p>Same as before if you have the same sizing problem as me use a “raw” tag or an iframe instead so you can specify the dimensions for the video.</p>
+<hr>
+<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><h2 id="1-–-iFrame"><a href="#1-–-iFrame" class="headerlink" title="1 – iFrame"></a>1 – iFrame</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">iframe</span> url [width] [height] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>With a YouTube video as an example (Notice it’s the embed URL used) and there’s dimensions that can be set this time:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">iframe</span> https://www.youtube.com/embed/AdfFnTt2UT0" 1080 500 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<iframe src="https://www.youtube.com/embed/AdfFnTt2UT0" "="" width="1080" height="500" frameborder="0" allowfullscreen></iframe>
+<hr>
+<h2 id="2-–-Custom-Image"><a href="#2-–-Custom-Image" class="headerlink" title="2 – Custom Image"></a>2 – Custom Image</h2><p>I assume this is if you store any images in the <code>assets</code> folder of Hexo, and have it enabled in the <code>_config.yml</code> file. </p>
+<p>I never use this so I’m not going to provide an example, but what you need to substitute in is shown in the next code block: </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">img</span> [class names] /path/to/image [width] [height] [title text [alt text]] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="3-–-Custom-Link"><a href="#3-–-Custom-Link" class="headerlink" title="3 – Custom Link"></a>3 – Custom Link</h2><p>This one’s lets you modify a hyper-link, although I’ve never used it instead of normal markdown for links. </p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">link</span> text url [external] [title] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p>Here’s an example with actual contents; not sure whether this is how it’s properly used though:</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">link</span> Grunt's Official Website http://gruntjs.com/ %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+<a href="http://gruntjs.com/" target="_blank" rel="external">Grunt's Official Website</a>
+<hr>
+<h2 id="4-–-Raw-HTML"><a href="#4-–-Raw-HTML" class="headerlink" title="4 – Raw HTML"></a>4 – Raw HTML</h2><p>If certain content is causing processing issues in your posts, you can wrap it with the raw tag to avoid rendering errors.</p>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">raw</span> %&#125;</span><span class="xml"></span><br><span class="line">HTML tags and content</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endraw</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">raw</span> %&#125;</span><span class="xml"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'//redditjs.com/subreddit.js'</span> <span class="attr">data-subreddit</span>=<span class="string">'eve'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endraw</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
+<p><strong>Hexo Output</strong></p>
+
+<script src="//redditjs.com/subreddit.js" data-subreddit="eve"></script>
+
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://hexo.io/plugins/" target="_blank" rel="external">Official Hexo Documentation: Tag Plugins</a> – The base tag example are from here, there are few actual examples though. </li>
+<li><a href="https://hexo.io/plugins/" target="_blank" rel="external">Octopress Documentation: Plugins</a> –  Some of the Hexo plugins are ported from Octopress. </li>
+<li><a href="https://github.com/imathis/octopress/tree/master/plugins" target="_blank" rel="external">Octopress Github Plugins Page</a> –  Has some examples on several of the ported Octopress plugins. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Hexo/" class="post__tag__link">Hexo</a></li><li class="post__tag__item"><a href="/tags/Plugins/" class="post__tag__link">Plugins</a></li><li class="post__tag__item"><a href="/tags/Octopress/" class="post__tag__link">Octopress</a></li></ul><a href="/2015/11/16/hexo-tag-plugins/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-10-04T23:00:00.000Z" class="post__time">October 5, 2015</time><h1 class="post__title"><a href="/2015/10/05/minecraft-server-debian/">Installing Minecraft Server on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Covers the general process of setting up a basic Minecraft server from start to finish. Along with how to configure some of the server’s properties and user permissions. </p>
+<ul>
+<li>Uses Java (OpenJDK in this case) as a dependency. </li>
+<li>Requires GNU Screen to maintain a shell session.</li>
+<li>The Minecraft game client is necessary to test access to the server. </li>
+<li>Suitable Server Hardware specifications are addressed. </li>
+</ul>
+<blockquote>
+<p><a href="https://minecraft.net/" target="_blank" rel="external">Minecraft’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm the action by entering <code>y</code> for any prompts in this step.</p>
+<hr>
+<h1 id="2-—-Install-Screen"><a href="#2-—-Install-Screen" class="headerlink" title="2 — Install Screen"></a>2 — Install Screen</h1><p>Screen is used to keep the Minecraft server running in a persistent shell session, it also allows us to disconnect or re-attach to the session when needed.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Install-Open-JDK"><a href="#3-–-Install-Open-JDK" class="headerlink" title="3 – Install Open JDK"></a>3 – Install Open JDK</h1><p>Install the open JDK platform with Debian’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install openjdk-7-jre-headless</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> “It is recommended that Linux users avoid using OpenJDK 6 for server hosting, as it has been known to cause issues.”</p>
+</blockquote>
+<hr>
+<h1 id="4-–-Create-Dedicated-User"><a href="#4-–-Create-Dedicated-User" class="headerlink" title="4 – Create Dedicated User"></a>4 – Create Dedicated User</h1><p>Add a user with a suitable name who’ll run and store the server software in its <code>home</code> directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo adduser minecraft</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-iptables-Firewall"><a href="#5-–-iptables-Firewall" class="headerlink" title="5 – iptables Firewall"></a>5 – iptables Firewall</h1><p>If using <code>iptables</code> you’ll need to allow access on the Minecraft server’s TCP port <code>25565</code> for incoming connecting clients. </p>
+<p>Here is one command to add this, tweak it to your own needs and firewall setup:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -I INPUT 3 -p tcp --dport 25565 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 25565 Minecraft server"</span></span><br></pre></td></tr></table></figure>
+<p>Remember to re-save your updated rules (IPv4 in my case). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables-save &gt; /etc/iptables/rules.v4</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Download-Minecraft-Server-Software"><a href="#6-–-Download-Minecraft-Server-Software" class="headerlink" title="6 – Download Minecraft Server Software"></a>6 – Download Minecraft Server Software</h1><p>SSH to the new <code>minecraft</code> user (or whatever you named them). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh minecraft@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Download the latest version of the Minecraft server <em>jar</em> file. </p>
+<p>The current version number is <code>1.8.8</code> at the time of writing this: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -v https://s3.amazonaws.com/Minecraft.Download/versions/1.8.8/minecraft_server.1.8.8.jar</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Amend your command to include the version number that is currently in release. Previously found at <a href="https://minecraft.net/download" target="_blank" rel="external">https://minecraft.net/download</a> towards the bottom of the page. </p>
+</blockquote>
+<hr>
+<h1 id="7-–-Create-Minecraft-Executable-Script"><a href="#7-–-Create-Minecraft-Executable-Script" class="headerlink" title="7 – Create Minecraft Executable Script"></a>7 – Create Minecraft Executable Script</h1><p>With a text editor create a shell script named something similar to the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>In the newly created script add the code in the next snippet, replacing the two <code>java</code> parameter values with your own preferred memory usage values. </p>
+<figure class="highlight bash"><figcaption><span>~/run-minecraft-server.sh</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span><br><span class="line"></span></span><br><span class="line">BINDIR=$(dirname <span class="string">"<span class="variable">$(readlink -fn "$0")</span>"</span>)</span><br><span class="line"><span class="built_in">cd</span> <span class="string">"<span class="variable">$BINDIR</span>"</span></span><br><span class="line"></span><br><span class="line">java -Xmx1024M -Xms1024M -jar minecraft_server.*.*.*.jar nogui</span><br></pre></td></tr></table></figure>
+<p>See the next image for recommendations on server requirements from the official Minecraft wiki, to determine your values.</p>
+<p><img src="http://i.gyazo.com/252e38114f335e58904cda95b00e96f8.png" alt="Minecraft Wiki Server Requirements"></p>
+<blockquote>
+<p>-<strong>Note:</strong> <code>Xms256M</code> dictates the lowest amount of system memory the Minecraft server will consume, and <code>Xmx512M</code> specifies the upper limit of server memory it can max out at.</p>
+</blockquote>
+<p>Save your changes to the script and exit back to the command line. </p>
+<p>Finally in this step use <code>chmod</code> to make the previous script executable. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Run-Executable-Script"><a href="#8-–-Run-Executable-Script" class="headerlink" title="8 – Run Executable Script"></a>8 – Run Executable Script</h1><p>Run it from the command line by adding the <code>./</code> prefix. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>You’ll see the following output if the script has been written correctly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[09:10:50] [Server thread/INFO]: Starting minecraft server version 1.8.8</span><br><span class="line">[09:10:50] [Server thread/WARN]: To start the server with more ram, launch it as <span class="string">"java -Xmx1024M -Xms1024M -jar minecraft_server.jar"</span></span><br><span class="line">[09:10:50] [Server thread/INFO]: Loading properties</span><br><span class="line">[09:10:50] [Server thread/WARN]: server.properties does not exist</span><br><span class="line">[09:10:50] [Server thread/INFO]: Generating new properties file</span><br><span class="line">[09:10:50] [Server thread/WARN]: Failed to load eula.txt</span><br><span class="line">[09:10:50] [Server thread/INFO]: You need to agree to the EULA <span class="keyword">in</span> order to run the server. Go to eula.txt <span class="keyword">for</span> more info.</span><br><span class="line">[09:10:50] [Server thread/INFO]: Stopping server</span><br><span class="line">[09:10:50] [Server Shutdown Thread/INFO]: Stopping server</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Agree-to-EULA"><a href="#9-–-Agree-to-EULA" class="headerlink" title="9 – Agree to EULA"></a>9 – Agree to EULA</h1><p>The EULA you must agree to is located in the same user’s home directory. </p>
+<p>Again using a text editor open it for writing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim eula.txt</span><br></pre></td></tr></table></figure>
+<p>Set the <code>eula</code> directive  to <code>true</code> like in the example below:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#By changing the setting below to TRUE you are indicating your agreement to our EULA (https://account.mojang.com/documents/minecraft_eula).</span></span><br><span class="line"><span class="comment">#Mon Oct 05 09:10:50 EDT 2015</span></span><br><span class="line">eula=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>Save changes and exit the text editor. </p>
+<p>Back on the command line begin a screen session by providing the full path to your executable script:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen ./run-minecraft-server.sh</span><br></pre></td></tr></table></figure>
+<p>The server now runs and begins to generate the in-game content. </p>
+<hr>
+<h1 id="10-–-Client-Connections"><a href="#10-–-Client-Connections" class="headerlink" title="10 – Client Connections"></a>10 – Client Connections</h1><p>The server should now be running continually and Minecraft clients can connect to it. </p>
+<blockquote>
+<p>Connect with a Minecraft client to the server IP. </p>
+</blockquote>
+<p>Everything should be functioning as intended, and the server is ready for use!</p>
+<p>You can leave and detach from the screen session by pressing <code>CTRL</code> + <code>d</code> then <code>a</code> on your keyboard, back in the terminal. </p>
+<hr>
+<h1 id="11-–-Administration"><a href="#11-–-Administration" class="headerlink" title="11 – Administration"></a>11 – Administration</h1><p>Logged in once again as the Linux user <code>minecraft</code> or whatever you chose to call your dedicated user, re-attach to the minecraft <em>screen</em> session from earlier with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -r</span><br></pre></td></tr></table></figure>
+<p>Shut down the server which saves player created progress and the in-game content.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/stop</span><br></pre></td></tr></table></figure>
+<p>Now the server has been stopped you can begin to play around with its file structure. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br></pre></td></tr></table></figure>
+<p>There are several key files in in regards to maintaining the server, and two other directories to consider. </p>
+<blockquote>
+<p>Any time you modify these files while the game is running, you will need to stop and restart the server for the changes to take effect.</p>
+</blockquote>
+<hr>
+<h2 id="ops-json"><a href="#ops-json" class="headerlink" title="ops.json"></a>ops.json</h2><p>This file named <code>ops.json</code> contains usernames of players that have <em>ops</em> privileges on your server.</p>
+<p>It is empty until you add player usernames however.</p>
+<blockquote>
+<p><strong>Warning:</strong> Players listed in this file can change their game mode, input certain commands, and ban or unban other players from the server. </p>
+</blockquote>
+<p>You can either add user details directly to this <code>.json</code> file, if you understand the formatting involved. </p>
+<p>Or create a completely separate <code>ops.txt</code> file with a list of usernames inside. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/ops.txt</span><br></pre></td></tr></table></figure>
+<p>The text file you create is then converted into the <code>ops.json</code> file from earlier once the server is next booted.</p>
+<p>It is recommended that you follow this method if you are unfamiliar with JSON formatting.   </p>
+<p>For more information on ops or <em>operators</em> in Minecraft click the next link:</p>
+<blockquote>
+<p><a href="http://minecraft.gamepedia.com/Operator" target="_blank" rel="external">Minecraft Wiki Operators Page</a></p>
+</blockquote>
+<hr>
+<h2 id="server-properties"><a href="#server-properties" class="headerlink" title="server.properties"></a>server.properties</h2><p>The bulk of in-game settings and properties are stored in the following text file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/server.properties</span><br></pre></td></tr></table></figure>
+<p>There are a longer list of properties you can add to the file that are listed at this next URL: </p>
+<blockquote>
+<p><a href="]http://minecraft.gamepedia.com/Server.properties">Minecraft Wiki Server.properties Page</a></p>
+</blockquote>
+<hr>
+<h2 id="banned-ips-json-amp-banned-players-json"><a href="#banned-ips-json-amp-banned-players-json" class="headerlink" title="banned-ips.json &amp; banned-players.json"></a>banned-ips.json &amp; banned-players.json</h2><p>In order to ban an IP address from connecting to the server, the full IP address must be specified; - impartial addresses or wildcards are not supported here. </p>
+<p>Any players who are banned in this manner see “Your IP address is banned from this server!” when attempting to connect through the client. </p>
+<p>In-game an operator can instead use  “/ban-ip ipaddress”, where “ipaddress” is the IP address of the user they wish to ban. To remove and undo a ban, the operator can issue “pardon-ip ipaddress”. Or if they have access, edit the server’s <code>banned-ips.json</code> file.</p>
+<hr>
+<h1 id="white-list-json"><a href="#white-list-json" class="headerlink" title="white-list.json"></a>white-list.json</h1><p>This essentially can be used to make a server private to a select group of clients. To do so add their usernames to the file <code>white-list.txt</code>. You will need to edit the <code>server.properties</code> file, changing <code>white-list=false</code> to <code>white-list=true</code> .</p>
+<p>Alongside this you can also use this file to change the public message on your Minecraft server. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/white-list.txt</span><br></pre></td></tr></table></figure>
+<p>Edit <code>motd=A Minecraft Server</code> to show the name or phrase that you want to display publicly to clients. </p>
+<hr>
+<h2 id="World-Directories"><a href="#World-Directories" class="headerlink" title="World Directories"></a>World Directories</h2><p>This directory and its subdirectories contain map and player data for the <em>realms</em> in your game. </p>
+<p>It is worth backing up these directories regularly so that you can revert to previous versions in case of in-game mishaps or unwanted trolls. These directories may be in different locations, depending on which version of the Minecraft server you installed. </p>
+<p>Also note that the directories for the <em>nether</em> and <em>the end</em> will not be created until a player visits the area at least once on the server.</p>
+<hr>
+<h2 id="Log-Directory"><a href="#Log-Directory" class="headerlink" title="Log Directory"></a>Log Directory</h2><p>Anything and everything that goes on is stored in the <code>logs</code> directory. It’s worth reviewing it’s contents every now and then or if any technical problems arise. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ less ~/logs/latest.log</span><br></pre></td></tr></table></figure>
+<p>Previous logs are compressed automatically as and when needed.</p>
+<hr>
+<h2 id="Console-Commands"><a href="#Console-Commands" class="headerlink" title="Console Commands"></a>Console Commands</h2><p>The link below contains a table that summarizes all available commands. Some of which have been mentioned here, but most of which have not.  </p>
+<blockquote>
+<p><a href="http://minecraft.gamepedia.com/Commands#Summary_of_commands" target="_blank" rel="external">Minecraft Wiki Commands Page</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.linode.com/docs/applications/game-servers/minecraft-on-linode-with-ubuntu-12-04" target="_blank" rel="external">Minecraft on Linode </a></li>
+<li><a href="http://minecraft.gamepedia.com/Server/Requirements/Dedicated" target="_blank" rel="external">Minecraft Wiki Server Requirement Pages</a></li>
+<li><a href="http://minecraft.gamepedia.com/Server" target="_blank" rel="external">Minecraft Wiki Server Maintenance Page</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/Java/" class="post__tag__link">Java</a></li></ul><a href="/2015/10/05/minecraft-server-debian/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-10-01T23:00:00.000Z" class="post__time">October 2, 2015</time><h1 class="post__title"><a href="/2015/10/02/terraria-tdsm-server/">Installing TDSM Terraria Server Mod on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>TDSM is one of several open-source server mods available for the online action-adventure game Terraria. This modification is developed to allow the Terraria server software to be run on Linux like operating systems, and opens up many other potential benefits for players using the server. </p>
+<ul>
+<li>External plugin support. </li>
+<li>Administrative permissions system. </li>
+<li>MySQL &amp; SQLite databases.</li>
+<li>New &amp; custom in-game commands.</li>
+<li>Remote console administration. </li>
+</ul>
+<p>It’s also updated relatively quickly by the maintainers after a new Terraria client version is released.</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod" target="_blank" rel="external">TDSM Github Project Page</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h1><ul>
+<li><p>A Terraria game client for connection to the server after installation. </p>
+</li>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM. </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM. </p>
+</li>
+</ul>
+<hr>
+<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm the action by entering <code>y</code> for any prompts in this step. </p>
+<hr>
+<h1 id="2-–-Install-Screen"><a href="#2-–-Install-Screen" class="headerlink" title="2 – Install Screen"></a>2 – Install Screen</h1><p>Screen will be used to keep the TDSM server running in a persistent shell session, and allows us to disconnect or re-attach to the session when needed. </p>
+<p>Install Screen with the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Install-Mono"><a href="#3-–-Install-Mono" class="headerlink" title="3 – Install Mono"></a>3 – Install Mono</h1><p>Mono is the open source implementation of Microsoft’s .NET Framework, and we need it to successfully run and start the TDSM server later on.</p>
+<p>Install Mono and all its packages with the command: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mono-complete</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Install-Unzip"><a href="#4-–-Install-Unzip" class="headerlink" title="4 – Install Unzip"></a>4 – Install Unzip</h1><p>The server software comes packaged in a <code>.zip</code> file. So install the <em>unzip</em> package which we’ll use in the next step, to extract the files. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Add-Swap-Space"><a href="#5-–-Add-Swap-Space" class="headerlink" title="5 – Add Swap Space"></a>5 – Add Swap Space</h1><p>The server mod requires adequate swap space to be allocated by the system. Otherwise this can result in crashing and instability with TDSM whilst it is running. </p>
+<p>Create the base swap file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo fallocate <span class="_">-l</span> &lt;^&gt;4G&lt;^&gt; /swapfile</span><br></pre></td></tr></table></figure>
+<p>Give it the correct permissions it needs:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
+<p>Have the system build the file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
+<p>Then enable it with the <code>swapon</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
+<p>To automate the mounting of the swap file on boot we need to include its details into the <code>/etc/fstab</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nano /etc/fstab</span><br></pre></td></tr></table></figure>
+<p>Insert this top line show in the next code snippet into the file.</p>
+<figure class="highlight bash"><figcaption><span>/etc/fstab</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile   none    swap    sw    0   0</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Download-the-TDSM-Server-Software"><a href="#6-–-Download-the-TDSM-Server-Software" class="headerlink" title="6 – Download the TDSM Server Software"></a>6 – Download the TDSM Server Software</h1><p>The TDSM server software that we’ll download in this step will be stored and run from your user’s home directory.</p>
+<p>Make sure this is your current working directory by entering:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+<p>As of writing this tutorial the current TDSM server build release is number: <code>005</code></p>
+<p>For newer versions than the current <code>005</code> release, and to download the most up to date version.<br>You’ll need to change the URL passed to <code>wget</code> in the next code snippet. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/DeathCradle/Terraria<span class="_">-s</span>-Dedicated-Server-Mod/releases/download/Build-5/tdsm-b5.zip</span><br></pre></td></tr></table></figure>
+<p>The TDSM server releases and their file URL’s can be found on the project’s GitHub page:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases" target="_blank" rel="external">TDSM Releases on Github</a></p>
+</blockquote>
+<hr>
+<h1 id="7-–-Run-the-Terraria-Server-Binary"><a href="#7-–-Run-the-Terraria-Server-Binary" class="headerlink" title="7 – Run the Terraria Server Binary"></a>7 – Run the Terraria Server Binary</h1><p>Next unzip the downloaded archive file and extract the contents into a new folder named <code>tdsm-terraria-server</code> using the <code>-d</code> option:</p>
+<blockquote>
+<p><strong>Note:</strong> The downloaded <code>.zip</code> file name will differ for future release downloads.</p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ unzip tdsm-b5.zip <span class="_">-d</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Change into the unpacked <code>tdsm-terraria-server</code> directory with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
+<p>Now to run the server software in it’s most basic form without any arguments or parameters, enter the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen mono tdsm.exe</span><br></pre></td></tr></table></figure>
+<p>Note the inclusion of Screen in the last command. This runs the Mono program and server in a separate shell session to our original one.</p>
+<hr>
+<h1 id="8-–-Create-a-New-World"><a href="#8-–-Create-a-New-World" class="headerlink" title="8 – Create a New World"></a>8 – Create a New World</h1><p>The below output (or similar) is seen upon successfully running the server binary in “<strong>Step 7 – Run the Terraria Server Binary</strong>“.</p>
+<p>Type <code>n</code>  and press <code>ENTER</code> to create a new world.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind API build 5lr running on Mono                                                                                                                                                                            ﻿10/2/2015 2:05:20 PM Run&gt; Logging started to file <span class="string">"/home/&lt;username&gt;/src/tdsm-terraria-server/Data/server_20151002_1405.log"</span>.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; Loading plugin from TDSM.Core.dll.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core build 5lr</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core enabled</span><br><span class="line">10/2/2015 2:05:21 PM Run&gt; Server state changed to: Initialising</span><br><span class="line">10/2/2015 2:05:23 PM Run&gt; Server state changed to: Starting</span><br><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> depending upon your preference and suitability of world size. </p>
+<p>The requirements section at the start of this article indicates what world size is suitable for your VPS. </p>
+<p>Here it is again:</p>
+<ul>
+<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM.   </p>
+</li>
+<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM.   </p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Warning:</strong> Be aware that the larger the world the more memory and CPU your server will need to consume whilst the server is up and running, so be sure to select a suitable world size. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Small</span><br><span class="line">2       Medium</span><br><span class="line">3       Large</span><br><span class="line"></span><br><span class="line">Choose size:</span><br></pre></td></tr></table></figure>
+<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> again once more depending upon your desired level of in-game difficulty.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Normal</span><br><span class="line">2       Expert</span><br><span class="line"></span><br><span class="line">Choose difficulty:</span><br></pre></td></tr></table></figure>
+<p>Now give the new world a suitable name. </p>
+<p>For example purposes we’re calling ours <code>test-tdsm-server</code> in this guide. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Enter world name:</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Wait for the new world to be generated as it outputs its progress and percentage completion.</strong></p>
+</blockquote>
+<hr>
+<h1 id="9-–-Set-World-Details"><a href="#9-–-Set-World-Details" class="headerlink" title="9 – Set World Details"></a>9 – Set World Details</h1><p>Once the world is created and has finished generating, choose your previously created world by entering <code>1</code> into the prompt:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1   <span class="built_in">test</span>-tdsm-server      norm, crim, exp   Last used: 10/02/2015 10:27 AM</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
+<p>Provide the world with a <strong>max</strong> number of players that can join the server at any one time. If you are unsure on a value, the default of <code>8</code> is a sensible choice. </p>
+<blockquote>
+<p><strong>Warning:</strong> Once again be aware that the more players the world has connected the more memory and CPU your server will need to consume whilst running. </p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Max players (press enter <span class="keyword">for</span> 8):</span><br></pre></td></tr></table></figure>
+<p>Enter a suitable port the server can transmit on, go for the default choice of <code>7777</code> if you don’t have a specific port you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Server port (press enter <span class="keyword">for</span> 7777):</span><br></pre></td></tr></table></figure>
+<p>The final two questions are up to you (forwarding and password). Forwarding with <code>iptables</code> is covered in this next section however. </p>
+<blockquote>
+<p><strong>Wait for the server to load as it outputs its progress.</strong></p>
+</blockquote>
+<hr>
+<h1 id="10-–-iptables-Firewall"><a href="#10-–-iptables-Firewall" class="headerlink" title="10 – iptables Firewall"></a>10 – iptables Firewall</h1><p>Now the server is up running you’ll need to de-attach from the currently active screen session with:</p>
+<p><code>CTRL</code> + <code>a</code> then <code>c</code></p>
+<p>If using <code>iptables</code> (or you intend to use it) as a firewall solution on the VPS, then open up the port number you chose in <strong>“ 9 – Set World Details”</strong></p>
+<p>To do this use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 7777 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 7777 Terraria server"</span></span><br></pre></td></tr></table></figure>
+<p>Replacing <code>7777</code> for your own chosen port number.</p>
+<p>For any other firewall program you may use in its place perform the equivalent port forwarding/opening actions. </p>
+<p>To now connect back to the previous screen session press: </p>
+<p><code>CTRL</code> + <code>a</code> then <code>n</code></p>
+<hr>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>The server itself is now ready and should be open for connections via the Terraria client.</p>
+<p>To learn how to administer, run, and configure the server properly alongside what configuration files it uses, see the Github wiki:</p>
+<blockquote>
+<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server" target="_blank" rel="external">TDSM Project Github Wiki</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://store.steampowered.com/app/105600/" target="_blank" rel="external">Terraria Client on Steam</a> – The client is very small in size and available through Steam. </li>
+<li><a href="http://terraria.gamepedia.com/Mods" target="_blank" rel="external">Terraria Mod Information</a> – Brief explanation of mods for Terraria. </li>
+<li><a href="https://github.com/NyxStudios/TShock" target="_blank" rel="external">TShock Terraria Server Mod</a> – Another mod that may function on Linux/Unix OS, but not one hundred percent supported.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-09-25T23:00:00.000Z" class="post__time">September 26, 2015</time><h1 class="post__title"><a href="/2015/09/26/git-version-control-two/">Git Version Control (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a follow up from the <a href="http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/">previous Git post</a> and covers some of the areas not mentioned in the original.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-VCS-Background"><a href="#1-–-VCS-Background" class="headerlink" title="1 – VCS Background"></a>1 – VCS Background</h1><ul>
+<li><p><strong>Local Version Control</strong> – A singular database on local storage media that keeps insertions and deletions to the code-base. Very primitive and not interconnected between a team and its members.</p>
+</li>
+<li><p><strong>Centralized Version Control</strong> – The many drawbacks and limitations of local version control brought about a new practice of centralised version control. Allowing multiple developers to work on the same code or content. Progress of coding could be tracked and viewed by all involved leading to better communication as well has giving more power over access rights.</p>
+</li>
+<li><p><strong>Distributed Version Control</strong> – Instead of housing the code in a single repository like in CVS, the code-base is shared locally across all clients involved. This way if the remote central server fails or is compromised, many backups exist and developers can continue to work in the mean time. <em>Mirrored</em> backups can also be used to restore central servers if needed.</p>
+</li>
+</ul>
+<hr>
+<h1 id="2-–-Git-Principles"><a href="#2-–-Git-Principles" class="headerlink" title="2 – Git Principles"></a>2 – Git Principles</h1><ul>
+<li><p><strong>Snapshots</strong> – Git stores data in a file-system made up of multiple snapshots. Each time you update or change your project’s content with a <em>commit</em>, Git creates a snapshot of the altered object (e.g. file) and stores a reference to it.</p>
+</li>
+<li><p><strong>Local Operations</strong> – Git is mostly designed to cache data and work with locally held information. Instead of continually going over the network to another server, to retrieve core information.</p>
+</li>
+<li><p><strong>Tracking</strong> – Anything and everything within the project’s Git repository can be tracked for changes or removal. Which makes it function as an alternate backup service if needed.</p>
+</li>
+<li><p><strong>Data Integrity</strong> – Git is designed with security and potential data corruption in mind. Making it very difficult for a third party to intefere with a commit’s contents. Whilst at the same time taking measures to ensure data that is sent is confirmed as arriving intact.</p>
+</li>
+</ul>
+<hr>
+<h1 id="3-–-Git-Terminology"><a href="#3-–-Git-Terminology" class="headerlink" title="3 – Git Terminology"></a>3 – Git Terminology</h1><p>Files in a Git repository can exist in three main states:</p>
+<ol>
+<li><strong>Modified</strong> – The file has been altered but its changes have not been saved to anything Git related.</li>
+<li><strong>Staged</strong> – The previously changed file has had its changed tracked but not committed to the database.</li>
+<li><strong>Committed</strong> – The previously tracked file is now committed and securely stored in the local Git database.</li>
+</ol>
+<p><img src="http://i.imgur.com/DSgJ1QV.png" alt="Main States Image"></p>
+<p>A local Git repository has three main areas:</p>
+<ol>
+<li><strong>Working Directory</strong> – The current files and their local state reside here.</li>
+<li><strong>Index</strong> – The area local file changes are stored before being confirmed as valid alterations.  </li>
+<li><strong>Head</strong> – Points to the most recent commit made in the project.</li>
+</ol>
+<hr>
+<h1 id="4-–-Stashing-Changes"><a href="#4-–-Stashing-Changes" class="headerlink" title="4 – Stashing Changes"></a>4 – Stashing Changes</h1><p>If you’ve made some changes locally but need to pull, fetch, whilst still keeping your local edits, use the <em>stash</em> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash</span><br></pre></td></tr></table></figure>
+<p>This is useful for when you in general don’t want to lose any changes. All this does is temporarily hide the changes then give you a clean working directory. To retrieve the changes and apply them to your working directory use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Remotes"><a href="#5-–-Remotes" class="headerlink" title="5 – Remotes"></a>5 – Remotes</h1><p>With <em>cloned</em> repositories, Git automatically gives the name <code>origin</code> to the remote server from which you cloned. As well as the name <code>master</code> to your local default branch.</p>
+<p><strong>Remote Repositories Diagram</strong></p>
+<p><img src="http://i.imgur.com/PyWO8kj.png" alt="Remote Repositories Diagram"></p>
+<p>To see all current locally added remotes in a repository enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>The <code>-v</code> switch shows the remote’s URL’s as part of the output.</p>
+<figure class="highlight bash"><figcaption><span>Example Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remote1 https://github.com/remote1/example (fetch)</span><br><span class="line">remote1 https://github.com/remote1/example (push)</span><br><span class="line">remote2 https://github.com/remote2/example (fetch)</span><br><span class="line">remote2 https://github.com/remote2/example (push)</span><br><span class="line">remote3 https://github.com/remote3/example (fetch)</span><br><span class="line">remote3 https://github.com/remote3/example (push)</span><br></pre></td></tr></table></figure>
+<p>To add a remote to the local repository you would use the next command.</p>
+<p>The <code>remote4</code> parameter should be the <em>shortname</em> of the remote.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add remote4 https://github.com/remote4/example</span><br></pre></td></tr></table></figure>
+<p>If you need to rename a remote’s short name, make use of:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rename remote4 remote5</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be aware that the <em>rename</em> command also alters the names of the respective remote branches e.g. remote4/master would change to remote5/master in the last example.</p>
+</blockquote>
+<p>To remove a remote for the local repository when contributor has left the team, or the server URL has changed use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rm remote5</span><br></pre></td></tr></table></figure>
+<h2 id="Fetching"><a href="#Fetching" class="headerlink" title="Fetching"></a>Fetching</h2><p>Fetching is the name given to pulling data you don’t currently have from a remote’s project, in order to update your local repository.</p>
+<p>Here is the command to do it, where <code>remote4</code> is the remote’s shorthand name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch remote4</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You should also possess the references to all branches for that specific remote when fetching from it.</p>
+</blockquote>
+<p>For cloned repositories, you can use the command <code>git fetch origin</code> to pull down any of the new changes that were pushed to it, since you originally cloned or last issued the <code>fetch</code> command.</p>
+<h2 id="Pulling"><a href="#Pulling" class="headerlink" title="Pulling"></a>Pulling</h2><p>The <code>fetch</code> command only pulls new data to a local repository; it does not at any point <em>merge</em> changes with or attempt to modify your local work. The <code>pull</code> command however allows for both fetching and automatic merging at the same time.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull remote4</span><br></pre></td></tr></table></figure>
+<p>See the More Information Section for a more detailed thread about he differences between <code>fetch</code> and <code>pull</code> commands.</p>
+<hr>
+<h1 id="6-–-Fixing-amp-Reverting-Changes"><a href="#6-–-Fixing-amp-Reverting-Changes" class="headerlink" title="6 – Fixing &amp; Reverting Changes"></a>6 – Fixing &amp; Reverting Changes</h1><p>For editing of your last commit there’s the <code>--amend</code> parameter. This works if no file changes have been made since the last commit (the one you are wanting to change the message of).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m amend <span class="string">"The last commit message should really be this message instead."</span></span><br></pre></td></tr></table></figure>
+<p><strong>History Diagram</strong></p>
+<p><img src="http://i.imgur.com/kGHejcc.png" alt="History Diagram"></p>
+<p>This also works if you want to add more modified files to the previous commit.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git add modified-file.md</span><br><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure>
+<p>When <code>git reset --hard</code> is used, Git will overwrite any and all changes in the working directory, permanently destroying uncommitted changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br></pre></td></tr></table></figure>
+<p><strong>Reset Diagram</strong></p>
+<p><img src="http://i.imgur.com/RAf1UVE.png" alt="Reset Diagram"></p>
+<p>To get rid of changes resulting from a previous commit, we can use the <code>git revert</code> command. This command does not technically revert everything, but instead creates a new most recent commit that undoes the changes introduced in your specified past commit. Preventing Git from losing any of its history. This is in stark contrast to the <code>reset</code> command which actually alters the existing previous commit history.</p>
+<p>The hash value identifies the commit to be reverted.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert ed04fb96992698248d240ed545b104f2414a61ed</span><br></pre></td></tr></table></figure>
+<p><strong>Revert Diagram</strong></p>
+<p><img src="http://i.imgur.com/obncGjG.png?1" alt="Revert Diagram"></p>
+<p>To do the last commit you can simply provide it with <code>HEAD</code> in its place:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
+<p>Another way of resetting staged file changes back to the last commit, is to use the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout modified-file.md</span><br></pre></td></tr></table></figure>
+<p>This is different to <code>reset</code> as it mechanically erases any changes made to the file by <strong>copying</strong> HEAD’s file version over it.</p>
+<p><strong>Checkout Diagram</strong></p>
+<p><img src="http://i.imgur.com/f9sk5h8.png" alt="Checkout Diagram"></p>
+<hr>
+<h1 id="7-–-Rebasing"><a href="#7-–-Rebasing" class="headerlink" title="7 – Rebasing"></a>7 – Rebasing</h1><p>In Git, <em>Rebasing</em> is an alternative to merging.</p>
+<p>It works by using the <em>diffs</em> resulting from each last commit of your current branch and the one you want to rebase into. Both commits are stored in temporary files, and then the “current branch” gets reset to the same commit as that of the branch you are targeting. Last but not least, all the changes are then applied to the latter branch.</p>
+<p><strong>Rebasing Process Diagram</strong></p>
+<p><img src="http://i.imgur.com/fgrpfC4.png" alt="Rebasing Process Diagram"></p>
+<p>The main difference between merging is:</p>
+<blockquote>
+<p>“The rebasing process rewrites a project’s history by replaying all changes committed on one branch to another one, leading to cleaner application of commits on a remote branch and a linear history.””</p>
+</blockquote>
+<p>As an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout <span class="built_in">test</span>-branch</span><br><span class="line">$ git rebase master</span><br></pre></td></tr></table></figure>
+<p>There are opposing viewpoints regarding merging and rebasing. The general arguments and differences between the two are:</p>
+<p><strong>Merging</strong> – The true commit history of a repository should not be altered because it’s a log and record of occurrences.</p>
+<p><strong>Rebasing</strong> – Commit histories should be polished and well edited, and rebasing provides this.</p>
+<hr>
+<h1 id="8-–-Tags"><a href="#8-–-Tags" class="headerlink" title="8 – Tags"></a>8 – Tags</h1><p>Git has a feature that allows it to flag certain points in a project’s history as being significant or of some importance.</p>
+<p><strong>Tags Diagram</strong></p>
+<p><img src="http://i.imgur.com/uxjfzpe.png" alt="Tags Diagram"></p>
+<p>Listing current tags in a project is done with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag</span><br></pre></td></tr></table></figure>
+<p>There are two types of tags you can choose to create.</p>
+<p><strong>Lightweight</strong> – This type of tag points to a particular commit.</p>
+<p><strong>Annotated</strong> – These tags are kept in the Git database as a <em>full object</em>, they contain a tagging message, tagger name, email address, and tag date. Annotated Tags are also often signed and verified with GNU Privacy Guard (GPG). The best practice is to use annotated tags whenever possible.</p>
+<p>Lightweight tags only hold a checksum and the commit value it points to.</p>
+<p>To create a lightweight tag, use the command below <strong>without</strong> any extra command line options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v3.0</span><br></pre></td></tr></table></figure>
+<p>Create an annotated tag like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag <span class="_">-a</span> v3.0 -m “version 3.1”</span><br></pre></td></tr></table></figure>
+<p>The <code>-m</code> option passes a message for the tag.</p>
+<p>See the tag once it’s created via the <code>show</code> parameter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show v3.0</span><br></pre></td></tr></table></figure>
+<p>Users must explicitly push tags to remote servers after creation as by default <code>git push</code> does not send tags as part of its data.</p>
+<p>Use the <code>--tags</code> option with the git push command to include them.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push --tags</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Ignoring-Files"><a href="#9-–-Ignoring-Files" class="headerlink" title="9 – Ignoring Files"></a>9 – Ignoring Files</h1><p>At some point you’ll come across a situation where you don’t want Git to track certain files. There are a few ways to tell Git which files to <em>ignore</em> and not take into account.</p>
+<p><strong>Repository Wide .gitignore</strong></p>
+<p>Creating a file named <code>.gitignore</code> in your repository allows Git to ignore the file names it holds. They will not be included in any commits or changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim .gitignore</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>“GitHub maintains an official list of recommended <code>.gitignore</code> files for many popular operating systems, environments, and languages in the <a href="https://github.com/github/gitignore" target="_blank" rel="external">github/gitignore public repository</a>.”</p>
+</blockquote>
+<p>The <code>.gitignore</code> file itself should be tracked and committed to Git so others using the repository can incorporate the same ignore rules.</p>
+<p>This Gist has some less specific general purpose ignore rules you may want to add to your own file:</p>
+<script src="//gist.github.com/9257657.js?file=.gitignore"></script>
+<p><strong>Global Repositories .gitignore</strong></p>
+<p>It is also possible to create a global <code>.gitignore</code> file. Which differs from the above in that it is a list of rules for ignoring files in <em>every</em> Git repository on your local machine.</p>
+<p>To create this make a file at <code>~/.gitignore_global</code> and add your desired global rules to it.</p>
+<p>Afterwards run the following in your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
+<p>If in either of the two main examples above (repository wide or global) you want to ignore a file that has already been checked in, and the current version is in turn kept on a remote. You must untrack the file first fully, ignoring it with this next command. Before then ignoring it as usual.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached example-file</span><br></pre></td></tr></table></figure>
+<p>This removes the file contents from the index, which means on committing the change it removes it from <code>HEAD</code> and thereby the remote upon pushing changes.</p>
+<hr>
+<p>The vast majority of the content in this post is derived from a Git guide provided by <a href="https://www.udemy.com/" target="_blank" rel="external">Udemy</a>.</p>
+<p>The Udemy post can be accessed at this link on their blog:</p>
+<blockquote>
+<p><a href="https://blog.udemy.com/git-tutorial-a-comprehensive-guide/" target="_blank" rel="external">https://blog.udemy.com/git-tutorial-a-comprehensive-guide/</a></p>
+</blockquote>
+<p>Be sure to read the rest of it for the areas of Git not covered here.</p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/292357/what-are-the-differences-between-git-pull-and-git-fetch" target="_blank" rel="external">Stack Overflow Git fetch/pull Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="http://stackoverflow.com/questions/3639342/whats-the-difference-between-git-reset-and-git-checkout" target="_blank" rel="external">Stack Overflow Git checkout/reset Difference Thread</a> – Stack Overflow thread discussing differences.</li>
+<li><a href="https://www.atlassian.com/git/" target="_blank" rel="external">Getting Git Right Tutorials</a> – Very well presented Git tutorials from Atlassian, diagrams originate from here.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-09-09T23:00:00.000Z" class="post__time">September 10, 2015</time><h1 class="post__title"><a href="/2015/09/10/slack-irssi-connection/">Slack IRC Gateway Authentication with irssi</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/PVgdIPJ.png" alt="Slack Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Slack’s web interface isn’t too shabby, but at times it’s more preferable and easier to instead have a command line alternative. Also when working on a server or command line orientated environment, you might not have access to a web browser to login to Slack. So running an IRC client with access to the gateway provided, is the supported solution and remedy for this. The rest of this post shows one relatively straight forward way of using irssi IRC chat client to connect and authenticate with the gateway. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Enable-IRC-on-Slack-Team"><a href="#1-–-Enable-IRC-on-Slack-Team" class="headerlink" title="1 – Enable IRC on Slack Team"></a>1 – Enable IRC on Slack Team</h1><p>In the Slack team’s web browser session navigate to:</p>
+<p><strong>Team settings &gt; Permissions &gt; Gateways &gt; Expand</strong></p>
+<p>Tick “Enable IRC gateway (SSL only)” and then click Save Settings.</p>
+<p><img src="http://i.imgur.com/1G1TH3u.png" alt="Slack Tick-boxes"></p>
+<p>XMPP as pictured can also be enabled here for services such as <em>Jabber</em></p>
+<hr>
+<h1 id="2-–-Install-irssi"><a href="#2-–-Install-irssi" class="headerlink" title="2 – Install irssi"></a>2 – Install irssi</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S irssi</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install irssi</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Run-irssi"><a href="#3-–-Run-irssi" class="headerlink" title="3 – Run irssi"></a>3 – Run irssi</h1><p>Here are two methods, either on its own:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ irssi</span><br></pre></td></tr></table></figure>
+<p>Or in a screen session:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -S irssi-irc-client irssi</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Slack-Team-Gateway-Credentials"><a href="#4-–-Slack-Team-Gateway-Credentials" class="headerlink" title="4 – Slack Team Gateway Credentials"></a>4 – Slack Team Gateway Credentials</h1><p>Navigate to the new page that contains your team’s Slack gateway credentials.</p>
+<p><strong>Account &amp; Profile &gt; Settings tab &gt; Gateways &gt; Gateway configuration</strong><br>Here are the details you need for the next few steps in order to setup IRC authentication to the Slack team.</p>
+<p><img src="http://i.imgur.com/sabrQRA.png" alt="Slack Gateway Details"></p>
+<p>Refer back to them as needed for these next steps.</p>
+<hr>
+<h1 id="5-–-Add-Slack-Network-Details"><a href="#5-–-Add-Slack-Network-Details" class="headerlink" title="5 – Add Slack Network Details"></a>5 – Add Slack Network Details</h1><p>Where <code>&lt;slack-username&gt;</code> is your Slack username, and <code>loy-slack</code> is the name you want the network to be remembered as.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/network add -nick &lt;slack-username&gt; loy-slack</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Add-Slack-Server-Details"><a href="#6-–-Add-Slack-Server-Details" class="headerlink" title="6 – Add Slack Server Details"></a>6 – Add Slack Server Details</h1><p>Now add the server details to the network defined in the previous step, the command to do this comes next. Remember to replace <code>loy-slack</code> with the name you gave the network, and substitute the details from your Slack team’s IRC credentials into the command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/server add -auto -ssl -network loy-slack &lt;slack-teamname&gt;.irc.slack.com 6667 &lt;slack-password&gt;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-Save-Default-Slack-Channels"><a href="#7-–-Save-Default-Slack-Channels" class="headerlink" title="7 – Save Default Slack Channels"></a>7 – Save Default Slack Channels</h1><p>Entering this command will ensure irssi always joins the channel and network name whenever you connect to the server:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/channel add -auto <span class="comment">#general loy-slack</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Save-Configuration"><a href="#8-–-Save-Configuration" class="headerlink" title="8 – Save Configuration"></a>8 – Save Configuration</h1><p>Save all changes to the irssi configuration file in your user’s Linux home directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/save</span><br></pre></td></tr></table></figure>
+<p>Then quit the program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/quit</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Run-irssi"><a href="#9-–-Run-irssi" class="headerlink" title="9 – Run irssi"></a>9 – Run irssi</h1><p>Once again run the program as down in the earlier step:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ irssi</span><br></pre></td></tr></table></figure>
+<p>Or in a screen session:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -S irssi-irc-client irssi</span><br></pre></td></tr></table></figure>
+<p>The below output or similar appears upon launch of irssi:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">3:43 -!- Irssi: Looking up &lt;slack-teamname&gt;.irc.slack.com</span><br><span class="line">13:43 -!- Irssi: Connecting to &lt;slack-teamname&gt;.irc.slack.com [52.6.30.134] port 6667</span><br><span class="line">13:43 -!- Irssi: Connection to &lt;slack-teamname&gt;.irc.slack.com established</span><br><span class="line">13:43 slackbot [] requested CTCP VERSION from &lt;user-name&gt;: </span><br><span class="line">13:43 -!- IRC-SLACK gateway</span><br><span class="line">13:43 -!- Welcome to Slack IRC Gateway server &lt;user-name&gt;!~&lt;user-name&gt;@10.0.23.98</span><br><span class="line">13:43 -!- MAP SILENCE=15 WHOX WALLCHOPS WALLVOICES USERIP CPRIVMSG CNOTICE MODES=6 MAXCHANNELS=100 SAFELIST are supported by this server</span><br><span class="line">13:43 -!- NICKLEN=32 TOPICLEN=160 AWAYLEN=160 CHANTYPES=<span class="comment"># PREFIX=(ov)@+ CHANMODES=b,k,l,rimnpst CASEMAPPING=rfc1459 are supported by this server</span></span><br><span class="line">13:43 -!- there are 11 users </span><br><span class="line">13:43 -!- Message of the day</span><br><span class="line">13:43 -!- WELCOME TO SLACK...</span><br><span class="line">13:43 -!- End of MOTD <span class="built_in">command</span></span><br><span class="line">13:43 -!- Mode change [] <span class="keyword">for</span> user &lt;user-name&gt;:+i</span><br></pre></td></tr></table></figure>
+<p>The persistent Slack connection is now setup and will be active each time you run irssi.</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://www.pilgrimbreak.com/how-to-access-slack-with-command-line-irc-client-irssi/" target="_blank" rel="external">How to Access Slack with the Command Line</a> – Most of the images and content were gleaned from here. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/irssi/" class="post__tag__link">irssi</a></li><li class="post__tag__item"><a href="/tags/IRC/" class="post__tag__link">IRC</a></li><li class="post__tag__item"><a href="/tags/Slack/" class="post__tag__link">Slack</a></li></ul><a href="/2015/09/10/slack-irssi-connection/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

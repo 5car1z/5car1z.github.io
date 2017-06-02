@@ -1,0 +1,874 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-02-10T00:00:00.000Z" class="post__time">February 10, 2016</time><h1 class="post__title"><a href="/2016/02/10/ansible-installing-running/">Ansible - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Ansible is one of many configuration management tools but has its own unique set of differences. The platform aims to provide solutions for the entirety of a setup. With consideration for infrastructure provisioning, application deployment, and overall orchestration taken into account.  </p>
+<p>Some of its features it uses to achieve this are agentless management, multi-node deployment, ad hoc task execution, module libraries, and use of higher level install scripts referred to as <em>playbooks</em>. Security and reliability is maintained throughout this with SSH as the transport protocol.  </p>
+<p>Compared to to other CM tools the learning curve is also seen as much lower with Ansible, making it easier to understand and use from the outset. Only Python and a designated control machine are required for the actual installation. With all configuration for the “inventory” assets written in YAML to keep things simple and clean. </p>
+<blockquote>
+<p><a href="http://www.ansible.com/" target="_blank" rel="external">http://www.ansible.com/</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Control-Machine-Installation"><a href="#1-–-Control-Machine-Installation" class="headerlink" title="1 – Control Machine Installation"></a>1 – Control Machine Installation</h1><p>The host you want to use as the <em>control machine</em> for Ansible requires Python 2.6 or 2.7 installed. This control machine can be a desktop, laptop, or workstation etc as long it’s running a Linux based OS such as Debian/Ubuntu, Arch, CentOS, RHEL, OS X, or any version of BSD. </p>
+<p>Windows as a platform is not currently supported for the control machine. </p>
+<p>In this post the commands are shown for installing Ansible onto the control machine using system package managers, and for only a few of the many Linux distributions on offer.</p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p><a href="https://wiki.archlinux.org/index.php/Ansible" target="_blank" rel="external">Ansible</a> has a Pacman package in the community repository.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S ansible</span><br></pre></td></tr></table></figure>
+<p>The AUR also has a package build that pulls directly from GitHub called <code>ansible-git</code> . Any Aurum helper can be used to automatically build and install this</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yaourt -S ansible-git</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>Install the common software properties package if you don’t already have it. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install software-properties-common</span><br></pre></td></tr></table></figure>
+<p>Add the official Ansible package repository to the system and update the package manager database. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-add-repository ppa:ansible/ansible</span><br><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+<p>Install Ansible from the newly added package repository.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ansible</span><br></pre></td></tr></table></figure>
+<h2 id="Fedora"><a href="#Fedora" class="headerlink" title="Fedora"></a>Fedora</h2><p>Fedora users can install Ansible directly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum -y update</span><br><span class="line">$ sudo yum -y install ansible</span><br></pre></td></tr></table></figure>
+<h2 id="RHEL-CentOS"><a href="#RHEL-CentOS" class="headerlink" title="RHEL / CentOS"></a>RHEL / CentOS</h2><p><a href="http://fedoraproject.org/wiki/EPEL" target="_blank" rel="external">EPEL must be configured before trying to install Ansible on these systems.</a> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum -y update</span><br><span class="line">$ sudo yum -y install ansible</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Remote-Nodes-SSH-Setup"><a href="#2-–-Remote-Nodes-SSH-Setup" class="headerlink" title="2 – Remote Nodes SSH Setup"></a>2 – Remote Nodes SSH Setup</h1><p>On the remote nodes you want Ansible to interact with you need to register the control machine’s public SSH key. This is as Ansible uses SSH to communicate and operate by default. </p>
+<p>To generate a new SSH key for the control machine use the next command on the control machine host:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> .ssh/ </span><br><span class="line">$ ssh-keygen -t rsa -b 4096 -C <span class="string">"ansible-control-host"</span></span><br></pre></td></tr></table></figure>
+<p>Then copy the new key across to the remote client nodes; changing the <code>-p</code> value for your own relevant SSH port number. Along with the usernames plus remote host IP addresses. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id -i ansible-control-host -p 3980 username@remote.one.ip.address</span><br><span class="line">$ ssh-copy-id -i ansible-control-host -p 3980 username@remote.two.ip.address</span><br><span class="line">$ ssh-copy-id -i ansible-control-host -p 3980 username@remote.three.ip.address</span><br></pre></td></tr></table></figure>
+<p>Next open the main Ansible configuration file; which is explained more in a latter section. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ansible/ansible.cfg</span><br></pre></td></tr></table></figure>
+<p>Locate the lines that describe private key authentication (shown below) and remove the <code>#</code> symbol whilst adding in the path to the new private key we created.</p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># if set, always use this private key file for authentication, same as</span></span><br><span class="line"><span class="comment"># if passing --private-key to ansible or ansible-playbook</span></span><br><span class="line">private_key_file = ~/.ssh/ansible-control-host</span><br></pre></td></tr></table></figure>
+<p>Save and exit the file. </p>
+<p>This forces Ansible to use this private key for all operations by default. An alternative to this would be to use the <code>ansible_ssh_private_key_file</code> variable in the <code>hosts</code> file explained later on. </p>
+<p>Like with the control machine the remote nodes must have Python installed (2.4 or later) as a prerequisite to using Ansible with them. So any remote nodes that do not have Python already installed must be attended to before continuing. </p>
+<hr>
+<h1 id="3-–-Ansible-Hosts-File-Setup"><a href="#3-–-Ansible-Hosts-File-Setup" class="headerlink" title="3 – Ansible Hosts File Setup"></a>3 – Ansible Hosts File Setup</h1><iframe width="1080" height="500" src="https://www.youtube.com/embed/xew7CMkL7jY" frameborder="1" allowfullscreen><br></iframe>
+
+<p>Continuing on with the control machine - backup the template Ansible hosts file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv /etc/ansible/hosts /etc/ansible/hosts.orig</span><br></pre></td></tr></table></figure>
+<p>Begin writing to a new buffer to create a new “hosts” file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/ansible/hosts</span><br></pre></td></tr></table></figure>
+<p>Add the contents of the next code snippet into the hosts file, substituting in the IP addresses of your remotes in the process.</p>
+<figure class="highlight yaml"><figcaption><span>/etc/ansible/hosts</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[servers]</span></span><br><span class="line"><span class="string">remote.one.ip.address</span></span><br><span class="line"><span class="string">remote.two.ip.address</span></span><br><span class="line"><span class="string">remote.three.ip.address</span></span><br></pre></td></tr></table></figure>
+<p>This configuration file is very flexible and can be expanded to use variables, aliases, and port numbers. Which is what we need to add to ensure the SSH connectivity. </p>
+<blockquote>
+<p><strong>Note:</strong> If your SSH port is the default port 22 on these remote nodes then you do not have to set this upcoming port variable.</p>
+</blockquote>
+<p>Expand the file by adding a hostname alias, host variable, user variable, and port number variable:</p>
+<figure class="highlight yaml"><figcaption><span>/etc/ansible/hosts</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[servers]</span></span><br><span class="line"><span class="string">server-name-1</span> <span class="string">ansible_host=remote.one.ip.address</span> <span class="string">ansible_user=username</span> <span class="string">ansible_port=3980</span> </span><br><span class="line"><span class="string">server-name-2</span> <span class="string">ansible_host=remote.two.ip.address</span> <span class="string">ansible_user=username</span> <span class="string">ansible_port=3980</span> </span><br><span class="line"><span class="string">server-name-3</span> <span class="string">ansible_host=remote.three.ip.address</span> <span class="string">ansible_user=username</span> <span class="string">ansible_port=3980</span></span><br></pre></td></tr></table></figure>
+<p>Save the changes and exit the text editor. </p>
+<p>As an extra option here, adding an <code>ansible_ssh_private_key_file=~/.ssh/ansible-control-host</code> variable to each host line is another possibility. Instead of what we set in the last step i.e. the default private key directive in Ansible’s main configuration file (<code>ansible.cfg</code>). </p>
+<hr>
+<h1 id="4-–-Test-Ansible-Connectivity"><a href="#4-–-Test-Ansible-Connectivity" class="headerlink" title="4 – Test Ansible Connectivity"></a>4 – Test Ansible Connectivity</h1><p>An Ansible module named “ping” is useful for testing the previous host file configuration we added.</p>
+<p>Note that <code>all</code> can be replaced for a group name like <code>server</code> - which is taken from the example earlier to only select those hosts in that group. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible all -m ping</span><br></pre></td></tr></table></figure>
+<p>A successful hosts and SSH key configuration returns an output similar to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">hostname1 | SUCCESS =&gt; &#123;</span><br><span class="line">    <span class="string">"changed"</span>: <span class="literal">false</span>, </span><br><span class="line">    <span class="string">"invocation"</span>: &#123;</span><br><span class="line">        <span class="string">"module_args"</span>: &#123;</span><br><span class="line">            <span class="string">"data"</span>: null</span><br><span class="line">        &#125;, </span><br><span class="line">        <span class="string">"module_name"</span>: <span class="string">"ping"</span></span><br><span class="line">    &#125;, </span><br><span class="line">    <span class="string">"ping"</span>: <span class="string">"pong"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">hostname2 | SUCCESS =&gt; &#123;</span><br><span class="line">    <span class="string">"changed"</span>: <span class="literal">false</span>, </span><br><span class="line">    <span class="string">"invocation"</span>: &#123;</span><br><span class="line">        <span class="string">"module_args"</span>: &#123;</span><br><span class="line">            <span class="string">"data"</span>: null</span><br><span class="line">        &#125;, </span><br><span class="line">        <span class="string">"module_name"</span>: <span class="string">"ping"</span></span><br><span class="line">    &#125;, </span><br><span class="line">    <span class="string">"ping"</span>: <span class="string">"pong"</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">hostname3 | SUCCESS =&gt; &#123;</span><br><span class="line">    <span class="string">"changed"</span>: <span class="literal">false</span>, </span><br><span class="line">    <span class="string">"invocation"</span>: &#123;</span><br><span class="line">        <span class="string">"module_args"</span>: &#123;</span><br><span class="line">            <span class="string">"data"</span>: null</span><br><span class="line">        &#125;, </span><br><span class="line">        <span class="string">"module_name"</span>: <span class="string">"ping"</span></span><br><span class="line">    &#125;, </span><br><span class="line">    <span class="string">"ping"</span>: <span class="string">"pong"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Manual options are also sometimes added to these <em>ad hoc</em> Ansible commands. </p>
+<p>Here <code>-u</code> selects a Linux user to issue the command as: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible all -m ping -u &lt;username&gt;</span><br></pre></td></tr></table></figure>
+<p>Furthermore the  <code>-b</code> option triggers the command to be run with <code>sudo</code> privileges: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible all -m ping -u &lt;username&gt; -b</span><br></pre></td></tr></table></figure>
+<p>This is all with the “ping” module example, but live commands are just as easy.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible all <span class="_">-a</span> <span class="string">"/bin/echo hello world!"</span></span><br></pre></td></tr></table></figure>
+<p>You can do this without invoking the program directly and use the <code>command</code> module with Ansible instead.</p>
+<p>Return the “servers” group drive partitions using the <code>df</code> program: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible -m <span class="built_in">command</span> <span class="_">-a</span> <span class="string">"df -h"</span> servers</span><br></pre></td></tr></table></figure>
+<p>Example output from one host:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">hostname1 | SUCCESS | rc=0 &gt;&gt;</span><br><span class="line">Filesystem                 Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/disk/by-label/DOROOT   30G  6.1G   22G  22% /</span><br><span class="line">udev                        10M     0   10M   0% /dev</span><br><span class="line">tmpfs                      202M   25M  178M  13% /run</span><br><span class="line">tmpfs                      505M     0  505M   0% /dev/shm</span><br><span class="line">tmpfs                      5.0M     0  5.0M   0% /run/lock</span><br><span class="line">tmpfs                      505M     0  505M   0% /sys/fs/cgroup</span><br><span class="line">tmpfs                      101M     0  101M   0% /run/user/1001</span><br></pre></td></tr></table></figure>
+<p>Checking disk space on multiple nodes has never been easier!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible -m <span class="built_in">command</span> <span class="_">-a</span> <span class="string">"free -h"</span> servers</span><br></pre></td></tr></table></figure>
+<p>Example output from one host:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">hostname2 | SUCCESS | rc=0 &gt;&gt;</span><br><span class="line">             total       used       free     shared    buffers     cached</span><br><span class="line">Mem:          1.0G       875M       134M        25M       187M       570M</span><br><span class="line">-/+ buffers/cache:       117M       892M</span><br><span class="line">Swap:         2.0G        32K       2.0G</span><br></pre></td></tr></table></figure>
+<p>Query the system’s uptime of only one requested host using the assigned alias from the hosts file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ansible -m <span class="built_in">command</span> <span class="_">-a</span> <span class="string">"uptime -p"</span> hostname3</span><br></pre></td></tr></table></figure>
+<p>Example output:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hostname3 | SUCCESS | rc=0 &gt;&gt;</span><br><span class="line">up 7 weeks, 1 day, 7 minutes</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Ansible-Configuration-File"><a href="#5-–-Ansible-Configuration-File" class="headerlink" title="5 – Ansible Configuration File"></a>5 – Ansible Configuration File</h1><p>Custom changes to the Ansible install and how it behaves are made through the configuration files. </p>
+<p>Changes in relation to configuration are processed and picked up in the the following order:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">* ANSIBLE_CONFIG (an environment variable)</span><br><span class="line">* ansible.cfg (<span class="keyword">in</span> the current directory)</span><br><span class="line">* .ansible.cfg (<span class="keyword">in</span> the home directory)</span><br><span class="line">* .ansible.cdg (<span class="keyword">in</span> /etc/ansible/ansible.cfg)</span><br></pre></td></tr></table></figure>
+<p>In this section we’re taking a quick look at the <code>ansible.cfg</code> file we modified slightly earlier. </p>
+<p>There’s not much wrong with the default contents of the main <code>/etc/ansible.cfg</code> file, but you may need to delve into it at some point in the future. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/ansible/ansible.cfg</span><br></pre></td></tr></table></figure>
+<p>Here are some cherry picked lines and directives from the file that may be of interest. Remember if/when setting these to remove the <code>#</code> symbol to uncomment. </p>
+<p>To assign a different directory for a custom hosts file location. </p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#inventory = /etc/ansible/hosts</span></span><br></pre></td></tr></table></figure>
+<p>This next line designates the number of parallel processes to generate when talking with remote hosts. The value will always depend upon your hardware capabilities and amount of remote nodes in play. </p>
+<p>Higher fork values will help to complete actions across the nodes faster. Assuming you have the hardware needed. A common value is 50, rather than the default of 5. </p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#forks = 5</span></span><br></pre></td></tr></table></figure>
+<p>To control whether an Ansible playbook prompts for a sudo password when sudoing - set this next directive to true. </p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ask_sudo_pass = True</span></span><br></pre></td></tr></table></figure>
+<p>Similarly to set whether an Ansible playbook prompts for a password when run - set this next line to true.</p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ask_pass = True</span></span><br></pre></td></tr></table></figure>
+<p>This sets the default SSH port for all system connections, be aware that any settings in the inventory (e.g. hosts file) will override this. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#remote_port = 22</span><br></pre></td></tr></table></figure>
+<p>Set the time out value for SSH queries here on this line:</p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># SSH timeout</span></span><br><span class="line"><span class="comment">#timeout = 10</span></span><br></pre></td></tr></table></figure>
+<p>Enable playbook logging capability in the specified directory on these lines here: </p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># logging is off by default unless this path is defined</span></span><br><span class="line"><span class="comment"># if so defined, consider logrotate</span></span><br><span class="line"><span class="comment">#log_path = /var/log/ansible.log</span></span><br></pre></td></tr></table></figure>
+<p>Who doesn’t like <code>cowsay</code> ?</p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># don't like cows?  that's unfortunate.</span></span><br><span class="line"><span class="comment"># set to 1 if you don't want cowsay support or export ANSIBLE_NOCOWS=1 </span></span><br><span class="line"><span class="comment">#nocows = 1</span></span><br></pre></td></tr></table></figure>
+<p>The lines following these let you tweak and customise components of cowsay even further!</p>
+<p>After which the remaining sections that have been omitted here contain more background areas of Ansible, should you need to examine or change them in the future.</p>
+<figure class="highlight bash"><figcaption><span>/etc/ansible/ansible.cfg</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[privilege_escalation]</span><br><span class="line">&lt;...&gt;</span><br><span class="line">[paramiko_connection]</span><br><span class="line">&lt;...&gt;</span><br><span class="line">[ssh_connection]</span><br><span class="line">&lt;...&gt;</span><br><span class="line">[accelerate]</span><br><span class="line">&lt;...&gt;</span><br><span class="line">[selinux]</span><br><span class="line">&lt;...&gt;</span><br></pre></td></tr></table></figure>
+<p>Any major changes or crucial updates to the configuration file syntax and formatting will likely be pushed to the GitHub development configuration file at:</p>
+<blockquote>
+<p><a href="https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg" target="_blank" rel="external">https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg</a></p>
+</blockquote>
+<p>Or shown in the official documentation. </p>
+<hr>
+<iframe width="1080" height="500" src="https://www.youtube.com/embed/ZNB1at8mJWY" frameborder="1" allowfullscreen><br></iframe>
+
+<p>What’s been covered in this post is the very basics of Ansible and only goes a short way towards demonstrating its ability as a configuration management tool. There are still a variety of pieces to fit into the puzzle such as modules, inventory items, and most importantly the playbooks. Which all make up and achieve the aims of the software described in the premable. </p>
+<p>A future post on Ansible will look at more at the concept of “inventory”. </p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://docs.ansible.com/ansible/intro_installation.html" target="_blank" rel="external">Official Ansible Documentation - Installation</a> – Extensive instructions for installing and building Ansible from source are located here. </li>
+<li><a href="http://docs.ansible.com/ansible/intro_getting_started.html" target="_blank" rel="external">Official Ansible Documentation - Getting Started</a> – A few initial ad hoc commands and examples of them are described in brief here. </li>
+<li><a href="http://docs.ansible.com/ansible/intro_configuration.html" target="_blank" rel="external">Official Ansible Documentation - Configuration File</a> – Anything and everything to do with the configuration file, good for referring back to.  </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Ansible/" class="post__tag__link">Ansible</a></li><li class="post__tag__item"><a href="/tags/CM/" class="post__tag__link">CM</a></li><li class="post__tag__item"><a href="/tags/Python/" class="post__tag__link">Python</a></li></ul><a href="/2016/02/10/ansible-installing-running/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-01-27T00:00:00.000Z" class="post__time">January 27, 2016</time><h1 class="post__title"><a href="/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This time we are beginning by centering around the Docker daemon and how it interacts with various process mangers from different platforms. Followed up by an introduction to networking in Docker that uses more of the Docker training images to link together and create a basic network of containers. Specifically a PostgreSQL database container and a Python webapp container.  </p>
+<p>This is post three on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a>. If you’re looking for more generalised administration and basic example uses of the Docker Engine CLI then you may want to read that post instead. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Docker-Daemon-Administration"><a href="#1-–-Docker-Daemon-Administration" class="headerlink" title="1 – Docker Daemon Administration"></a>1 – Docker Daemon Administration</h1><p>The Docker daemon is the background service that handles running containers and all their states. </p>
+<p>The starting and stopping of the Docker daemon is often configured through a process manager like systemd or Upstart. In a production environment this is very useful as you have a lot of customisable control over the behaviour of the daemon. </p>
+<p>It can be run directly from the command line though instead of this:  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker daemon</span><br></pre></td></tr></table></figure>
+<p>It listens on the Unix socket - <code>unix:///var/run/docker.sock</code> when active and running. </p>
+<p>If you’re running the docker daemon directly like this you can append configuration options to the command.</p>
+<p>An example of running the docker <a href="https://docs.docker.com/engine/reference/commandline/daemon/" target="_blank" rel="external">daemon</a> with configuration options is as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker daemon -D --tls=<span class="literal">true</span> --tlscert=/var/docker/server.pem --tlskey=/var/docker/serverkey.pem -H tcp://192.168.59.3:2376</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>-D</code> <code>--debug=false</code>    – Enable or disable debug mode. </li>
+<li><code>--tls=false</code> – Enable or disable TLS. </li>
+<li><code>--tlscert=</code> – certificate location. </li>
+<li><code>tlskey=</code> – key location. </li>
+<li><code>-H</code> <code>--host=[]</code> – Daemon socket(s) to connect to.</li>
+</ul>
+<p>More options are on offer for the Docker daemon at the link before the last code block. </p>
+<h2 id="Upstart"><a href="#Upstart" class="headerlink" title="Upstart"></a>Upstart</h2><p>The default Docker daemon Upstart job is found in <code>/etc/init/docker.conf</code> .</p>
+<p>To check the status of the daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo status docker</span><br></pre></td></tr></table></figure>
+<p>To start the Docker daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo start docker</span><br></pre></td></tr></table></figure>
+<p>Stop the Docker daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo stop docker</span><br></pre></td></tr></table></figure>
+<p>Or restart the daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo restart docker</span><br></pre></td></tr></table></figure>
+<p>Logs for Upstart jobs are found in <code>/var/log/upstart</code> and are compressed when the daemon is not running. So run the daemon/container to read the active log file - <code>docker.log</code> via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo tail -fn 15 /var/<span class="built_in">log</span>/upstart/docker.log</span><br></pre></td></tr></table></figure>
+<h2 id="systemd"><a href="#systemd" class="headerlink" title="systemd"></a>systemd</h2><p>Default unit files are stored in the subdirectories of <code>/usr/lib/systemd</code> and <code>/lib/systemd/system</code> . Custom user created unit files are kept in <code>/etc/systemd/system</code> .</p>
+<p>To check the status of the daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl status docker</span><br></pre></td></tr></table></figure>
+<p>To start the Docker daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br></pre></td></tr></table></figure>
+<p>Stop the Docker daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl stop docker</span><br></pre></td></tr></table></figure>
+<p>Or restart the daemon:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p>To ensure the Docker daemon starts at boot:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl enable docker</span><br></pre></td></tr></table></figure>
+<p>Logs for Docker are viewed in systemd with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ journalctl -u docker</span><br></pre></td></tr></table></figure>
+<p>A more in-depth look at systemd and Docker is kept here in the Docker docs:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/articles/systemd/" target="_blank" rel="external">Docker Documentation - systemd</a></p>
+</blockquote>
+<hr>
+<h1 id="2-–-Process-Manager-Container-Automation"><a href="#2-–-Process-Manager-Container-Automation" class="headerlink" title="2 – Process Manager Container Automation"></a>2 – Process Manager Container Automation</h1><p><em>Restart policies</em> are an in-built Docker mechanism for restarting containers automatically when they exit. These must be set manually with the flag - <code>--restart=&quot;yes&quot;</code> and are also triggered when the Docker daemon starts up (like after a system reboot). Restart policies start linked containers in the correct order too. </p>
+<p>If you have non-Docker processes that depend on Docker containers you can use a process manager like upstart, systemd or supervisor instead of these restart policies to replace this functionality. </p>
+<p>This is what we will cover in this step.</p>
+<blockquote>
+<p><strong>Note:</strong> Be aware that process mangers will conflict with Docker restart policies if they are both in action So don’t run restart policies if you are using a process manager.</p>
+</blockquote>
+<p>For these examples assume that the container’s for each have already been created and are running Ghost with the name <code>--name=ghost-container</code> . </p>
+<h2 id="Upstart-1"><a href="#Upstart-1" class="headerlink" title="Upstart"></a>Upstart</h2><figure class="highlight bash"><figcaption><span>/etc/init/ghost.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">description <span class="string">"Ghost Blogging Container"</span></span><br><span class="line">author <span class="string">"Scarlz"</span></span><br><span class="line">start on filesystem and started docker</span><br><span class="line">stop on runlevel [!2345]</span><br><span class="line">respawn</span><br><span class="line">script</span><br><span class="line">  /usr/bin/docker start <span class="_">-a</span> ghost-container</span><br><span class="line">end script</span><br></pre></td></tr></table></figure>
+<p>Docker automatically attaches the process manager to the running container, or starts it if needed with this setup.</p>
+<p>All signals from Docker are also forwarded so that the process manager can detect when a container stops, to correctly restart it.</p>
+<p>If you need to pass options to the containers (such as <code>--env</code>) then you’ll need to use <code>docker run</code> rather than <code>docker start</code> in the job configuration.</p>
+<p>For Example: </p>
+<figure class="highlight bash"><figcaption><span>/etc/init/ghost.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">script</span><br><span class="line">  /usr/bin/docker run --env foo=bar --name ghost-container ghost</span><br><span class="line">end script</span><br></pre></td></tr></table></figure>
+<p>This differs as it creates a new container using the <code>ghost</code> image every time the service is started and takes into account the extra options. </p>
+<h2 id="systemd-1"><a href="#systemd-1" class="headerlink" title="systemd"></a>systemd</h2><figure class="highlight bash"><figcaption><span>/etc/systemd/system/ghost</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=Ghost Blogging Container</span><br><span class="line">Requires=docker.service</span><br><span class="line">After=docker.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Restart=always</span><br><span class="line">ExecStart=/usr/bin/docker start <span class="_">-a</span> ghost-container</span><br><span class="line">ExecStop=/usr/bin/docker stop -t 2 ghost-container</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=local.target</span><br></pre></td></tr></table></figure>
+<p>Docker automatically attaches the process manager to the running container, or starts it if needed with this setup. </p>
+<p>All signals from Docker are also forwarded so that the process manager can detect when a container stops, to correctly restart it.</p>
+<p>If you need to pass options to the containers (such as <code>--env</code>), then you’ll need to use <code>docker run</code> rather than <code>docker start</code> in the job configuration.</p>
+<p>For Example: </p>
+<figure class="highlight bash"><figcaption><span>/etc/systemd/system/ghost</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ExecStart=/usr/bin/docker run --env foo=bar --name ghost-container ghost</span><br><span class="line">ExecStop=/usr/bin/docker stop -t 2 ghost-container ; /usr/bin/docker rm <span class="_">-f</span> ghost-container</span><br></pre></td></tr></table></figure>
+<p>This differs as it creates a new container with the extra options every time the service is started, which stops and removes itself when the Docker service ends. </p>
+<hr>
+<h1 id="3-–-Docker-Networks"><a href="#3-–-Docker-Networks" class="headerlink" title="3 – Docker Networks"></a>3 – Docker Networks</h1><p>Network drivers allow containers to be linked together and networked. Docker comes with two default network drivers as part of the normal installation:</p>
+<ul>
+<li>The bridge driver.  </li>
+<li>The overlay driver. </li>
+</ul>
+<p>These two drivers are replaceable with other third party drivers that perform more optimally in different situations. But for low end basic Docker use these given defaults are fine. </p>
+<p>Docker also automatically includes three default networks with the base install:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network ls</span><br></pre></td></tr></table></figure>
+<p>Listing them as:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NETWORK ID          NAME                DRIVER</span><br><span class="line">2d41f8bbf514        host                host                </span><br><span class="line">f9ee6308ecdd        bridge              bridge              </span><br><span class="line">49dab653f349        none                null</span><br></pre></td></tr></table></figure>
+<p>The network named <code>bridge</code> is classed as a special network. Docker launches any and all containers in this network (unless told otherwise). </p>
+<p>So if you currently you have containers running these will have been placed into the <code>bridge</code> network group. </p>
+<p>Networks can be <a href="https://docs.docker.com/engine/reference/commandline/network_inspect/" target="_blank" rel="external">inspected</a> using the next command, where <code>bridge</code> is the network name to be inspected:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network inspect bridge</span><br></pre></td></tr></table></figure>
+<p>The output shows any and all configured directives for the network:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"Name"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"Id"</span>: <span class="string">"f9ee6308ecdd5dc5a588428469de1b7c475fdafdab49cfc33c1c3ac0bf0559ab"</span>,</span><br><span class="line">        <span class="string">"Scope"</span>: <span class="string">"local"</span>,</span><br><span class="line">        <span class="string">"Driver"</span>: <span class="string">"bridge"</span>,</span><br><span class="line">        <span class="string">"IPAM"</span>: &#123;</span><br><span class="line">            <span class="string">"Driver"</span>: <span class="string">"default"</span>,</span><br><span class="line">            <span class="string">"Config"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="string">"Subnet"</span>: <span class="string">"172.17.0.0/16"</span></span><br><span class="line">                &#125;</span><br><span class="line">            ]</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Containers"</span>: &#123;</span><br><span class="line">            <span class="string">"ff98b5ed01dd4323f0ce38af9b8cea2d49d0b1e194cf147a3a8f632278a11451"</span>: &#123;</span><br><span class="line">                <span class="string">"EndpointID"</span>: <span class="string">"b7c9fabcda00ccebd6523f76477b51eba00dd5d3f26940355139fff62d5576bb"</span>,</span><br><span class="line">                <span class="string">"MacAddress"</span>: <span class="string">"02:42:ac:11:00:02"</span>,</span><br><span class="line">                <span class="string">"IPv4Address"</span>: <span class="string">"172.17.0.2/16"</span>,</span><br><span class="line">                <span class="string">"IPv6Address"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="string">"Options"</span>: &#123;</span><br><span class="line">            <span class="string">"com.docker.network.bridge.default_bridge"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_icc"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.enable_ip_masquerade"</span>: <span class="string">"true"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.host_binding_ipv4"</span>: <span class="string">"0.0.0.0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.bridge.name"</span>: <span class="string">"docker0"</span>,</span><br><span class="line">            <span class="string">"com.docker.network.driver.mtu"</span>: <span class="string">"1500"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>This <code>inspect</code> output changes as a network is altered and configured, how to do this is covered in later steps. </p>
+<hr>
+<h1 id="4-–-Creating-Docker-Networks"><a href="#4-–-Creating-Docker-Networks" class="headerlink" title="4 – Creating Docker Networks"></a>4 – Creating Docker Networks</h1><p>Networks are natural ways to isolate containers from other containers or other networks. The original default networks are not to be solely relied upon however. It’s better to create your own network groups.</p>
+<p>Remember there are two default drivers and therefore two native network types; <code>bridge</code> and <code>overlay</code> . Bridge networks can only make use of one singular host to run the Docker Engine software. An overlay network differs in that it can incorporate multiple hosts into running the Docker software. </p>
+<p>To make the simpler “bridge” type network we use the <code>create</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network create <span class="_">-d</span> bridge &lt;new-network-name&gt;</span><br></pre></td></tr></table></figure>
+<p>With this last command the <code>-d</code> (driver) and <code>bridge</code> option specifies the network type we want to create. With a new name for the network at the end of the command. </p>
+<p>To see the new network after creation:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network ls</span><br></pre></td></tr></table></figure>
+<p>Shown on the last line:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NETWORK ID          NAME                  DRIVER</span><br><span class="line">f9ee6308ecdd        bridge                bridge              </span><br><span class="line">49dab653f349        none                  null                </span><br><span class="line">2d41f8bbf514        host                  host                </span><br><span class="line">08f44ef7de28        <span class="built_in">test</span>-bridge-network   bridge</span><br></pre></td></tr></table></figure>
+<p>Overlay networks are a much wider topic due to their inclusion of multiple hosts so aren’t covered in this post but the basic principles and where to start is mentioned in the link below:    </p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/userguide/networking/work-with-networks/" target="_blank" rel="external">Docker Documentation - Working with Network Commands</a></p>
+</blockquote>
+<hr>
+<h1 id="5-–-Connecting-Containers-to-Networks"><a href="#5-–-Connecting-Containers-to-Networks" class="headerlink" title="5 – Connecting Containers to Networks"></a>5 – Connecting Containers to Networks</h1><p>Creating and using these networks allows container applications to to operate in unison and as securely as possible. Containers inside of networks can only interact with their counterparts and are isolated from the outsides of the network. Similar to VLAN segregation inside of a IP based network.    </p>
+<p>Usually containers are added to a network when you first launch and run the container. We’ll follow the example from the Docker Documentation that uses a PostgreSQL database container and the Python webapp to demonstrate a simple network configuration. </p>
+<p>First launch a container running the PostgreSQL database training image, and in the process add it to your custom made bridge network from the previous step. </p>
+<p>To do this we must pass the <code>--net=</code> flag to the new container, and provide it with the name of our custom bridge network. Which in my example earlier was <code>test-bridge-network</code> :  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --net=<span class="built_in">test</span>-bridge-network --name db training/postgres</span><br></pre></td></tr></table></figure>
+<p>You can inspect this aptly named <code>db</code> container to see where exactly it is connected:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect --format=<span class="string">'&#123;&#123;json .NetworkSettings.Networks&#125;&#125;'</span> db</span><br></pre></td></tr></table></figure>
+<p>This shows us the network details for the database container’s <code>test-bridge-network</code> connection:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"test-bridge-network"</span>:&#123;<span class="string">"EndpointID"</span>:<span class="string">"0008c8566542ef24e5e57d5911c8e33a79f0fcb91b1bbdd60d5cdec3217fb517"</span>,<span class="string">"Gateway"</span>:<span class="string">"172.18.0.1"</span>,<span class="string">"IPAddress"</span>:<span class="string">"172.18.0.2"</span>,<span class="string">"IPPrefixLen"</span>:16,<span class="string">"IPv6Gateway"</span>:<span class="string">""</span>,<span class="string">"GlobalIPv6Address"</span>:<span class="string">""</span>,<span class="string">"GlobalIPv6PrefixLen"</span>:0,<span class="string">"MacAddress"</span>:<span class="string">"02:42:ac:12:00:02"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>Next run the Python training web application in daemonised mode with out any extra options:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --name python-webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>Inspect the <code>python-webapp</code> container’s network connection in the same way as before: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect --format=<span class="string">'&#123;&#123;json .NetworkSettings.Networks&#125;&#125;'</span> python-webapp</span><br></pre></td></tr></table></figure>
+<p>As expected this new container is running under the <strong>default</strong> bridge network, shown in the output of the last command:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">"bridge"</span>:&#123;<span class="string">"EndpointID"</span>:<span class="string">"e5c7f1c8d097fdafc35b89d7bce576fe01a22709424643505d79abe394a59767"</span>,<span class="string">"Gateway"</span>:<span class="string">"172.17.0.1"</span>,<span class="string">"IPAddress"</span>:<span class="string">"172.17.0.2"</span>,<span class="string">"IPPrefixLen"</span>:16,<span class="string">"IPv6Gateway"</span>:<span class="string">""</span>,<span class="string">"GlobalIPv6Address"</span>:<span class="string">""</span>,<span class="string">"GlobalIPv6PrefixLen"</span>:0,<span class="string">"MacAddress"</span>:<span class="string">"02:42:ac:11:00:02"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>Docker lets us connect a container to as many networks as we like. More importantly for us we can also connect an already running container to a network. </p>
+<p>Attach the running <code>python-webapp</code> container to the “test-bridge-network” like we need:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network connect test-bridge-network python-webapp</span><br></pre></td></tr></table></figure>
+<p>To test the container connections to our custom network we can ping from one to the other.</p>
+<p>Get the IP address of the <code>db</code> container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect --format=<span class="string">'&#123;&#123;range .NetworkSettings.Networks&#125;&#125;&#123;&#123;.IPAddress&#125;&#125;&#123;&#123;end&#125;&#125;'</span> db</span><br></pre></td></tr></table></figure>
+<p>In my case this was:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">172.18.0.2</span><br></pre></td></tr></table></figure>
+<p>Now we have the IP address open an interactive shell into the <code>python-webapp</code> container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> -it python-webapp bash</span><br></pre></td></tr></table></figure>
+<p>Attempt to ping the <code>db</code> container with the IP address from before, substituting <code>172.18.0.2</code>  for your address equivalent:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping -c 10 172.18.0.2</span><br></pre></td></tr></table></figure>
+<p>As long as you successfully connected both containers earlier on, the ping command will be successful:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">root@<span class="built_in">fc</span>0f73c129c0:/opt/webapp<span class="comment"># ping -c 10 db</span></span><br><span class="line">PING db (172.18.0.2) 56(84) bytes of data.</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=1 ttl=64 time=0.216 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=2 ttl=64 time=0.059 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=3 ttl=64 time=0.053 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=4 ttl=64 time=0.063 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=5 ttl=64 time=0.065 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=6 ttl=64 time=0.063 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=7 ttl=64 time=0.062 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=8 ttl=64 time=0.064 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=9 ttl=64 time=0.061 ms</span><br><span class="line">64 bytes from db (172.18.0.2): icmp_seq=10 ttl=64 time=0.063 ms</span><br><span class="line"></span><br><span class="line">--- db ping statistics ---</span><br><span class="line">10 packets transmitted, 10 received, 0% packet loss, time 8997ms</span><br><span class="line">rtt min/avg/max/mdev = 0.053/0.076/0.216/0.047 ms</span><br></pre></td></tr></table></figure>
+<p>Conveniently container names work in the place of an IP address too in this scenario:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ping -c 10 db</span><br></pre></td></tr></table></figure>
+<p>Press <code>CTRL</code> + <code>D</code> to exit the container prompt, or type in <code>exit</code> instead. </p>
+<p>And with that we have two containers on the same user created network able to communicate with each other, and able to share data. Which is what we would be aiming for in the case of the PostgreSQL database and Python webapp.  </p>
+<p>There’s more ways of sharing data between containers once they are connected through a network, but these are covered in the next post of the series. </p>
+<hr>
+<h1 id="6-–-Miscellaneous-Networking-Commands"><a href="#6-–-Miscellaneous-Networking-Commands" class="headerlink" title="6 – Miscellaneous Networking Commands"></a>6 – Miscellaneous Networking Commands</h1><p>Here are a few complimentary commands in relation to what has already been covered in this post.</p>
+<p>At some point you are likely to need to remove a container from its network. This is done by using the <code>disconnect</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network disconnect <span class="built_in">test</span>-bridge-network &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Here <code>test-bridge-network</code> is the name of the network, followed by which container you want to remove from it. </p>
+<p>When all the containers in a network are stopped or disconnected, you can remove networks themselves completely with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker network rm <span class="built_in">test</span>-bridge-network</span><br></pre></td></tr></table></figure>
+<p>Meaning the <code>test-bridge-network</code> is now deleted and absent from the list of existing networks:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">NETWORK ID          NAME                  DRIVER             </span><br><span class="line">2e38b3a44489        bridge                bridge              </span><br><span class="line">79d9d21edbec        none                  null                </span><br><span class="line">61371e641e1b        host                  host</span><br></pre></td></tr></table></figure>
+<p>The output here is garnered from the <code>docker network ls</code> command. </p>
+<hr>
+<p>Networking in Docker begins here with these examples but goes a lot further than what we’ve covered. Data volumes, data containers, and mounting host volumes are described in the next post on Docker when it’s released. </p>
+<ol>
+<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
+<li>Docker - Daemon Administration and Networking (3)</li>
+<li><a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></li>
+</ol>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/engine/articles/configuring/" target="_blank" rel="external">Docker Docs - Configuring and Running Docker on Various Distributions</a> – Covers the daemon setup and is the main source for the first few steps of this post.  </li>
+<li><a href="https://docs.docker.com/engine/articles/host_integration/" target="_blank" rel="external">Docker Docs -Automatically Start Containers</a> – Is mostly step 2 and has the bases for the process manger uptime script examples. </li>
+<li><a href="https://docs.docker.com/engine/userguide/networking/" target="_blank" rel="external">Docker Docs - Networking Containers</a> – Anything and everything networking wise in this post comes from this. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/01/27/docker-further-administration-networking/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-01-07T00:00:00.000Z" class="post__time">January 7, 2016</time><h1 class="post__title"><a href="/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>In this post we run a python program in a Docker container sourced from the user guide. Look at the various commands that come into play when administering containers, and then briefly setup some real world applications with Docker. </p>
+<p>This will be the second post on Docker following on from <a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a>. If you’re brand new to Docker then the first post linked helps to introduce some of its concepts and theory to better understand the utilities it can provide. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Example-Container-Application"><a href="#1-–-Example-Container-Application" class="headerlink" title="1 – Example Container Application"></a>1 – Example Container Application</h1><p>Pull this training image from the Docker user guide:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>The <code>-d</code> option tells Docker to daemonise and run the container in the background. <code>-P</code> maps any required network ports inside the container to your host, and the Python application inside is also executed at the end. </p>
+<p>Run the Docker process command to see running container details:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
+<p>The “webapp” image container shows network ports that have been mapped as part of the image configuration:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                     NAMES</span><br><span class="line">b8a16d8e94cc        training/webapp     <span class="string">"python app.py"</span>     2 minutes ago      Up 2 minutes       0.0.0.0:32768-&gt;5000/tcp   nostalgic_knuth</span><br></pre></td></tr></table></figure>
+<p>In my example here port <code>5000</code> (the default Python Flask port) inside the container has been exposed on the host ephemeral TCP port <code>32768</code> . <em>Ephemeral</em> port ranges are temporary short lived port numbers which typically range anywhere from 32768 to 61000. These are dynamically used and are never set in stone. </p>
+<p>The Docker image decides all this for us, but as an aside it’s also possible to manually sets the ports to use by a container. </p>
+<p>This command assigns port <code>80</code> on the local host to port <code>5000</code> inside the container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -p 80:5000 training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>It’s important never to map ports in a 1:1 fashion i.e. <code>5000-&gt;5000/tcp</code> as if we needed multiple containers running the same image, the traffic will use the same host port (<code>5000</code>) and only be accessible one instance at a time. </p>
+<p>If you like you can check the original Python docker container’s port is working by accessing:</p>
+<p><a href="http://localhost:32768" target="_blank" rel="external">http://localhost:32768</a> or <a href="http://your.hosts.ip.address:32768" target="_blank" rel="external">http://your.hosts.ip.address:32768</a> in a browser.</p>
+<p>Where the port number <code>32768</code> is set to your own example container’s ephemeral port. </p>
+<p>Another way to see this example containers image’s port configuration is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Showing:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">32768-&gt;5000/tcp</span><br></pre></td></tr></table></figure>
+<p>To see the front facing host machine’s mapped ports individually add the number of the internal port to the end of the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt; 5000</span><br></pre></td></tr></table></figure>
+<p>Which shows:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.0.0.0:32768</span><br></pre></td></tr></table></figure>
+<p>Now we have this example container up and running we’ll go through multiple administrative commands that are important for when working with containers. These commands if you wish can be tested with the example container, or even better with multiple instances of it. Each and ever command shown may not be completely applicable however. </p>
+<hr>
+<h1 id="2-–-Administrative-Commands"><a href="#2-–-Administrative-Commands" class="headerlink" title="2 – Administrative Commands"></a>2 – Administrative Commands</h1><p>Here’s a list of select Docker commands to refer to when playing around with or monitoring containers. There are even more to check out as this list is by no means exhaustive.</p>
+<p>A few core commands were already mentioned in <a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a>  so won’t appear here. </p>
+<p>The first command allows you to <a href="https://docs.docker.com/engine/reference/commandline/attach/" target="_blank" rel="external">attach</a> to a running container interactively using the container’s ID or name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker attach &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>You can detach again from the container and leave it running with <code>CTRL</code> + <code>P</code> or <code>CTRL</code> + <code>Q</code> for a quiet exit.</p>
+<p>To list the changed files and directories in a container᾿s filesystem use <a href="https://docs.docker.com/engine/reference/commandline/diff/" target="_blank" rel="external">diff</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker diff &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where in the output the three “event types” are tagged as either:</p>
+<ul>
+<li><code>A</code> - Add</li>
+<li><code>D</code> - Delete</li>
+<li><code>C</code> - Change</li>
+</ul>
+<p>For real-time container and image activity begin a feed of <a href="https://docs.docker.com/engine/reference/commandline/events/" target="_blank" rel="external">event</a> output with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker events</span><br></pre></td></tr></table></figure>
+<p>The <a href="https://docs.docker.com/engine/reference/commandline/exec/" target="_blank" rel="external">exec</a> command runs a command of your choosing inside a container without dropping you down into a shell inside the container.</p>
+<p>This example creates a container named <code>ubuntu_bash</code> and starts a Bash session that runs the <code>touch</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> <span class="_">-d</span> ubuntu_bash touch /tmp/<span class="built_in">exec</span>Works</span><br></pre></td></tr></table></figure>
+<p>Backing up a containers <strong>internal</strong> file-system as a tar archive is carried out using the “<a href="https://docs.docker.com/engine/reference/commandline/export/" target="_blank" rel="external">export</a>“ command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">export</span> &lt;container-name&gt; &gt; backup-archive.tar</span><br></pre></td></tr></table></figure>
+<p>Show the internal <a href="https://docs.docker.com/engine/reference/commandline/history/" target="_blank" rel="external">history</a> of an image with human readable <code>-H</code> values:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">history</span> -H &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>To display system wide Docker <a href="https://docs.docker.com/engine/reference/commandline/info/" target="_blank" rel="external">info</a> and statistics use: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker -D info</span><br></pre></td></tr></table></figure>
+<p>Return low-level information on a container or image using <a href="https://docs.docker.com/engine/reference/commandline/inspect/" target="_blank" rel="external">inspect</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect</span><br></pre></td></tr></table></figure>
+<p>You can filter with the <code>inspect</code> command by adding the parameters described on the previously linked page.</p>
+<p>Use <code>SIGKILL</code> to <a href="https://docs.docker.com/engine/reference/commandline/kill/" target="_blank" rel="external">kill</a> a running container, caution as usual is advised with this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">kill</span> &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.docker.com/engine/reference/commandline/pause/" target="_blank" rel="external">Pause</a> and <a href="https://docs.docker.com/engine/reference/commandline/unpause/" target="_blank" rel="external">unpause</a> all running processes in a Docker container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker pause</span><br><span class="line">$ docker unpause</span><br></pre></td></tr></table></figure>
+<p>If the auto-generated names are not to your taste rename containers like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rename &lt;container-name&gt; &lt;new-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Alternatively when first creating/running a container <code>--name</code> sets the name from the onset:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; <span class="_">-d</span> &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Enter a real-time live feed of one or more containers resource usage <a href="https://docs.docker.com/engine/reference/commandline/stats/" target="_blank" rel="external">stats</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stats &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Docker has its own <a href="https://docs.docker.com/engine/reference/commandline/top/" target="_blank" rel="external">top</a> command for containers, to see the running processes inside:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker top &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>That’s all for these. Some real world examples of running images from the official Docker Hub repositories are now covered briefly to serve as realistic examples for how you might want to use Docker and its containerisation. </p>
+<p>Be mindful that these are not walk-throughs on fully setting up each service, but general starting points for each.</p>
+<hr>
+<h1 id="3-–-Ghost-Image-Container"><a href="#3-–-Ghost-Image-Container" class="headerlink" title="3 – Ghost Image Container"></a>3 – Ghost Image Container</h1><blockquote>
+<p><strong>“Ghost is a free and open source blogging platform written in JavaScript.”</strong></p>
+</blockquote>
+<p>To pull the image itself:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull ghost</span><br></pre></td></tr></table></figure>
+<p>To run a basic Ghost instance named <code>ghost-blog-name</code> on the mapped port <code>2368</code> use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -p 8080:2368 <span class="_">-d</span> ghost</span><br></pre></td></tr></table></figure>
+<p>Then access the blog via <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> or <a href="http://your.hosts.ip.address:8080" target="_blank" rel="external">http://your.hosts.ip.address:8080</a> in a browser.</p>
+<p><img src="http://i.imgur.com/1umv5BN.png" alt="Ghost Default Blog Image"></p>
+<p>The image can also be pointed to existing Ghost content on your local host:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -v /path/to/ghost/blog:/var/lib/ghost ghost</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://hub.docker.com/_/ghost/" target="_blank" rel="external">Docker Hub - Ghost</a></p>
+</blockquote>
+<hr>
+<h1 id="4-–-irssi-Image-Container"><a href="#4-–-irssi-Image-Container" class="headerlink" title="4 – irssi Image Container"></a>4 – irssi Image Container</h1><blockquote>
+<p><strong>“irssi is a terminal based IRC client for UNIX systems.”</strong></p>
+</blockquote>
+<p>I’m not sure about the benefits of running your irssi client through Docker but to serve as another example we’ll go through the Docker Hub provided setup process:</p>
+<p>Create an interactive shell session in a new container named whatever you choose whilst setting an environment variable named <code>TERM</code> that is retrieved from the host. The user ID is set with <code>-u</code> and group ID is set with the <code>-g</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; <span class="_">-e</span> TERM -u $(id -u):$(id -g) \</span><br></pre></td></tr></table></figure>
+<p>Then stop the log driver to avoid storing “useless interactive terminal data”:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; --log-driver=none \</span><br></pre></td></tr></table></figure>
+<p>Mount and bind the hosts <code>/.irssi</code> config home directory to the internal container equivalent: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; -v <span class="variable">$HOME</span>/.irssi:/home/user/.irssi:ro \</span><br></pre></td></tr></table></figure>
+<p>Mount and bind the hosts <code>/localtime</code> directory to the internal container equivalent: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; -v /etc/localtime:/etc/localtime:ro \</span><br></pre></td></tr></table></figure>
+<p>Pull down and apply all the previous commands to the <code>irssi</code> image from Docker Hub:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; irssi</span><br></pre></td></tr></table></figure>
+<p>As everyone who uses irssi has their own configuration for the program this image does not come with any provided pre-sets. So you have to set this up yourself. Other than this you are dropped into the irssi session within the new container.</p>
+<p><img src="http://i.imgur.com/phsQdD0.png" alt="irssi Containerised Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/irssi/" target="_blank" rel="external">Docker Hub - irssi</a></p>
+</blockquote>
+<hr>
+<h1 id="5-–-MongoDB-Image-Container"><a href="#5-–-MongoDB-Image-Container" class="headerlink" title="5 – MongoDB Image Container"></a>5 – MongoDB Image Container</h1><blockquote>
+<p><strong>“MongoDB document databases provide high availability and easy scalability.”</strong></p>
+</blockquote>
+<p>The standard command to pull the image and container is one we’re familiar with by now:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;mongo-container-name&gt; <span class="_">-d</span> mongo</span><br></pre></td></tr></table></figure>
+<p>This image is configured to expose port <strong>27017</strong> (Mongo’s default port), so linking other containers to it will make it automatically available. </p>
+<p>In brief this is how to link a new container to a Mongo container named <code>mongo-container-name</code>. The image at the end is the application/service the new container will run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;new-container-name&gt; --link &lt;mongo-container-name&gt;:mongo <span class="_">-d</span> &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Using <code>inspect</code> with <code>grep</code> shows the link:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect nginx-container | grep -i -A1 <span class="string">"links"</span></span><br></pre></td></tr></table></figure>
+<p>With the output in my case being:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"Links"</span>: [</span><br><span class="line">            <span class="string">"/mongo-container:/nginx-container/mongo"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://hub.docker.com/_/mongo/" target="_blank" rel="external">Docker Hub - MongoDB</a></p>
+</blockquote>
+<hr>
+<h1 id="6-–-NGINX-Image-Container"><a href="#6-–-NGINX-Image-Container" class="headerlink" title="6 – NGINX Image Container"></a>6 – NGINX Image Container</h1><blockquote>
+<p><strong>“Nginx (pronounced “engine-x”) is an open source reverse proxy server for HTTP, HTTPS, SMTP, POP3, and IMAP protocols, as well as a load balancer, HTTP cache, and a web server (origin server).”</strong></p>
+</blockquote>
+<p>As usual like with all these images to download/pull:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull nginx</span><br></pre></td></tr></table></figure>
+<p>A basic example is given of some static HTML content served from a directory (<code>~/static-content-dir</code>) that has been mounted onto the NGINX hosting directory within the new container: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -v ~/static-content-dir:/usr/share/nginx/html:ro -P <span class="_">-d</span> nginx</span><br></pre></td></tr></table></figure>
+<p>Whichever port is auto-assigned to the NGINX container can be used to access the static HTML content.</p>
+<p>Find out the port number using either <code>docker ps</code> or:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>For our purpose here we want the second line’s port which in my case is <code>327773</code> - as shown:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">443/tcp -&gt; 0.0.0.0:32772</span><br><span class="line">80/tcp -&gt; 0.0.0.0:32773</span><br></pre></td></tr></table></figure>
+<p><a href="http://localhost:32773" target="_blank" rel="external">http://localhost:32773</a> or <a href="http://your.hosts.ip.address:32773" target="_blank" rel="external">http://your.hosts.ip.address:32773</a> in a browser on the localhost now returns:</p>
+<p><img src="http://i.imgur.com/eB7yWCi.png" alt="32773 Port Image"></p>
+<p>The same idea but with a <code>Dockerfile</code> is better, one that is located in the directory containing our static HTML content: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/static-content-dir/Dockerfile</span><br></pre></td></tr></table></figure>
+<p>Type in:</p>
+<figure class="highlight bash"><figcaption><span>~/static-content-dir/Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<p>Then build a new image with the <code>Dockerfile</code> and give it a suitable name; <code>nginx-custom-image</code> is what I’m using for this example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t nginx-custom-image ~/static-content-dir/</span><br></pre></td></tr></table></figure>
+<p>If this is successful output in this form is given:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Sending build context to Docker daemon 6.372 MB</span><br><span class="line">Step 1 : FROM nginx</span><br><span class="line"> ---&gt; 5328fdfe9b8e</span><br><span class="line">Step 2 : COPY . /usr/share/nginx/html</span><br><span class="line"> ---&gt; a4bf297e4dcc</span><br><span class="line">Removing intermediate container 7a213493723d</span><br><span class="line">Successfully built a4bf297e4dcc</span><br></pre></td></tr></table></figure>
+<p>All that’s left is to run the custom built image, this time with a more typical, user provided port number:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -p 8080:80 <span class="_">-d</span> nginx-custom-image</span><br></pre></td></tr></table></figure>
+<p>Again accessing <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> or <a href="http://your.hosts.ip.address:8080" target="_blank" rel="external">http://your.hosts.ip.address:8080</a> in a browser on the localhost shows the static HTML web pages:</p>
+<p><img src="http://i.imgur.com/KOwae6N.png" alt="8080 Port Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/nginx/" target="_blank" rel="external">Docker Hub - NGINX</a></p>
+</blockquote>
+<hr>
+<h1 id="7-–-Apache-httpd-2-4-Image-Container"><a href="#7-–-Apache-httpd-2-4-Image-Container" class="headerlink" title="7 – Apache httpd (2.4) Image Container"></a>7 – Apache httpd (2.4) Image Container</h1><p>To serve static HTML content in a directory named <code>static-content-dir</code> on port <code>32775</code> of the local host machine we can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -v ~/static-content-dir:/usr/<span class="built_in">local</span>/apache2/htdocs/ -p 32755:80 <span class="_">-d</span> httpd:2.4</span><br></pre></td></tr></table></figure>
+<p>Visiting <a href="http://localhost:32755" target="_blank" rel="external">http://localhost:32755</a> or <a href="http://your.hosts.ip.address:32755" target="_blank" rel="external">http://your.hosts.ip.address:32755</a> in a browser on the localhost then returns:</p>
+<p><img src="http://i.imgur.com/2TuGYPe.png" alt="Port 32755 Image"></p>
+<p>With a Dockerfile for configuration, custom setups can be applied. Create the <code>Dockerfile</code> in the project directory where the static content is hosted from:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/static-content-dir/Dockerfile</span><br></pre></td></tr></table></figure>
+<p>Add lines like the below, where line 2 copies a httpd config file from the current working directory, to the internal container’s version. And line 3 copies the entirety of the current working directory (the static HTML files) to the Apache container’s web hosting directory:</p>
+<figure class="highlight bash"><figcaption><span>~/static-content-dir/Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM httpd:2.4</span><br><span class="line">COPY ./my-httpd.conf /usr/<span class="built_in">local</span>/apache2/conf/httpd.conf</span><br><span class="line">COPY . /usr/<span class="built_in">local</span>/apache2/htdocs/</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> If the <code>my-httpd:2.4</code> configuration file is missing, the next command to build the image will fail. </p>
+</blockquote>
+<p>Build the new custom Apache image defined in the <code>Dockerfile</code> and give it the name <code>custom-apache-image</code> which you can of course change if you like:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t custom-apache-image ~/static-content-dir/</span><br></pre></td></tr></table></figure>
+<p>Successful output for the image build sequence looks like this (or similar): </p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Sending build context to Docker daemon 6.372 MB</span><br><span class="line">Step 1 : FROM httpd:2.4</span><br><span class="line"> ---&gt; 1a49ac676c05</span><br><span class="line">Step 2 : COPY . /usr/<span class="built_in">local</span>/apache2/htdocs/</span><br><span class="line"> ---&gt; f7052ffe8190</span><br><span class="line">Removing intermediate container 53311d3ac0a5</span><br><span class="line">Successfully built f7052ffe8190</span><br></pre></td></tr></table></figure>
+<p>Lastly, start and run a new container using the custom generated image on port <code>32756</code> of the localhost machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -p 32756:80 <span class="_">-d</span> custom-apache-image</span><br></pre></td></tr></table></figure>
+<p>Visiting <a href="http://localhost:32756" target="_blank" rel="external">http://localhost:32756</a> or <a href="http://your.hosts.ip.address:32756" target="_blank" rel="external">http://your.hosts.ip.address:32756</a> in a browser on the localhost now returns:</p>
+<p><img src="http://i.imgur.com/92R7BYV.png" alt="Port 32756 Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/httpd/" target="_blank" rel="external">Docker Hub - httpd</a></p>
+</blockquote>
+<hr>
+<h1 id="8-–-Jenkins-Image-Container"><a href="#8-–-Jenkins-Image-Container" class="headerlink" title="8 – Jenkins Image Container"></a>8 – Jenkins Image Container</h1><p>Create a new directory in your user’s home directory for the Jenkins config files. This will be mounted and mapped to the container’s equivalent configuration space: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/jenkins_home</span><br></pre></td></tr></table></figure>
+<p>Run the Jenkins image mapping the two internal ports to ephermal ports on the host side, whilst syncing the config directory we just created to the new container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -p 32790:8080 -p 32791:50000 -v ~/jenkins_home:/var/jenkins_home <span class="_">-d</span> jenkins</span><br></pre></td></tr></table></figure>
+<p>Jenkins can be seen at the first port number we mapped. In my example it was  <code>32790</code> meaning a URL of  <a href="http://localhost:32790" target="_blank" rel="external">http://localhost:32790</a> or <a href="http://your.hosts.ip.address:32790" target="_blank" rel="external">http://your.hosts.ip.address:32790</a> in a browser takes us to the Jenkins application page:</p>
+<p><img src="http://i.imgur.com/KMy5xOK.png" alt="Jenkins on Port 32790"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/jenkins/" target="_blank" rel="external">Docker Hub - Jenkins</a></p>
+</blockquote>
+<hr>
+<p>Remember that there are unofficial image repositories to be found on Docker Hub too, and potentially elsewhere when made available. </p>
+<p>The third post on Docker talks a bit more about administration with Docker. As well as details based around how to network containers together. </p>
+<ol>
+<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></li>
+<li>Docker - Administration and Container Applications (2)</li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></li>
+</ol>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/engine/userguide/usingdocker/" target="_blank" rel="external">Docker Docs - Run a Simple Application</a> – This is where the example of the Python program containerised comes from.  </li>
+<li><a href="https://docs.docker.com/engine/reference/commandline/cli/" target="_blank" rel="external">Docker Docs - Use the Docker Command Line</a> – The administrative commands in their entirety are found here on the left of the page. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/01/07/docker-administration-applications/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-12-23T00:00:00.000Z" class="post__time">December 23, 2015</time><h1 class="post__title"><a href="/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a <em>container</em>. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.</p>
+<p>This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installing-Docker"><a href="#1-–-Installing-Docker" class="headerlink" title="1 – Installing Docker"></a>1 – Installing Docker</h1><p>The first “main method” in this step should always ensure you have an up to date version of Docker installed on your system, and is the recommended route to installing Docker. It uses an install script from one of their official domains, and is suggested by the developers.</p>
+<h2 id="Main-Method"><a href="#Main-Method" class="headerlink" title="Main Method"></a>Main Method</h2><blockquote>
+<p><strong>“Docker requires a 64-bit installation regardless of your Debian/Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version is also acceptable.”</strong></p>
+</blockquote>
+<p>Install using ether:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>Or:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>Then start the <code>docker</code> service:</p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Package-Managers-Method"><a href="#Package-Managers-Method" class="headerlink" title="Package Managers Method"></a>Package Managers Method</h2><p>It’s advised to use the first “main method” of installing Docker in order to always install the latest version, and not to use the build packages included in your Linux system’s package manager.</p>
+<p>Here’s how to use up to date package versions manually if you do wish to do so however.</p>
+<h2 id="Arch-Linux-1"><a href="#Arch-Linux-1" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using <code>pacman</code> package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S docker</span><br></pre></td></tr></table></figure>
+<p>Using an Aurum helper like Yaourt you can get access to another package that is built off of the Docker Git <em>master</em> branch:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yaourt -S docker-git</span><br></pre></td></tr></table></figure>
+<p>Remember to start the <code>docker</code> service:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+<p>More information can be found at:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/archlinux/" target="_blank" rel="external">Docker Installation Documentation - Arch Linux</a></p>
+</blockquote>
+<h2 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h2><p>For Debian to get an up to date version of Docker you must add and update the <em>apt</em> repository by following the steps here:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/debian/" target="_blank" rel="external">Docker Installation Documentation - Debian</a></p>
+</blockquote>
+<p>Then run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><p>For Ubuntu to get an up to date version of Docker you must add and update the <em>apt</em> repository, and set up any of the relevant “prerequisites” by following the steps here:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/ubuntulinux/" target="_blank" rel="external">Docker Installation Documentation - Ubuntu</a></p>
+</blockquote>
+<p>Then run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Docker-User-Group"><a href="#2-–-Docker-User-Group" class="headerlink" title="2 – Docker User Group"></a>2 – Docker User Group</h1><p>After installing Docker a message is returned that reads:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">If you would like to use Docker as a non-root user, you should now consider</span><br><span class="line">adding your user to the <span class="string">"docker"</span> group with something like:</span><br><span class="line"></span><br><span class="line">  sudo usermod <span class="_">-a</span>G docker &lt;username&gt;</span><br><span class="line"></span><br><span class="line">Remember that you will have to <span class="built_in">log</span> out and back <span class="keyword">in</span> <span class="keyword">for</span> this to take effect!</span><br></pre></td></tr></table></figure>
+<p>This if followed allows you to run Docker as a non-root user; with the user you add to the group. While this may seem like a great idea, be aware of the potential implications involved in adding users to this group.</p>
+<p>The Docker daemon requires root privileges to carry it out its work, so only trusted users and user accounts should be added to this group, and given control of the Docker daemon.</p>
+<p>Read this page on Docker security for reasoning and a better explanation of why this is potentially a security risk:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/articles/security/#docker-daemon-attack-surface" target="_blank" rel="external">Docker Daemon Attack Surface</a></p>
+</blockquote>
+<p>Once you understand this if you want to add your Linux user to the Docker group use the next command.</p>
+<p>Where <code>scarlz</code> is replaced by the username you wish to add.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermod <span class="_">-a</span>G docker scarlz</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Now log out and back into your Linux system.</li>
+</ul>
+<p>The rest of this tutorial assumes your are entering the commands in each step as a user that has been added to the <code>docker</code> group. IF you did not do this simply append <code>sudo</code> to each Docker command where necessary.</p>
+<hr>
+<h1 id="3-–-Containers-amp-Images"><a href="#3-–-Containers-amp-Images" class="headerlink" title="3 – Containers &amp; Images"></a>3 – Containers &amp; Images</h1><iframe width="1080" height="500" src="https://www.youtube.com/embed/klzLdzpPcQw" frameborder="1" allowfullscreen><br></iframe>
+
+<p>Docker uses the concept of <em>containers</em> to provide the benefits and functionality mentioned in the preamble. A container is a very lightweight bare-bones stripped version of an operating system (Linux OS). Only containing the necessary essential parts for whatever purpose it needs to server.</p>
+<p><em>Images</em> are loaded into a container and are the service or program you want to be run as a docker process. This could be anything from personally created custom images to official web servers, databases, etc. The official images of these are held by “Docker Hub” which is explained more in an upcoming section.</p>
+<p>Enter this command to run an example “hello world” image in a Docker container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>This is what the <code>hello-world</code> image should have output:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hello from Docker.</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker Hub account:</span><br><span class="line"> https://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<p>Here’s also what happened internally with the previous command:</p>
+<p><img src="http://i.imgur.com/mSdE5yh.png?1" alt="hello-world Docker Image"></p>
+<ul>
+<li>Docker checked to see if the <code>hello-world</code> software image was present on the host machine’s local file-system.</li>
+<li>The <code>hello-world</code> image was not found so Docker downloaded the image from Docker Hub.</li>
+<li>After it finished downloading it was then loaded as an image into a container and “run” successfully.</li>
+</ul>
+<p>Images can be very simple (like this one) or can be designed to carry out more complex high-level tasks.</p>
+<p>It can also be tempting to think of containers as “lightweight” virtual machines, and although this is generally a good analogy to some small degree, it does not account for and explain everything Docker containers are about.</p>
+<p><blockquote align="center" class="twitter-tweet" data-partner="tweetdeck"><p lang="en" dir="ltr">&quot;Containers are not lightweight VMs, there is much more to it&quot;, says Arnaud Porterie. <a href="https://twitter.com/hashtag/DockerCon?src=hash" target="_blank" rel="external">#DockerCon</a></p>&mdash; sushan ghimire (@sixev) <a href="https://twitter.com/sixev/status/666246458333622272" target="_blank" rel="external">November 16, 2015</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+<h1 id="4-–-Docker-Hub"><a href="#4-–-Docker-Hub" class="headerlink" title="4 – Docker Hub"></a>4 – Docker Hub</h1><p>Who built the “hello-world” software image? Docker did, but anyone can and is welcome to contribute to the online catalogue of Docker images known colloquially as Docker Hub.</p>
+<blockquote>
+<p><a href="https://hub.docker.com/explore/" target="_blank" rel="external">Docker Hub Official Repositories</a></p>
+</blockquote>
+<p>The Docker Hub houses most of the more familiar and popular software and services you’re accustomed to. We will look one or two of these later.</p>
+<p>For now pull a second example image from Docker Hub by typing into the search-bar <code>whalesay</code> on the Docker Hub website, and then finding the official <code>docker/whalesay</code> image.</p>
+<p>The page for it looks like this:</p>
+<p><img src="http://i.imgur.com/fHOBrlp.png" alt="Whalesay Dock Hub Page"></p>
+<p>Image descriptions, pull commands, instructions, and owners are always listed here for any type of image.</p>
+<p>Run the command as shown by the page:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run docker/whalesay cowsay boo</span><br></pre></td></tr></table></figure>
+<p>Which runs the image in a container resulting in:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Unable to find image <span class="string">'docker/whalesay:latest'</span> locally</span><br><span class="line">latest: Pulling from docker/whalesay</span><br><span class="line"></span><br><span class="line">2880a3395ede: Pull complete</span><br><span class="line">515565c29c94: Pull complete</span><br><span class="line">98b15185dba7: Pull complete</span><br><span class="line">2ce633e3e9c9: Pull complete</span><br><span class="line">35217eff2e30: Pull complete</span><br><span class="line">326bddfde6c0: Pull complete</span><br><span class="line">3a2e7fe79da7: Pull complete</span><br><span class="line">517de05c9075: Pull complete</span><br><span class="line">8f17e9411cf6: Pull complete</span><br><span class="line">ded5e192a685: Pull complete</span><br><span class="line">Digest: sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> docker/whalesay:latest</span><br><span class="line"> _____</span><br><span class="line">&lt; boo &gt;</span><br><span class="line"> -----</span><br><span class="line">    \</span><br><span class="line">     \</span><br><span class="line">      \     </span><br><span class="line">                    <span class="comment">##        .            </span></span><br><span class="line">              <span class="comment">## ## ##       ==            </span></span><br><span class="line">           <span class="comment">## ## ## ##      ===            </span></span><br><span class="line">       /<span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span>___/ ===        </span><br><span class="line">  ~~~ &#123;~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~   </span><br><span class="line">       \______ o          __/            </span><br><span class="line">        \    \        __/             </span><br><span class="line">          \____\______/</span><br></pre></td></tr></table></figure>
+<p>Furthermore here’s the <em>dockerfile</em> (configuration file) for the whalesay image we just ran:</p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install cowsay, and move the "default.cow" out of the way so we can overwrite it with "docker.cow"</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y cowsay --no-install-recommends &amp;&amp; rm -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; mv /usr/share/cowsay/cows/default.cow /usr/share/cowsay/cows/orig-default.cow</span><br><span class="line"></span><br><span class="line"><span class="comment"># "cowsay" installs to /usr/games</span></span><br><span class="line">ENV PATH <span class="variable">$PATH</span>:/usr/games</span><br><span class="line"></span><br><span class="line">COPY docker.cow /usr/share/cowsay/cows/</span><br><span class="line">RUN ln -sv /usr/share/cowsay/cows/docker.cow /usr/share/cowsay/cows/default.cow</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"cowsay"</span>]</span><br></pre></td></tr></table></figure>
+<p>it’s also possible to search for images by keyword from the command line:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker search ubuntu</span><br></pre></td></tr></table></figure>
+<p>This like the website search shows you a list of the currently available public repositories on the Docker Hub which match the provided keyword.</p>
+<p>Some final considerations for Docker Hub are:</p>
+<ul>
+<li><p>You can sign up for a free Docker Hub account to upload your own Docker images. Private repositories for organisation wide images also exist.  </p>
+</li>
+<li><p>Automated Builds allow you to auto-create new images when you make changes to a targeted source, GitHub repo, or Bitbucket repo.</p>
+</li>
+<li><p>Inbuilt webhooks let you trigger actions after a successful push to a repository (or successful automated build).</p>
+</li>
+<li><p>General GitHub and Bitbucket integration adds the Hub and Docker images to your current workflows.</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-–-Running-Docker-Containers"><a href="#5-–-Running-Docker-Containers" class="headerlink" title="5 – Running Docker Containers"></a>5 – Running Docker Containers</h1><p>In this step there’s more containers to be run alongside the specifics of how Docker command structures work.</p>
+<p>To start with run yet another example command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run ubuntu:14.04 /bin/<span class="built_in">echo</span> <span class="string">'Hello world'</span></span><br></pre></td></tr></table></figure>
+<p>In this last command <code>docker run</code> starts us off by creating a brand new container, just like before. Then the image we asked for is this time not just a program/service but <code>ubuntu:14.04</code> - an entire Linux OS environment. Bear in mind the quote from earlier!</p>
+<p>As we don’t have this Docker image (it’s still classed and used as an image by Docker) it must be downloaded from Docker Hub.</p>
+<p>After this we asked Docker to run a shell command inside the new container’s environment, which was:</p>
+<p><code>/bin/echo &quot;Hello World&quot;</code></p>
+<p>We then saw the result of this whole sequence as output on the command line.</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello world</span><br></pre></td></tr></table></figure>
+<p>Docker containers only run as long as the command you specify is active. So as soon as Hello World was <em>echoed</em>, the container stopped.</p>
+<p>Try this new command that has some options and calls a shell.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -t -i ubuntu:14.04 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>The <code>-t</code> option assigns/begins a pseudo-tty or terminal inside the new container.</p>
+<p>The <code>-i</code> option allows us to make an interactive connection by grabbing the standard in (STDIN) of the container.</p>
+<p>Which as we’ve called <code>bash</code> shell will take us to a bash command prompt inside of the container.</p>
+<p>The usual commands will work in this shell and file-system. It’s just a contained version of a regular Ubuntu OS environment.</p>
+<p>Use <code>exit</code> or <code>CTRL</code> + <code>D</code> to end the session, thereby also ending and stopping this container.</p>
+<p>Although these are useful examples most of the time it’s more likely and common you’ll use Docker with “daemonised” programs or services.</p>
+<p>Here’s how this looks with the “Hello World” example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> ubuntu:14.04 /bin/sh -c <span class="string">"while true; do echo hello world; sleep 1; done"</span></span><br></pre></td></tr></table></figure>
+<p>The differences here are the command line options and <em>do while</em> loop.</p>
+<p>The <code>-d</code> option tells Docker to run the container but put it in the background, to “daemonise” it. The loop contains a command that permanently echoes “hello world” into the container with a short delay in between.</p>
+<p>You will have noticed that as it’s been daemonised, instead of seeing any output, a long string comprised of digits and numbers has been returned:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f54eb8a426307e63684040eee69e0a6cf43859bee08c3f6a9086b195213df052</span><br></pre></td></tr></table></figure>
+<p>This is known as a container ID; it uniquely identifies a container instance so we can work with it.</p>
+<p>This next step shows how you can monitor, examine, and find out what’s going on inside of  daemonised containers.</p>
+<hr>
+<h1 id="6-–-Docker-CLI-Client"><a href="#6-–-Docker-CLI-Client" class="headerlink" title="6 – Docker CLI Client"></a>6 – Docker CLI Client</h1><p>We can use the container ID to see what’s happening inside of our daemonised hello world container.</p>
+<p>First let’s list all of the currently running containers and their details:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
+<p>The <code>docker ps</code> command queries the Docker daemon for information about all the containers it has tied to it.</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">f54eb8a42630        ubuntu:14.04        <span class="string">"/bin/sh -c 'while tr"</span>   11 minutes ago      Up 10 minutes                           amazing_jepsen</span><br></pre></td></tr></table></figure>
+<p>Note the shortened container ID in the first column, and the auto-assigned name in the end column.</p>
+<p>To check on the inner workings of the container and see if our earlier “hello world” loop is still running use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker logs amazing_jepsen</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You can use either the container ID or name as a parameter.</p>
+</blockquote>
+<p>The output confirms it’s working as intended:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<p>Lastly for this, stopping and ending a container is achieved by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop amazing_jepsen</span><br></pre></td></tr></table></figure>
+<p>Autocomplete works for this last command too when entering the name.</p>
+<p>To start the container again simply replace <code>stop</code> in the last command with <code>start</code> . Or to delete the container entirely use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm amazing_jepsen</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Removing a container is permanent, once it’s deleted it’s gone.</p>
+</blockquote>
+<p>So the container from before is now gone. The Ubuntu image we have been using is still present on the system however.</p>
+<p>To see images that have been downloaded and still present enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
+<p>Which will give a similar output to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">ubuntu              14.04               89d5d8e8bafb        13 days ago         187.9 MB</span><br><span class="line">hello-world         latest              0a6ba66e537a        9 weeks ago         960 B</span><br><span class="line">docker/whalesay     latest              ded5e192a685        7 months ago        247 MB</span><br></pre></td></tr></table></figure>
+<p>To delete and remove images use this command with the image name as a parameter e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi ubuntu:14.04</span><br></pre></td></tr></table></figure>
+<p>Autocomplete works for the image names and multiple names can be passed as parameters.</p>
+<p>A successful deletion gives output similar to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Untagged: ubuntu:14.04</span><br><span class="line">Deleted: 89d5d8e8bafb6e279fa70ea444260fa61cc7c5c7d93eff51002005c54a49c918</span><br><span class="line">Deleted: e24428725dd6f8e354a0c6080570f90d40e9e963c6878144291c6ba9fd39b25f</span><br><span class="line">Deleted: 1796d1c62d0c3bad665cc4fbe4b6a051e26c22f14aa5e0e2490e528783764ca0</span><br><span class="line">Deleted: 0bf0561619131d3dc0432a2b40a9438bd48f4a84e89ff128cc5147a089c114e4</span><br></pre></td></tr></table></figure>
+<p>If an error message is returned claiming another container is using the image as a reference <strong>and</strong> you know this is not true.</p>
+<p>Try using the <code>-f</code> force option with the <code>rmi</code> removal command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi <span class="_">-f</span> ubuntu:14.04</span><br></pre></td></tr></table></figure>
+<p>With this we complete the cycle of downloading, creating, and removing an image and its containers.</p>
+<hr>
+<p>Docker is an amazing step forward in the world of virtualisation and resource efficiency, but these examples here are for demonstration purposes only, and are meant to teach the basics. As much as possible try to to think of how this concept could benefit a large hosting provider, or business that serves web applications to many.</p>
+<p>Post number two on Docker goes into more detail on administering and handling containers. With some examples of real services and apps running under Docker. </p>
+<ol>
+<li>Docker - Installing and Running (1)</li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></li>
+</ol>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/" target="_blank" rel="external">Official Docker Documentation</a> – Is updated and maintained pretty well.</li>
+<li><a href="https://docs.docker.com/engine/userguide/" target="_blank" rel="external">Official Docker User Guide</a> – The main source of inspiration and command content for this post.</li>
+<li><a href="https://github.com/docker/docker" target="_blank" rel="external">Docker GitHub Project Page</a> – The Readme contains some very clear explanations of why Docker is such an asset.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2015/12/23/installing-running-docker/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-11-30T00:00:00.000Z" class="post__time">November 30, 2015</time><h1 class="post__title"><a href="/2015/11/30/django-modwsgi-apache/">Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. </p>
+<p>More popular methods of running and hosting Django are mentioned at the end of the post. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Update-amp-Install-Packages"><a href="#1-–-Update-amp-Install-Packages" class="headerlink" title="1 – Update &amp; Install Packages"></a>1 – Update &amp; Install Packages</h1><p>Update and upgrade the server’s system packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Install Apache, mod-wsgi, and Python’s pip package manager.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2 libapache2-mod-wsgi python-pip</span><br></pre></td></tr></table></figure>
+<p>Also the <code>virtualenv</code> package is required for the next step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install virtualenv</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Setup-Virtual-Environment"><a href="#2-–-Setup-Virtual-Environment" class="headerlink" title="2 – Setup Virtual Environment"></a>2 – Setup Virtual Environment</h1><p>Decide where you want to keep your Django project. </p>
+<p>There are several places form which you could run the project. One that is very common is the user’s <code>home</code> directory. Another suitable place is the <code>/srv/</code> system directory. A final place could be directly inside the system’s web server directories i.e. <code>/var/www</code> and down. </p>
+<p>In my example I’ll be using a Linux user’s home directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/django-project &amp;&amp; <span class="built_in">cd</span> ~/django-project</span><br></pre></td></tr></table></figure>
+<p>Inside the new project folder create a dedicated Python virtual environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv django-virt-env</span><br></pre></td></tr></table></figure>
+<p>Activate the environment and enter into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Now you’re within the environment (prompt will change) install Django with pip into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install django</span><br></pre></td></tr></table></figure>
+<p>Once Django is installed, use the <code>deactivate</code> command to exit the environment prompt.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Create-or-Import-Django-Project"><a href="#3-–-Create-or-Import-Django-Project" class="headerlink" title="3 – Create or Import Django Project"></a>3 – Create or Import Django Project</h1><p>To start from scratch you can use the Django installation in the virtual environment and make a brand new Django project. Or instead import your Django project files from something like version control. </p>
+<p>For this tutorial we’ll go down the path of importing a a pre-existing Django project from Git. </p>
+<p>Before this though, here are the initial steps for starting a brand new Django project. </p>
+<h2 id="Create-Project"><a href="#Create-Project" class="headerlink" title="Create Project"></a>Create Project</h2><p>Skip past this section to instead import an existing Django project.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Create the new project and give it a name, where <code>project_name</code> is replaced with your name you want to give it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ django-admin.py startproject project-name .</span><br></pre></td></tr></table></figure>
+<p>Run initial migration: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py migrate</span><br></pre></td></tr></table></figure>
+<p>Create a superuser for the project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py createsuperuser</span><br></pre></td></tr></table></figure>
+<p>Open up the <code>settings.py</code> file for editing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim project-name/settings.py</span><br></pre></td></tr></table></figure>
+<p>Add this new line to the bottom section of the file:</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project_name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STATIC_ROOT = os.path.join(BASE_DIR, <span class="string">"static/"</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Copy static content into the directory set in the previous <code>STATIC_ROOT</code> directive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./manage.py collectstatic</span><br></pre></td></tr></table></figure>
+<p>Test the server runs correctly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py runserver 0.0.0.0:8000</span><br></pre></td></tr></table></figure>
+<p>You can test the project works in a web browser at: <code>your.vps.ip.address:8000</code></p>
+<p><img src="https://i.gyazo.com/a0ca362f8a25159e68f4df71b43b6a0b.png" alt="It Worked Django Image"></p>
+<p><code>CTRL</code> + <code>C</code> once checked to exit the server process. </p>
+<p>Then <code>deactivate</code> once again to leave the Python virtual env prompt. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<h2 id="Import"><a href="#Import" class="headerlink" title="Import"></a>Import</h2><p>This is the assumption I’m following for the rest of the post, that you already have a Django project created and want to host it. You could still however carry on with the new blank project from before. </p>
+<p>Import the Django project into our local project’s root folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git ~/django-project</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Then move on to setting up the virtual host.</p>
+<hr>
+<h1 id="4-–-Setup-Apache-Virtual-Host"><a href="#4-–-Setup-Apache-Virtual-Host" class="headerlink" title="4 – Setup Apache Virtual Host"></a>4 – Setup Apache Virtual Host</h1><p>Using your preferred text editor open the default Apache <em>vhost</em> for writing, or a <em>dedicated vhost</em> instead. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apache2/sites-available/000-default.conf</span><br></pre></td></tr></table></figure>
+<p>The complete main block of the virtual host should contain the following:</p>
+<figure class="highlight apache"><figcaption><span>/etc/apache2/sites-available/000-default.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute"><span class="nomarkup">ServerName</span></span> exampledomain.com</span><br><span class="line"><span class="attribute">ServerAlias</span> www.exampledomain.com</span><br><span class="line"><span class="attribute">ServerAdmin</span> server-administrator@emaildomain.com</span><br><span class="line">    </span><br><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br><span class="line"></span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project&gt;</span></span><br><span class="line">    <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">        <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">    <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> project-name</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<p>What follows are the broken down areas of the above virtual host, and how to set them.</p>
+<p><strong>Static Alias</strong></p>
+<p>The first option to set is an alias, and needs to point to the <code>static</code> directory we generated when either creating or importing the Django project files. </p>
+<p>So username needs to be your Linux username, and <code>django-project</code> needs to be substituted for whatever you named the very first folder we created. Back at the start of <strong>Step 3</strong>. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br></pre></td></tr></table></figure>
+<p><strong>Static Directory Access</strong></p>
+<p>The web server must also allow access to the directory we aliased for <code>static</code>. Do this with a directory block that looks like this. Except again with the same values as before substituted in.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">  <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>wsgi.py Access</strong></p>
+<p>The <code>wsgi.py</code> file inside your <code>project-name</code> directory should also be open for access. Add this second directory block to ensure it’s accessible.</p>
+<p>Again <code>project_name</code> and the previous values need altering to your own.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/project-name&gt;</span></span><br><span class="line">  <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">  <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>WSGI Settings</strong><br>The gateway interface mod for Apache uses <code>wsgi.py</code> to handle passing clients to the Django web app. Set it up with a daemon process path, process group name, and alias to the <code>wsgi.py</code> file location. </p>
+<p>Some things to note are that the latter half of the <code>python-path</code> setting should point to your virtual environment’s Python site packages, and not your system wide ones. The <code>:</code> character delimits separate paths. </p>
+<p>For the <code>WSGIDaemonProcess</code> and <code>WSGIProcessGroup</code> name (<code>project-name</code> in my example) you can set it to any suitable name. </p>
+<p>All relevant values here once again should be replaced with your own. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> django-project</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Apache-Permissions"><a href="#5-–-Apache-Permissions" class="headerlink" title="5 – Apache Permissions"></a>5 – Apache Permissions</h1><p>Change the system permissions so that the Linux group owner of the database file can read and write. </p>
+<p>The database file is named  <code>db.sqlite3</code> by default and is in the root project directory if not moved previously. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod 664 ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>Apache runs under the <code>www-data</code> system group, give said group ownership of the database file:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>In order for the <code>www-data</code> Apache group to properly write to the database file, we also need to give it ownership of the database file’s parent directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/myproject</span><br></pre></td></tr></table></figure>
+<p>Restart Apache to implement the changes we just made:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service apache2 restart</span><br></pre></td></tr></table></figure>
+<p>Assuming your firewall is setup correctly you should now be able to access your Django site by going to your server’s domain name or IP address in a browser. </p>
+<hr>
+<h1 id="Live-Deployment-Considerations"><a href="#Live-Deployment-Considerations" class="headerlink" title="Live Deployment Considerations"></a>Live Deployment Considerations</h1><h1 id="1-–-Django-Project-Settings"><a href="#1-–-Django-Project-Settings" class="headerlink" title="1 – Django Project Settings"></a>1 – Django Project Settings</h1><p>The <code>settings.py</code> file usually contains sensitive data values such as passwords, <em>secret keys</em>, and user credentials. Which are at risk of being exposed when stored in the Project’s version control (at least if public version control is used). </p>
+<p>The exact details set in <code>settings.py</code> are also likely to differ from user to user. As different directives and values may be required depending upon the installation context and user in question. For example <code>DEBUG</code> being set to <code>TRUE</code> on a local environment versus a live environment. </p>
+<p>It’s for these reasons it’s advisable to instead import these values into <code>settings.py</code> from another local <em>credentials</em> file. One that the user fills out manually upon setting up the project locally for the first time. </p>
+<p>The same “credentials” file must then be permanently ignored by the version control system, so the user specific details and passwords are kept private, but still imported into <code>settings.py</code> . </p>
+<p>Here is what an example template for this credentials file might look like:</p>
+<script src="https://gist.github.com/5car1z/6b014dd95f216780b1ce.js"></script>
+
+<p>Once created the <code>credentials.py</code> file and it’s stored directives can all then be imported inside the main Django settings file. </p>
+<p>Via this line of code: </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Imports sensitive/user config variable values.</span></span><br><span class="line"><span class="keyword">from</span> credentials <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
+<p>It’s a good idea to use a template file like the one above to replace the <code>credentials.py</code> in version control. So new users and installs can make a copy of it, and fill in the details required. </p>
+<hr>
+<h1 id="2-–-Live-Specific-Directives"><a href="#2-–-Live-Specific-Directives" class="headerlink" title="2 – Live Specific Directives"></a>2 – Live Specific Directives</h1><p>As mentioned in the previous section, some directives will need to be set differently for different situations. </p>
+<p>Here are some of the directives defined in <code>credentials.py</code> (or an equivalent user specific settings file) that are suitable for a live setup.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>Setting this next directive is optional more than anything but provides a means of helping with debugging errors and exceptions raised while rendering the apps templates.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATE_DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>This line and directive can be kept directly in <code>settings.py</code> unlike the other directives, although it doesn’t hurt to place in <code>credentials.py</code> anyway. Once <code>DEBUG</code> is set to <code>false</code> , this allows only the specified FQDN’s access to your Django site. </p>
+<p>It’s wise to ensure you <a href="https://github.com/DigitalOcean-User-Projects/Articles-and-Tutorials/blob/master/set_hostname_fqdn_on_ubuntu_centos.md" target="_blank" rel="external">have a valid FQDN hostname set on your server</a> if experiencing any problems with this directive.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">'127.0.0.1'</span>, <span class="string">'localhost'</span>, <span class="string">'.leagueofyorkshire.co.uk'</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> it is unwise to add a <code>*</code> symbol to the <code>ALLOWED_HOSTS</code> directive, as this would give access to any and all potential requests. </p>
+</blockquote>
+<p>Django uses the <code>STATIC_ROOT</code> directive to tell Apache where the generated <em>static</em> files are located. If the <code>./manage.py collectstatic</code> is run with live settings then the <code>STATIC_ROOT</code> directive must be set to something other than the previous <code>static</code> directory. In this case in the below code it’s set to generate it in a directory named <code>assets</code>. The other commented directives also need enabling in here for this to work:  </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span></span><br><span class="line"><span class="comment"># STATIC_URL = '/static/'</span></span><br><span class="line"><span class="comment"># STATIC_ROOT = os.path.join(BASE_DIR, "assets/")</span></span><br><span class="line"><span class="comment"># STATICFILES_DIRS = (os.path.join('static'),)</span></span><br></pre></td></tr></table></figure>
+<p>These previous directives are not <strong>all</strong> the ones you will find or define in the credentials file, but are mostly the ones to consider when working with a live deployment install of the project. </p>
+<p>See here for detailed information about more of these:</p>
+<blockquote>
+<p><a href="https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-ADMINS" target="_blank" rel="external">Django Official Documentation - Settings</a></p>
+</blockquote>
+<hr>
+<h1 id="3-–-Web-Server-Permissions"><a href="#3-–-Web-Server-Permissions" class="headerlink" title="3 – Web Server Permissions"></a>3 – Web Server Permissions</h1><p>We set some permissions on the database file and parent directory in an earlier step, however the other Django files hosted by your web server have their own permissions to consider. </p>
+<p>The main file to take into account when setting permission is the file that holds your live environment specific directives, and user sensitive data. In our example this was the <code>credentials.py</code> file, created from a template that takes it’s place in version control. </p>
+<p>Consider taking away read and write privileges to <em>everyone else</em> / <em>other</em> for this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o-rw ~/django-project/project-name/credentials.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Error-Reporting-amp-Logging"><a href="#4-–-Error-Reporting-amp-Logging" class="headerlink" title="4 – Error Reporting &amp; Logging"></a>4 – Error Reporting &amp; Logging</h1><blockquote>
+<p><strong>Section To Be Added</strong></p>
+</blockquote>
+<hr>
+<h1 id="5-–-gitignore"><a href="#5-–-gitignore" class="headerlink" title="5 – .gitignore"></a>5 – .gitignore</h1><p>Here is a .gitignore containing lots of potential file types and directories you likely don’t want to track for live or in general. Some are Django specific, others are Python project related. </p>
+<script src="https://gist.github.com/5car1z/2bd1ade7177fbccca339.js"></script>
+
+<hr>
+<h1 id="Further-Considerations"><a href="#Further-Considerations" class="headerlink" title="Further Considerations"></a>Further Considerations</h1><p>There are other alternatives to this entire procedure that have their own advantages and merits. These should be considered as an alternative or more specialised way of running Django. </p>
+<p><strong>Gunicorn</strong> </p>
+<p>“Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX. It’s a pre-fork worker model ported from Ruby’s Unicorn project. The Gunicorn server is broadly compatible with various web frameworks, simply implemented, light on server resources, and fairly speedy.”</p>
+<blockquote>
+<p><a href="http://gunicorn.org/" target="_blank" rel="external">http://gunicorn.org/</a></p>
+</blockquote>
+<p><strong>uWSGI</strong></p>
+<p>“The uWSGI project aims at developing a full stack for building hosting services. Versatility, performance, low-resource usage and reliability are the strengths of the project “</p>
+<blockquote>
+<p><a href="https://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html" target="_blank" rel="external">Quickstart for Python/WSGI applications</a></p>
+</blockquote>
+<p><strong>Tornado</strong></p>
+<p>“Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.”</p>
+<blockquote>
+<p><a href="http://www.tornadoweb.org/en/stable/wsgi.html" target="_blank" rel="external">tornado.wsgi — Interoperability with other Python frameworks and servers</a></p>
+</blockquote>
+<p><strong>Other Python Web Frameworks/Servers</strong></p>
+<ul>
+<li><a href="http://www.cherrypy.org/" target="_blank" rel="external">CherryPy</a></li>
+<li><a href="http://twistedmatrix.com/trac/wiki/TwistedWeb" target="_blank" rel="external">Twisted Web</a></li>
+<li><a href="http://waitress.readthedocs.org/en/latest/" target="_blank" rel="external">Waitress WSGI Server</a></li>
+</ul>
+<hr>
+<p><strong>More Information</strong> </p>
+<ul>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Serve Django Applications with Apache and mod_wsgi on Ubuntu 14.04</a> – Main source of inspiration and workflow for this blog post. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps" target="_blank" rel="external">Digital Ocean – How to Run Django with mod_wsgi and Apache with a virtualenv Python environment on a Debian VPS</a> – Similar to the first link here but with different approaches and older. </p>
+</li>
+<li><p><a href="https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/modwsgi/" target="_blank" rel="external">Official Django Documentation - How to use Django with Apache and mod_wsgi</a> – Good general purpose information. </p>
+</li>
+<li><p><a href="http://www.slideshare.net/GrahamDumpleton/getting-started-with-modwsgi" target="_blank" rel="external">Graham Dumpleton - PyCon AU 2010 - Getting Started With Apache/mod_wsgi</a> – Slides that are useful for troubleshooting Django errors, is a bit outdated now ion parts however. </p>
+</li>
+<li><p><a href="http://modwsgi.readthedocs.org/en/develop/index.html" target="_blank" rel="external">Official Documentation for mod_wsgi</a> – Anything and everything for mod_wsgi. </p>
+</li>
+<li><p><a href="http://www.djangobook.com/en/2.0/chapter12.html" target="_blank" rel="external">“Django Book” - Chapter 12: Deploying Django</a> – Overall good deployment practices. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications" target="_blank" rel="external">https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications</a> – The python web frameworks/servers from the last step. </p>
+</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Apache/" class="post__tag__link">Apache</a></li><li class="post__tag__item"><a href="/tags/Python/" class="post__tag__link">Python</a></li><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Django/" class="post__tag__link">Django</a></li></ul><a href="/2015/11/30/django-modwsgi-apache/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/2/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/4/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

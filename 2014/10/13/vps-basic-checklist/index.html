@@ -1,0 +1,71 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Debian 7 (Wheezy) VPS Basic Checklist - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2014-10-12T23:00:00.000Z" class="post__time">October 13, 2014</time><h1 class="post__title"><a href="/2014/10/13/vps-basic-checklist/">Debian 7 (Wheezy) VPS Basic Checklist</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/JXNdLSN.png" alt="VPS Cloud"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is intended primarily as a set of notes for myself but you might find the listed items of use, as the following are often commonplace and somewhat standardly used. </p>
+<p>Consider also that a persons needs for configuring a VPS will be tailored to their own requirements, criteria, and preferences. These are notes mostly for my benefit.  </p>
+<p><strong>This post is focused around Debian and its derivatives.</strong> </p>
+<a id="more"></a>
+<hr>
+<h1 id="Admin-Account"><a href="#Admin-Account" class="headerlink" title="Admin Account"></a>Admin Account</h1><p>Assuming initial root access for this section:</p>
+<p><strong>Add a new user</strong> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz</span><br></pre></td></tr></table></figure>
+<p><strong>Add the newly created user to the <code>sudo</code> elevation privileges group</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz sudo</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Repositories-Packages"><a href="#Repositories-Packages" class="headerlink" title="Repositories/Packages"></a>Repositories/Packages</h1><p>SSH into the newly created user, and use from now onwards.</p>
+<figure class="highlight bash"><figcaption><span>username@the.vps.ip.address</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh scarlz@the.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p><strong>Make sure system repositories are up to date</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update </span><br><span class="line">$ sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="LAMP"><a href="#LAMP" class="headerlink" title="LAMP"></a>LAMP</h1><h2 id="Apache"><a href="#Apache" class="headerlink" title="Apache"></a>Apache</h2><p><strong>Install apache web server</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2</span><br></pre></td></tr></table></figure>
+<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><p><strong>Install MySQL and complete the prompts</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mysql-server</span><br></pre></td></tr></table></figure>
+<h2 id="PHP"><a href="#PHP" class="headerlink" title="PHP"></a>PHP</h2><p><strong>Install PHP</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install php5-common libapache2-mod-php5 php5-cli</span><br></pre></td></tr></table></figure>
+<p><a href="http://php.net/manual/en/install.unix.debian.php" target="_blank" rel="external">PHP Official Debian GNU/Linux Installation Notes</a></p>
+<hr>
+<h1 id="SSH-Default-Port-amp-Root-Access"><a href="#SSH-Default-Port-amp-Root-Access" class="headerlink" title="SSH Default Port &amp; Root Access"></a>SSH Default Port &amp; Root Access</h1><p><strong>Change the VPS’s default SSH port &amp; Disable Root login</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p><em>Change the “Port 22” entry to any number between 1025 and 65536</em></p>
+<blockquote>
+<p><strong>Port 3267</strong></p>
+</blockquote>
+<ul>
+<li>Change the “PermitRootLogin yes” entry to “PermitRootLogin without-password”*</li>
+</ul>
+<p>This means only users with public SSH keys registered in the authorised keys file can log in as root. </p>
+<blockquote>
+<p><strong>PermitRootLogin without-password</strong></p>
+</blockquote>
+<p><strong>Restart SSH</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="SSH-Keys"><a href="#SSH-Keys" class="headerlink" title="SSH Keys"></a>SSH Keys</h1><p>On the client machine.</p>
+<p><strong>Generate RSA key pair</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa</span><br></pre></td></tr></table></figure>
+<p><strong>Copy public key into the authorized_keys file on the VPS</strong> </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id scarlz@the.vps.ip.address</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="iptables-Setup"><a href="#iptables-Setup" class="headerlink" title="iptables Setup"></a>iptables Setup</h1><p><strong>Display current rules in table</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -L -v</span><br></pre></td></tr></table></figure>
+<p><strong>Add standard rules</strong></p>
+<p>Line 4 below <code>--dport 3267</code> Should be whatever value SSH was altered to earlier on.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -i lo -j ACCEPT -m comment --comment <span class="string">"allow loopback address"</span></span><br><span class="line">$ sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT -m comment --comment <span class="string">"maintain all current connections"</span></span><br><span class="line">$ sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 80 HTTP"</span></span><br><span class="line">$ sudo iptables -A INPUT -p tcp --dport 3267 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 3267 SSH"</span></span><br></pre></td></tr></table></figure>
+<h2 id="ICMP-Ping-Rules"><a href="#ICMP-Ping-Rules" class="headerlink" title="ICMP (Ping) Rules"></a>ICMP (Ping) Rules</h2><p><strong>Create an IP address variable</strong></p>
+<figure class="highlight bash"><figcaption><span>SERVER_IP=your.vps.server.ip</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ SERVER_IP=189.56.33.99</span><br></pre></td></tr></table></figure>
+<p><strong>Add <code>echo-reply</code> and <code>echo-request</code> rules</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p icmp --icmp-type 8 <span class="_">-s</span> 0/0 <span class="_">-d</span> <span class="variable">$SERVER_IP</span> -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT -m comment --comment <span class="string">"ICMP echo-reply"</span></span><br><span class="line">$ sudo iptables -A OUTPUT -p icmp --icmp-type 0 <span class="_">-s</span> <span class="variable">$SERVER_IP</span> <span class="_">-d</span> 0/0 -m state --state ESTABLISHED,RELATED -j ACCEPT -m comment --comment <span class="string">"ICMP echo-request"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Add-Final-Rule"><a href="#Add-Final-Rule" class="headerlink" title="Add Final Rule"></a>Add Final Rule</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -P INPUT DROP -m comment --comment <span class="string">"block/drop all remaining connections"</span></span><br></pre></td></tr></table></figure>
+<h2 id="Saving-the-Configuration"><a href="#Saving-the-Configuration" class="headerlink" title="Saving the Configuration"></a>Saving the Configuration</h2><p><strong>Save the config by using the package below</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install iptables-persistent</span><br></pre></td></tr></table></figure>
+<p><strong>Start the service</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service iptables-persistent start</span><br></pre></td></tr></table></figure>
+<hr>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/VPS/" class="post__tag__link">VPS</a></li><li class="post__tag__item"><a href="/tags/Wheezy/" class="post__tag__link">Wheezy</a></li></ul><a href="/2014/10/13/vps-basic-checklist/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><div class="comments"><div id="disqus_thread"><noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript></div></div></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/2014/10/15/magical-technology/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><span title="Next" class="page-menu__link icon-arrow-right page-menu__link--disabled"></span></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","embed");
+</script></body></html>

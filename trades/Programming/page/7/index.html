@@ -1,0 +1,415 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-02-16T00:00:00.000Z" class="post__time">February 16, 2015</time><h1 class="post__title"><a href="/2015/02/16/arch-vm-base/">Arch Linux VM Base Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
+<p>I setup the base system components of Arch on a VM recently, here are the notes on one of the many ways of doing this.</p>
+<p>So bear in mind that these notes in places are relative to me.    </p>
+<blockquote>
+<p><a href="https://www.archlinux.org/download/" target="_blank" rel="external">Arch Linux Source Download Page</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Initial-Shell-Prompt"><a href="#1-–-Initial-Shell-Prompt" class="headerlink" title="1 – Initial Shell Prompt"></a>1 – Initial Shell Prompt</h1><p>After being presented with a shell prompt where you are automatically logged in as <em>root</em>. Begin by setting the keyboard language to your relevant country. </p>
+<p><strong>The shell in use is Zsh.</strong></p>
+<p>Show the possible keyboard layouts available with this command. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ localectl list-keymaps</span><br></pre></td></tr></table></figure>
+<p>To set it use <code>loadkeys</code> plus your keyboard layout choice:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ loadkeys uk</span><br></pre></td></tr></table></figure>
+<p>The <em>dhcpcd</em> network daemon starts automatically during boot, and it will attempt to start a wired connection by default. </p>
+<p>Use <code>ping</code> to check connectivity. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br></pre></td></tr></table></figure>
+<p>In a Virtual Machine that shares the host’s network connection, the <code>ping</code> should be successful as long as the host itself is connected and working, when using a <em>bridged</em> hardware network setting. If not this then… improvise.</p>
+<hr>
+<h1 id="2-–-Partitioning"><a href="#2-–-Partitioning" class="headerlink" title="2 – Partitioning"></a>2 – Partitioning</h1><p>This will list all devices connected to your system along with their partition schemes, including those used to host and boot live Arch installation media (e.g. a USB drive). Not all devices listed will therefore be viable or appropriate mediums for installation. To filter out inappropriate results, use this <code>grep</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsblk | grep -v <span class="string">"rom\|loop\|airoot"</span></span><br></pre></td></tr></table></figure>
+<p>Devices (e.g. hard drives) will be listed as <em>sdx</em>, where <em>x</em> is a lower-case letter starting from <em>a</em> for the first device (<em>sda</em>), <em>b</em> for the second device (<em>sdb</em>), and so on. For the VM only one device is available (<em>sda</em>) which is the allocated host hard drive space.</p>
+<p>Open the device (host HDD) that the partition table is to be created with and create a new <em>MBR</em>/<em>msdos</em> partition table for BIOS systems. All done using the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ parted <span class="_">-s</span> /dev/sda mktable msdos</span><br></pre></td></tr></table></figure>
+<p>Here I’m making two partitions in total for the VM. The first with line <code>1</code> and second with line <code>2</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ parted <span class="_">-s</span> /dev/sda mkpart primary 0% 100m</span><br><span class="line">$ parted <span class="_">-s</span> /dev/sda mkpart primary 100m 100%</span><br></pre></td></tr></table></figure>
+<p>You can run the earlier <code>grep</code> pattern again to see the newly created partitions. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsblk | grep -v <span class="string">"rom\|loop\|airoot"</span></span><br></pre></td></tr></table></figure>
+<p>Or use <code>parted</code> instead to see the partition table.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ parted /dev/sda <span class="built_in">print</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Filesystems"><a href="#3-–-Filesystems" class="headerlink" title="3 – Filesystems"></a>3 – Filesystems</h1><p><code>/boot</code></p>
+<p>The boot filesystem is formatted and placed on the first partition created (smaller of the two) with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.ext2 /dev/sda1</span><br></pre></td></tr></table></figure>
+<p><code>/</code></p>
+<p>The root filesystem is formatted on the other main partition now via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.btrfs /dev/sda2</span><br></pre></td></tr></table></figure>
+<h1 id="4-–-Mounting"><a href="#4-–-Mounting" class="headerlink" title="4 – Mounting"></a>4 – Mounting</h1><p><code>/mnt/</code></p>
+<p>This will <em>mount</em> the main partition:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda2 /mnt/</span><br></pre></td></tr></table></figure>
+<p>Make a boot directory in <code>/mnt/</code> which is now mapped/mounted to <code>/dev/sda2</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /mnt/boot</span><br></pre></td></tr></table></figure>
+<p>Mount the boot partition to the newly created boot sub-directory in the main root partition.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda1 /mnt/boot</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Mirrors-amp-System-Packages"><a href="#5-–-Mirrors-amp-System-Packages" class="headerlink" title="5 – Mirrors &amp; System Packages"></a>5 – Mirrors &amp; System Packages</h1><p>Begin by appending the system’s <em>mirrorlist</em> file name with <strong>.orig</strong> and the <code>mv</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig</span><br></pre></td></tr></table></figure>
+<p>Then run <code>rankmirrors</code> on the aforementioned file with the <code>-n</code> parameter to find and redirect the fastest <strong>6</strong> mirrors into a new <em>mirrorlist</em> file.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig &gt;/etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> This takes several minutes to process and complete, have faith and wait…  </p>
+</blockquote>
+<p>After this use <code>pacman</code> to update and sync the systems package listings. </p>
+<p><strong>“Whenever you change your mirrorlist, refresh all package lists with pacman, to ensure that the package lists are updated consistently.”</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Syy</span><br></pre></td></tr></table></figure>
+<p>Next install all the system’s base packages. Time to download packages will vary on your internet connection and the respective mirrors. </p>
+<p>Adding a <code>-i</code> parameter to this command enables a prompt for every package to be installed during the process, if preferred.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacstrap /mnt/ base base-devel</span><br></pre></td></tr></table></figure>
+<p>Copy the mirrorlist(s) from earlier over also.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-fstab"><a href="#6-–-fstab" class="headerlink" title="6 – fstab"></a>6 – fstab</h1><p>Here generate fstab like so in this directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ genfstab -p /mnt/ &gt;&gt;/mnt/etc/fstab</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-chroot"><a href="#7-–-chroot" class="headerlink" title="7 – chroot"></a>7 – chroot</h1><p><code>chroot</code> into a bash shell in <code>/mnt/</code> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ arch-chroot /mnt/ /bin/bash</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-hostname"><a href="#8-–-hostname" class="headerlink" title="8 – hostname"></a>8 – hostname</h1><p>Set the <code>hostname</code> to today’s date, or whatever you prefer. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"archlinux-vm-<span class="variable">$(date +"%d-%m-%y")</span>"</span> &gt;/etc/hostname</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-localtime"><a href="#9-–-localtime" class="headerlink" title="9 – localtime"></a>9 – localtime</h1><p>Set the <code>localtime</code> to London’s current time (obviously change this in relation to your own timezone.) </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ln <span class="_">-s</span> /usr/share/zoneinfo/Europe/London /etc/localtime</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="10-–-locale"><a href="#10-–-locale" class="headerlink" title="10 – locale"></a>10 – locale</h1><p><em>Locales</em> define which language the system uses and other regional considerations like currency denomination, numerology and character sets. </p>
+<p>Using <code>vi</code> do this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/locale.gen</span><br></pre></td></tr></table></figure>
+<p>Uncomment the relevant language you wish to use (UTF-8 support recommended).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en_GB.UTF-8 UTF-8</span><br></pre></td></tr></table></figure>
+<p>Then generate the <em>locales</em> .</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ locale-gen</span><br></pre></td></tr></table></figure>
+<p>The <code>/etc/locale.conf</code> file does not exist by default. Create it, where <code>LANG</code> refers to the first uncommented entry in <code>/etc/locale.gen</code> from earlier. </p>
+<p>See the next command for an example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> LANG=en_GB.UTF-8 &gt; /etc/locale.conf</span><br></pre></td></tr></table></figure>
+<p>Lastly export the chosen <em>locale</em>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> LANG=en_GB.UTF-8</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-passwd"><a href="#11-–-passwd" class="headerlink" title="11 – passwd"></a>11 – passwd</h1><p>Change the root user’s password for the VM.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-GRUB-Bootloader"><a href="#12-–-GRUB-Bootloader" class="headerlink" title="12 – GRUB Bootloader"></a>12 – GRUB Bootloader</h1><p>Here installation with GRUB and <em>MBR/msdos</em> is demonstrated. </p>
+<p>Install the <code>grub</code> package and then run <code>grub-install</code> to install the bootloader:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S grub</span><br><span class="line">$ grub-install --target=i386-pc --recheck /dev/sda</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Warning:</strong> Change <code>/dev/sda</code> to reflect the drive you installed Arch on if needed. Do not append a partition number, and do not replace it with “sdax” either.</p>
+</blockquote>
+<p>Next automatically generate the main grub config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="13-–-unmount-amp-reboot"><a href="#13-–-unmount-amp-reboot" class="headerlink" title="13 – unmount &amp; reboot"></a>13 – unmount &amp; reboot</h1><p>Exit from the <em>chrooted</em> shell environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<p>While partitions are unmounted automatically by <em>systemd</em> on shutdown, you may do so manually with the next command as a safety measure. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umount -R /mnt/</span><br></pre></td></tr></table></figure>
+<p>Finally if using a CD image you may have to remove it from your VM manager software, before rebooting.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>“Your new Arch Linux base system is now a functional GNU/Linux environment ready to be built into whatever you wish or require.”</strong></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://wiki.archlinux.org/index.php/Beginners%27_guide" target="_blank" rel="external">Arch Linux Beginner’s Guide</a> - From the official Wiki. </li>
+<li><a href="http://www.wuputah.com/2013/02/18/quickly-install-an-archlinux-vm-in-15-minutes/" target="_blank" rel="external">wuputah.musings</a> - Quickly Install an Arch Linux VM in 15 minutes.</li>
+<li><a href="https://www.archlinux.org/mirrors/status/" target="_blank" rel="external">Arch Linux Mirror Status</a> - Reports various aspects about the mirrors such as network problems with mirrors, data collection problems, the last time mirrors have been synced, etc.</li>
+<li><a href="https://wiki.archlinux.org/index.php/GRUB" target="_blank" rel="external">Arch Linux GRUB Article</a> - For more information on configuring and using GRUB, see GRUB.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/16/arch-vm-base/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-02-05T00:00:00.000Z" class="post__time">February 5, 2015</time><h1 class="post__title"><a href="/2015/02/05/zsh-basic-configuration/">Ubuntu 14.04 Z Shell (zsh) Installation and Basic Configuration</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/OyNFwff.gif" alt="Z Shell Logo"></p>
+<p>Initial notes on installing plus base setup of Z Shell. </p>
+<p>Listed here are some of its often touted features. </p>
+<ul>
+<li>Auto-completion </li>
+<li>Auto-correction</li>
+<li>Scripting capabilities</li>
+<li>Extensibility with modules</li>
+<li>Improved globbing</li>
+<li>Improved array handling</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installation"><a href="#1-–-Installation" class="headerlink" title="1 – Installation"></a>1 – Installation</h1><p>Update the <code>apt-get</code> package manager’s database.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+<p>Install <code>zsh</code> through the <code>apt-get</code> package manager.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install zsh</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-zsh-newuser-install"><a href="#2-–-zsh-newuser-install" class="headerlink" title="2 – zsh-newuser-install"></a>2 – zsh-newuser-install</h1><p>Run Z Shell for the first time to begin the new user config.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zsh</span><br></pre></td></tr></table></figure>
+<p>If it doesn’t run or drop into the config then you can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zsh /usr/share/zsh/<span class="built_in">functions</span>/Newuser/zsh-newuser-install <span class="_">-f</span></span><br></pre></td></tr></table></figure>
+<p>Which will invoke the new user config manually.</p>
+<p>Work through the new prompt screen as directed, typing <code>0</code> remembers an edit but does not save it until it is entered again on the root prompt screen.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1)  Configure settings <span class="keyword">for</span> <span class="built_in">history</span>, i.e. <span class="built_in">command</span> lines remembered</span><br><span class="line">     and saved by the shell.  (Recommended)</span><br></pre></td></tr></table></figure>
+<p>On the first option <code>0</code> will suffice and keeps the default settings.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2)  Configure the new completion system.  (Recommended.)</span><br></pre></td></tr></table></figure>
+<p>On the second option pressing <code>1</code> and turning on completion with default options is enough.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3)  Configure how keys behave when editing <span class="built_in">command</span> lines.  (Recommended.)</span><br></pre></td></tr></table></figure>
+<p>With the third option you can set the key’s shell line editor to behave like Emacs or Vi. Set it with <code>1</code> and press <code>e</code> for emacs and <code>v</code> for vi.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(4)  Pick some of the more common shell options.  These are simple <span class="string">"on"</span></span><br><span class="line">     or <span class="string">"off"</span> switches controlling the shell<span class="string">'s features.</span></span><br></pre></td></tr></table></figure>
+<p>In the fourth option I set <strong>1, 2, and 3</strong> to on, enabling them. </p>
+<p>Finally entering <code>0</code> at the root menu exits and saves these new settings.</p>
+<hr>
+<h1 id="3-–-Configuration-Files-Layout"><a href="#3-–-Configuration-Files-Layout" class="headerlink" title="3 – Configuration Files Layout"></a>3 – Configuration Files Layout</h1><p>When Z Shell starts, it sources the following files in this order:</p>
+<p><code>/etc/zsh/zshenv</code><br>Commands to set the global command search path and other system-wide environment variables; it should not contain commands that produce output.</p>
+<p><code>~/.zshenv</code><br>For per-user configuration. Generally used for setting some useful environment variables.</p>
+<p><code>/etc/zsh/zprofile</code><br>This is a global configuration file, usually used for executing some general commands at login. On Arch Linux, by default it contains one line which sources the /etc/profile.</p>
+<p><code>/etc/profile</code><br>This file should be sourced by all Bourne-compatible shells upon login: it sets up an environment upon login and application-specific settings. Again on Arch Linux, Z Shell will also source this by default.</p>
+<p><code>~/.zprofile</code><br>This file is generally used for automatic execution of user scripts upon login.</p>
+<p><code>/etc/zsh/zshrc</code><br>Another global configuration file. </p>
+<p><code>~/.zshrc</code><br>The main user configuration file, and the one most often customised by users. This file is the one that will be used and changed in the next section. </p>
+<p><code>/etc/zsh/zlogin</code><br>Another global configuration file.</p>
+<p><code>~/.zlogin</code><br>Same as the previous file before it, except for individual-user configuration.</p>
+<p><code>/etc/zsh/zlogout</code><br>A global configuration file, will be sourced when a login shell exits.</p>
+<p><code>~/.zlogout</code><br>Same as the previous file before it, except for individual-user configuration.</p>
+<h1 id="4-–-zshrc-Configuration-File"><a href="#4-–-zshrc-Configuration-File" class="headerlink" title="4 – .zshrc Configuration File"></a>4 – .zshrc Configuration File</h1><p>The newly created <code>zsh</code> config file contents we just defined can be seen by opening it with a text editor. I’m using <code>vim</code> in this example. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.zshrc</span><br></pre></td></tr></table></figure>
+<p>At the end of the config file append the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">autoload</span> -U promptinit compinit</span><br><span class="line">promptinit</span><br><span class="line">compinit</span><br><span class="line">prompt bart</span><br></pre></td></tr></table></figure>
+<p>Where <code>bart</code> is the name of the prompt you wish to use in your Z shell. For my example here I chose the bart theme.</p>
+<p>To see possible prompts available and installed follow these commands from a Z shell terminal prompt. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">autoload</span> -U promptinit</span><br><span class="line">$ promptinit</span><br><span class="line">$ prompt p</span><br></pre></td></tr></table></figure>
+<p>To apply any changes immediately in the config file you can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
+<p>Or exit and invoke a new Z Shell session.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">$ zsh</span><br></pre></td></tr></table></figure>
+<p>Finally to make Z Shell your Linux user’s <strong>default</strong> shell on this account enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chsh <span class="_">-s</span> $(<span class="built_in">which</span> zsh)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Do not include <code>sudo</code> with this previous command as it will alter the <em>root</em> user’s default shell instead. </p>
+</blockquote>
+<p>The <code>$SHELL</code> variable stores your user’s current default shell path. It can be used to confirm the set default shell.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Alternative-Method-via-oh-my-zsh"><a href="#Alternative-Method-via-oh-my-zsh" class="headerlink" title="Alternative Method via oh-my-zsh"></a>Alternative Method via oh-my-zsh</h1><blockquote>
+<p>Oh-My-Zsh is an open source, community-driven framework for managing your ZSH configuration. It comes bundled with a ton of helpful functions, helpers, plugins, themes, and a few things that make you shout…</p>
+</blockquote>
+<p>Instead of a manual setup many people choose to use <a href="http://ohmyz.sh/" target="_blank" rel="external">oh-my-zsh</a> to manage their zsh installations.</p>
+<p>It can be acquired most easily by using either <code>curl</code> <strong>or</strong> <code>wget</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L http://install.ohmyz.sh | sh</span><br></pre></td></tr></table></figure>
+<p>or</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget --no-check-certificate http://install.ohmyz.sh -O - | sh</span><br></pre></td></tr></table></figure>
+<p>Enable any of the plugins you want in your <code>~/.zshrc</code> config file by setting them active:</p>
+<figure class="highlight bash"><figcaption><span>~/.zshrc </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plugins=(git ruby)</span><br></pre></td></tr></table></figure>
+<p>Change the <code>ZSH_THEME</code> environment variable in your <code>~/.zshrc</code> to enable any of themes included in the package. </p>
+<figure class="highlight bash"><figcaption><span>~/.zshrc </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=<span class="string">"af-magic"</span></span><br></pre></td></tr></table></figure>
+<p>Furthermore you can <em>uncomment</em> any disabled options in this file if you want them active and enabled. </p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://zsh.sourceforge.net/FAQ/zshfaq01.html#l8" target="_blank" rel="external">I don’t have root access: how do I make zsh my login shell?</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Zsh" target="_blank" rel="external">Z Shell Arch Linux Wiki Page</a></li>
+<li><a href="https://github.com/robbyrussell/oh-my-zsh/" target="_blank" rel="external">oh-my-zsh on Github</a></li>
+<li><a href="http://www.bash2zsh.com/zsh_refcard/refcard.pdf" target="_blank" rel="external">zsh Reference Card</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/Ubuntu/" class="post__tag__link">Ubuntu</a></li><li class="post__tag__item"><a href="/tags/zsh/" class="post__tag__link">zsh</a></li></ul><a href="/2015/02/05/zsh-basic-configuration/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-01-15T00:00:00.000Z" class="post__time">January 15, 2015</time><h1 class="post__title"><a href="/2015/01/15/web-deployment-git-hooks/">Debian 7 Web Server Deployment with Git Hooks</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/p0i25Hx.png" alt="Github Logo"></p>
+<p>Some notes on how to use a git hook for web server deployment on Debian 7.</p>
+<ul>
+<li>Web server live directory: <code>/var/www</code></li>
+<li>Web server live directory with virtual hosts: <code>/var/www/www.exampledomain.com</code></li>
+<li>VPS “live” repository: <code>/var/repo-name/project-name</code></li>
+</ul>
+<a id="more"></a>
+<hr>
+<p>SSH into the server or VPS and create the following folders in the respective directories.<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /var</span><br><span class="line">$ mkdir repository-name</span><br><span class="line">$ <span class="built_in">cd</span> repository-name</span><br><span class="line">$ mkdir project-name </span><br><span class="line">$ <span class="built_in">cd</span> project-name</span><br></pre></td></tr></table></figure></p>
+<p>Use bare to initialise only the version control components of git and not any other of the source files. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git init --bare</span><br></pre></td></tr></table></figure>
+<p>Change into the <code>hooks</code> directory and create a text file named <code>post-receive</code> and begin writing to it. I’m using vim in this example. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> hooks</span><br><span class="line">$ vim post-receive</span><br></pre></td></tr></table></figure>
+<p>Enter the following lines for a single web server host, or <strong>skip</strong> to the next code block for multiple virtual hosts. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www --git-dir=/var/loy-web/loy-website checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
+<p>For multiple virtual hosts enter this coding instead:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www/www.example-domain.com --git-dir=/var/repo-name/project-name checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
+<p>Turn the newly created and completed <code>post-receive</code> file into a an executable file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x post-receive</span><br></pre></td></tr></table></figure>
+<p>On a user’s local git repository (the repository used previously for the same project, and for development of the website) add  the remote path of our server repository like so.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add live ssh://user@vps_address/var/repo-name/project-name</span><br></pre></td></tr></table></figure>
+<p>Push to the ‘live’ remote on the ‘master’ branch which will then update the specified web server hosting directory. Which in this case was <code>/var/www</code> or <code>/var/www/www.example-domain.com</code> for multiple virtual hosts. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push live master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/VPS/" class="post__tag__link">VPS</a></li><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li></ul><a href="/2015/01/15/web-deployment-git-hooks/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2014-11-26T00:00:00.000Z" class="post__time">November 26, 2014</time><h1 class="post__title"><a href="/2014/11/26/murmur-server-installation/">Debian 7 Mumble (Murmur) Server Installation</a></h1></header><div class="post__main echo"><p><img src="http://wiki.openstreetmap.org/w/images/thumb/8/8f/Icons_mumble.svg/200px-Icons_mumble.svg.png" alt="Mumble Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Mumble is one of several choices for those looking to host a client/server based VoIP application. It allows users to connect centrally and chat to one and other via microphone and audio output. The program is open-source so free of charge and aimed at gamers who need to communicate efficiently in real time. Anyone can of course make use of the application however. </p>
+<p>This post will focus on the process of installing plus configuring the server side aspects of Mumble, or Murmur as the server software is known. Mumble specifically is the client software that users need to download and install to connect to your Murmur server. Also note that as usual this post is written for those using Debian, or Debian derived distributions such as Ubuntu.</p>
+<a id="more"></a>
+<p>Other programs of this nature exist also such as Teamspeak and Ventrilo. Bear in mind though that both of these are freeware and free to use, but not open-source software. Meaning the source code cannot be altered, updated, or accessed legally. This is one of several reasons I personally use Murmur as a voice server. Others are as follows:</p>
+<p><strong>For Administrators</strong></p>
+<ul>
+<li>Low resource cost for hosting.</li>
+<li>Very stable server software.</li>
+<li>Free choice of server OS software.</li>
+<li>Extendible through Ice middleware.</li>
+<li>Automatable administration through Ice middleware.</li>
+</ul>
+<p><strong>For Users</strong></p>
+<ul>
+<li>Low-latency codecs - great for talking and gaming.</li>
+<li>Private and secure encrypted communication.</li>
+<li>Public/private-key authentication by default.</li>
+<li>Android &amp; Apple iOS app support.</li>
+</ul>
+<blockquote>
+<p>More general information can be found at the <a href="http://wiki.mumble.info/wiki/Main_Page" target="_blank" rel="external">Official Mumble Wiki</a></p>
+</blockquote>
+<hr>
+<h1 id="1-–-System-Packages"><a href="#1-–-System-Packages" class="headerlink" title="1 – System Packages"></a>1 – System Packages</h1><p>Begin by updating and upgrading your system’s current packages.</p>
+<p><strong>Updates the <code>apt-get</code> package manager database</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
+<p><strong>Installs any new updates to system packages</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Confirm when prompted about updating new packages by entering <code>y</code> for yes.</p>
+<hr>
+<h1 id="2-–-Install-the-Murmur-Package"><a href="#2-–-Install-the-Murmur-Package" class="headerlink" title="2 – Install the Murmur Package"></a>2 – Install the Murmur Package</h1><p>Use the package manager command below to retrieve and install the Murmur server package.</p>
+<p><strong>Installs Murmur onto the system</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mumble-server</span><br></pre></td></tr></table></figure>
+<p>Again confirm when prompted entering <code>y</code> for yes.</p>
+<p>All the dependencies that Murmur requires will also be installed here too. These are other packages mumble needs and <em>depends</em> upon to run, such as <code>libzeroc-ice34</code> and <code>mysql-common</code>.</p>
+<hr>
+<h1 id="3-–-Configure-Murmur-Package-Settings"><a href="#3-–-Configure-Murmur-Package-Settings" class="headerlink" title="3 – Configure Murmur Package Settings"></a>3 – Configure Murmur Package Settings</h1><p>Next begin the package configuration with the following command.</p>
+<p><strong>Starts the package config wizard</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg-reconfigure mumble-server</span><br></pre></td></tr></table></figure>
+<p>What follows are a series of interactive configuration prompts, you can select the options offered by pressing the tab key or directional arrows on your keyboard. </p>
+<p><img src="http://i.imgur.com/6wJ1VaT.png" alt="First Prompt"></p>
+<p>Select <code>Yes</code> and press enter for this first option unless you explicitly don’t want this.</p>
+<p>Note that for the <code>mumble-server</code> (Murmur) package on Debian or Debian-based distributions, initially you should not start the process manually. After you install and configure it here, it will start on its own.</p>
+<p><img src="http://i.imgur.com/3GKRCYG.png" alt="Second Prompt"></p>
+<p>Here the wizard allows you to prioritise Murmur’s networking processes over other ongoing services. I would advise selecting <code>Yes</code> as before, feel free to select no if you really do not want this behaviour enabled.  </p>
+<p><img src="http://i.imgur.com/lLidvzV.png" alt="Third Prompt"></p>
+<p><code>SuperUser</code> in Murmur/Mumble is very much like the <code>root</code> user account in Linux filesystems. It has all the access rights and privileges possibly available to it. You’ll need to make use of it to administer your server from time to time. Read the details in this step carefully then type in a suitable password, before pressing tab and enter to continue.</p>
+<hr>
+<h1 id="4-–-Murmur-Configuration-File"><a href="#4-–-Murmur-Configuration-File" class="headerlink" title="4 – Murmur Configuration File"></a>4 – Murmur Configuration File</h1><p>Located in <code>/etc/mumble-server.ini</code></p>
+<p>The file <code>mumble-server.ini</code> located in the above directory contains the vast majority of configurable settings that can be applied to your Murmur server. The contents of the text file itself are well commented and each individual option should have an explanation alongside it as a comment. </p>
+<p>Comments in this file begin with and are signified by the <code>#</code> symbol. Much like in <code>bash</code> scripting and several other programming languages.So consider that any line or command beginning with a <code>#</code> will not be processed as part of the configuration by the server.  </p>
+<p>Let’s take a look at the file. </p>
+<p><strong>Open the file with <code>vim</code> for viewing and editing</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/mumble-server.ini</span><br></pre></td></tr></table></figure>
+<p>You can use any text editor you prefer (nano, emacs, pico, etc) but I’ve used vim in the above example. Once inside you will be able to see all the configs available. Here are some of the options worth noting:</p>
+<p><code>welcometext</code> - As labelled, users see this message after joining the server in their Mumble client text message log. Anything within the two quotation marks <code>&quot; &quot;</code> is taken as the message to be shown. The server supports basic <code>HTML</code> markup code within this message, so items such as images, hyperlinks, formatted text, etc can be applied. </p>
+<p>Here is an example of some HTML formatting you can use for your message, but feel free to make your own!     </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">welcometext="</span><br><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">br</span>&gt;</span>You have joined our Mumble server, enjoy your stay!<span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://wiki.openstreetmap.org/w/images/thumb/8/8f/Icons_mumble.svg/200px-Icons_mumble.svg.png"</span>&gt;</span><span class="tag">&lt;/<span class="name">img</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span>&gt;</span>Server Links<span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://wiki.mumble.info/wiki/FAQ/English"</span> <span class="attr">rel</span>=<span class="string">"nofollow"</span>&gt;</span> Mumble Wiki FAQ<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://www.mumble.com/support/mumble-server-robotic-distorted-voice.php"</span> <span class="attr">rel</span>=<span class="string">"nofollow"</span>&gt;</span> Microphone Troubleshooting<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">b</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">center</span>&gt;</span>"</span><br></pre></td></tr></table></figure>
+<p><strong>Above HTML Output</strong></p>
+<center><br>    <br>You have joined our Mumble server, enjoy your stay!<br><br>    <img src="http://wiki.openstreetmap.org/w/images/thumb/8/8f/Icons_mumble.svg/200px-Icons_mumble.svg.png"><br><br>    <b>Server Links</b><br><br>    <b><a href="http://wiki.mumble.info/wiki/FAQ/English" rel="external" target="_blank"> Mumble Wiki FAQ</a></b><br><br>    <b><a href="http://www.mumble.com/support/mumble-server-robotic-distorted-voice.php" rel="external" target="_blank"> Microphone Troubleshooting</a></b><br><br></center>
+
+<p><code>port</code> - This is the port that will need to be opened and useable by outside connections in any firewalls you may have running, for example iptables in Debian/Linux. It must also be specified in the Mumble client program when users connect to your Murmur server.</p>
+<p><code>bandwidth</code>- The default value of “72000” here for this setting is sufficient, unless you are limited in available bandwidth on the hosting machine. Note that this option sets a <em>max</em> cap on per user bandwidth, and not a minimum, and is measured in bits.  </p>
+<p><code>users</code> - This value sets a limit on how many Mumble clients can be connected to the server at the same time. A general rule to follow here is that with the above <code>bandwidth</code> option set to “72000”, you can have 50 users max per 512MB of hardware memory (RAM) available. Any more and server latency issues resultant of this may arise. </p>
+<p><code>registerName, RegisterUrl</code> - On every Mumble client there exists a public list of registered servers that anyone can access and connect to. If this section is filled out and completed, your Murmur server with the relevant details is added to that list. In my experience it is beneficial to instead provide the host machine IP address plus chosen port number directly to accepted users, who can then connect with these details manually in their clients. </p>
+<blockquote>
+<p>Some further documentation for these configuration settings can be found at the <a href="http://wiki.mumble.info/wiki/Murmurguide" target="_blank" rel="external">Official Mumble Wiki</a></p>
+</blockquote>
+<p>Whenever you change any of these values the Murmur server needs to be restarted. We do this by restarting its daemon (a background process that is constantly running). It is only after you do this that any <code>mumble-server.ini</code> alterations will come into effect. Use the following command to do this, and remember that any users on the mumble server will get disconnected and have to reconnect after the service restarts again. </p>
+<p><strong>How to restart the Murmur server</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service mumble-server restart</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>From here on out the server is in its base working condition and can be accessed by users using the Mumble client software. There are however more steps to take if you are using a firewall on your Murmur hosting machine (which is advised). </p>
+<p>This consists of allowing traffic on the port number chosen in the configuration file earlier, otherwise it is likely users will not be able to connect with their client software.</p>
+<p>Stay tuned for another forthcoming post on the next stages of configuration. Which will include the <code>iptables</code> firewall rules mentioned just now, channel creation and customisation, and more instructions on how to run the server from an administration point of view.  </p>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Mumble/" class="post__tag__link">Mumble</a></li><li class="post__tag__item"><a href="/tags/Murmur/" class="post__tag__link">Murmur</a></li></ul><a href="/2014/11/26/murmur-server-installation/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2014-11-07T00:00:00.000Z" class="post__time">November 7, 2014</time><h1 class="post__title"><a href="/2014/11/07/html-media-code-snippets/">HTML Media Code Snippets</a></h1></header><div class="post__main echo"><h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Here’s a collection of some of the HTML code I’ve recently been using in several of these blog posts. Be wary to the fact that some of the indenting in this post is not always necessary, in each example. </p>
+<p>The intention here was to make certain parts of the code snippets easily readable and fit more on each line width wise. I think this helps overall, although I’m not completely convinced. Oh and most of the gifs won’t appear on mobile devices due to the source formats. </p>
+<p>Never mind though, here come the gifs.</p>
+<center><br>    <iframe class="imgur-embed" width="100%" height="400" src="http://i.imgur.com/RTm10Ov.gifv#embed"></iframe><br></center>
+
+<a id="more"></a>
+<hr>
+<h1 id="Video-Tag-Standard-Example"><a href="#Video-Tag-Standard-Example" class="headerlink" title="Video Tag - Standard Example"></a>Video Tag - Standard Example</h1><p>Standard <code>&lt;video&gt;</code> tag example, within the tag are source tags with URLS for <code>.webm</code> and <code>.mp4</code> containers. </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>=<span class="string">""</span> <span class="attr">loop</span>=<span class="string">""</span> <span class="attr">muted</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">type</span>=<span class="string">"video/webm"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/nDG57pe.webm"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/nDG57pe.mp4"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<center><br>    <video autoplay loop muted><br>        <source type="video/webm" src="http://i.imgur.com/nDG57pe.webm"><br>        <source type="video/mp4" src="http://i.imgur.com/nDG57pe.webm"><br>    </video><br></center>
+
+<hr>
+<h1 id="Video-Tag-Custom-Parameters"><a href="#Video-Tag-Custom-Parameters" class="headerlink" title="Video Tag - Custom Parameters"></a>Video Tag - Custom Parameters</h1><p>Same again but this time without the <code>.webm</code> link <code>&lt;source&gt;</code> tag. Here also are some examples of the attributes you can add/alter to style the video player’s appearance and functionality.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">height</span>=<span class="string">"370"</span> <span class="attr">width</span>=<span class="string">"660"</span> <span class="attr">autoplay</span>=<span class="string">""</span> <span class="attr">loop</span>=<span class="string">""</span> <span class="attr">muted</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">source</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/eHAlXli.mp4"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<center><br>    <video height="370" width="660" autoplay loop muted><br>        <source type="video/mp4" src="http://i.imgur.com/eHAlXli.mp4"><br>    </video><br></center>
+
+<blockquote>
+<p><code>&lt;video&gt;</code> <a href="http://www.w3schools.com/tags/tag_video.asp" target="_blank" rel="external">Attributes Reference</a></p>
+</blockquote>
+<hr>
+<h1 id="Imgur-iframe-Tag-Embed"><a href="#Imgur-iframe-Tag-Embed" class="headerlink" title="Imgur iframe Tag Embed"></a>Imgur iframe Tag Embed</h1><p>The method for using Imgur embed code with in an <code>&lt;iframe&gt;</code> tag. This one should appear on mobile device browsers as the embed source format is .gifv</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">class</span>=<span class="string">"imgur-embed"</span> <span class="attr">width</span>=<span class="string">"100%"</span> <span class="attr">height</span>=<span class="string">"325"</span> <span class="attr">frameborder</span>=<span class="string">"1"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/gXDFCu3.gifv#embed"</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<iframe class="imgur-embed" width="100%" height="325" frameborder="1" src="http://i.imgur.com/gXDFCu3.gifv#embed"></iframe>
+
+<p>If not signed in you can get the embed code by clicking the <a href="http://imgur.com/gXDFCu3?tags" target="_blank" rel="external">“get embed codes”</a> link at the bottom right of the image. However if signed in and it’s your own image. You can get the embed code in the current item’s links, listed on the right.</p>
+<hr>
+<h2 id="YouTube-iframe-Tag-Embed"><a href="#YouTube-iframe-Tag-Embed" class="headerlink" title="YouTube iframe Tag Embed"></a>YouTube iframe Tag Embed</h2><p>Same concept again except this time it’s for YouTube players and their embed code.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">width</span>=<span class="string">"1080"</span> <span class="attr">height</span>=<span class="string">"500"</span> <span class="attr">src</span>=<span class="string">"//www.youtube.com/embed/o0u4M6vppCI"</span> <span class="attr">frameborder</span>=<span class="string">"1"</span> <span class="attr">allowfullscreen</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<iframe width="1080" height="500" src="//www.youtube.com/embed/o0u4M6vppCI" frameborder="0" allowfullscreen></iframe>
+
+<p>You can get the embed code by right clicking anywhere on the video itself and then selecting “get embed code”.</p>
+<blockquote>
+<p><code>&lt;iframe&gt;</code> <a href="https://developers.google.com/youtube/player_parameters" target="_blank" rel="external">YouTube Player Parameters</a><br><code>&lt;iframe&gt;</code> <a href="https://developers.google.com/youtube/iframe_api_reference" target="_blank" rel="external">API Documentation</a></p>
+</blockquote>
+<hr>
+<h1 id="Hexo-Markdown-Generators-amp-Direct-Links"><a href="#Hexo-Markdown-Generators-amp-Direct-Links" class="headerlink" title="Hexo, Markdown Generators, &amp; Direct Links"></a>Hexo, Markdown Generators, &amp; Direct Links</h1><p>In <code>HTML5</code> the use of the <code>&lt;center&gt;</code> tag is no longer supported, and styling such as this should be done in the CSS configs. </p>
+<p>As I write my blogs in markdown using Hexo, the CSS plus styling can only be set generally and not specifically (element wise) for one specific post. At least without changing the <code>Jade</code> template code. So I use the raw code below in the markdown for centering videos among other things. </p>
+<p>This was done for all the images above in this post, bar the Imgur/YouTube embed iframes as they seem to centre automatically with my current CSS.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">center</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">title</span>=<span class="string">"Follow the White Rabbit"</span> <span class="attr">href</span>=<span class="string">"http://i.imgur.com/qijwVaz.gifv"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">video</span> <span class="attr">autoplay</span>=<span class="string">""</span> <span class="attr">loop</span>=<span class="string">""</span> <span class="attr">muted</span>=<span class="string">""</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span> <span class="attr">type</span>=<span class="string">"video/webm"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/qijwVaz.webm"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">source</span> <span class="attr">type</span>=<span class="string">"video/mp4"</span> <span class="attr">src</span>=<span class="string">"http://i.imgur.com/qijwVaz.mp4"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">center</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<center><br>    <a title="Follow the White Rabbit" href="http://i.imgur.com/qijwVaz.gifv" target="_blank" rel="external"><br>        <video autoplay loop muted><br>            <source type="video/webm" src="http://i.imgur.com/qijwVaz.webm"><br>            <source type="video/mp4" src="http://i.imgur.com/qijwVaz.mp4"><br>        </video><br>    </a><br></center>
+
+<p>As we know now lines <code>4</code> and <code>5</code> are the important lines, all the data for the file is within the the <code>&lt;videotag&gt;</code>. The <code>&lt;a&gt;</code> tag simply adds a hyperlink within the media, leading directly to the hosted file on its own.</p>
+<hr>
+<h1 id="Twitter-Timelines-Embed"><a href="#Twitter-Timelines-Embed" class="headerlink" title="Twitter Timelines Embed"></a>Twitter Timelines Embed</h1><p>You can create the embed code when logged into your twitter account at the <a href="(https://twitter.com/settings/widgets">widget settings page</a>.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">class</span>=<span class="string">"twitter-timeline"</span> <span class="attr">href</span>=<span class="string">"https://twitter.com/5leightz"</span> <span class="attr">data-widget-id</span>=<span class="string">"533607279958818820"</span>&gt;</span></span><br><span class="line">	Tweets by @5leightz</span><br><span class="line"><span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span><br><span class="line">	!<span class="function"><span class="keyword">function</span>(<span class="params">d,s,id</span>)</span>&#123;<span class="keyword">var</span> js,fjs=d.getElementsByTagName(s)[<span class="number">0</span>],p=<span class="regexp">/^http:/</span>.test(d.location)?<span class="string">'http'</span>:<span class="string">'https'</span>;<span class="keyword">if</span>(!d.getElementById(id))&#123;js=d.createElement(s);js.</span><br><span class="line">	id=id;js.src=p+<span class="string">"://platform.twitter.com/widgets.js"</span>;fjs.parentNode.insertBefore(js,fjs);&#125;&#125;(<span class="built_in">document</span>,<span class="string">"script"</span>,<span class="string">"twitter-wjs"</span>);</span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<center><br>    <a class="twitter-timeline" href="https://twitter.com/5leightz" data-widget-id="533607279958818820" target="_blank" rel="external">Tweets by @5leightz</a><br>    <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?’http’:’https’;if(!d.getElementById(id)){js=d.createElement(s);js.<br>    id=id;js.src=p+”://platform.twitter.com/widgets.js”;fjs.parentNode.insertBefore(js,fjs);}}(document,”script”,”twitter-wjs”);<br>    </script><br></center>
+
+<blockquote>
+<p><a href="https://dev.twitter.com/web/embedded-timelines#customization" target="_blank" rel="external">Embed Timeline Documentation</a></p>
+</blockquote>
+<hr>
+<h1 id="Twitter-Quote-Blocks-Embed"><a href="#Twitter-Quote-Blocks-Embed" class="headerlink" title="Twitter Quote Blocks Embed"></a>Twitter Quote Blocks Embed</h1><p>Tweets, and their hot-linked media can be embedded into sites as a <code>&lt;blockquote&gt;</code> element. You can get the embed code from your social media dashboard application like TweetDeck or when logged into Twitter from a browser, by selecting the <em>3 dots</em> icon at the bottom of a tweet.</p>
+<p>Note the inclusive <code>align=&quot;center&quot;</code> attribute, and that the code sample is from/for TweetDeck.</p>
+<figure class="highlight html"><figcaption><span>TweetDeck Example</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blockquote</span> <span class="attr">align</span>=<span class="string">"center"</span> <span class="attr">class</span>=<span class="string">"twitter-tweet"</span> <span class="attr">data-partner</span>=<span class="string">"tweetdeck"</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">p</span>&gt;</span></span><br><span class="line">		30 years. What an incredible journey it has been. The adventure continues... </span><br><span class="line">		<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://t.co/jts0GR4lNQ"</span>&gt;</span>http://t.co/jts0GR4lNQ<span class="tag">&lt;/<span class="name">a</span>&gt;</span> </span><br><span class="line">		<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"http://t.co/OogYa1T7jt"</span>&gt;</span>pic.twitter.com/OogYa1T7jt<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">	&amp;mdash; Dan and Dave (@bucktwins) </span><br><span class="line">	<span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"https://twitter.com/bucktwins/status/530413926417059840"</span>&gt;</span></span><br><span class="line">		November 6, 2014</span><br><span class="line">	<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">blockquote</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">async</span> <span class="attr">src</span>=<span class="string">"//platform.twitter.com/widgets.js"</span> <span class="attr">charset</span>=<span class="string">"utf-8"</span>&gt;</span><span class="undefined"> </span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<p><blockquote align="center" class="twitter-tweet" data-partner="tweetdeck"><br>    <p><br>        30 years. What an incredible journey it has been. The adventure continues…<br>        <a href="http://t.co/jts0GR4lNQ" target="_blank" rel="external">http://t.co/jts0GR4lNQ</a><br>        <a href="http://t.co/OogYa1T7jt" target="_blank" rel="external">pic.twitter.com/OogYa1T7jt</a><br>    </p><br>    &mdash; Dan and Dave (@bucktwins)<br>    <a href="https://twitter.com/bucktwins/status/530413926417059840" target="_blank" rel="external"><br>        November 6, 2014<br>    </a><br></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<blockquote>
+<p><a href="https://dev.twitter.com/web/embedded-tweets" target="_blank" rel="external">Embed Tweets Documentation</a></p>
+</blockquote>
+<hr>
+<h1 id="Reddit-Feeds-Standard-Example"><a href="#Reddit-Feeds-Standard-Example" class="headerlink" title="Reddit Feeds - Standard Example"></a>Reddit Feeds - Standard Example</h1><p>Here’s how to display reddit feeds (subreddits). The <code>data-subreddit=&#39; &#39;</code> attribute determines the feed in question. I used the <a href="http://www.reddit.com/r/eve" target="_blank" rel="external">/r/eve</a> subbreddit as an example here. </p>
+<figure class="highlight html"><figcaption><span>data-subreddit='subbredit-name'</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'//redditjs.com/subreddit.js'</span> <span class="attr">data-subreddit</span>=<span class="string">'eve'</span>&gt;</span><span class="undefined"></span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<script src="//redditjs.com/subreddit.js" data-subreddit="eve"></script>
+
+<hr>
+<h1 id="Reddit-Feeds-Custom-Parameters"><a href="#Reddit-Feeds-Custom-Parameters" class="headerlink" title="Reddit Feeds - Custom Parameters"></a>Reddit Feeds - Custom Parameters</h1><p>These feeds can be customised like most of the other <code>HTML</code> media types shown here. See the guide linked in the quote at the end of this section for a full list of the <code>JavaScript</code> code attributes you can use. </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'//redditjs.com/subreddit.js'</span> <span class="attr">data-subreddit</span>=<span class="string">'eve'</span> <span class="attr">data-height</span>=<span class="string">'400'</span> <span class="attr">data-width</span>=<span class="string">'330'</span> <span class="attr">data-sort</span>=<span class="string">'hot'</span> <span class="attr">data-theme</span>=<span class="string">'dark'</span> <span class="attr">data-subreddit-mode</span>=<span class="string">'grid'</span> &gt;</span><span class="undefined"></span><br><span class="line"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>HTML Output</strong></p>
+<script src="//redditjs.com/subreddit.js" data-subreddit="eve" data-height="400" data-width="330" data-sort="hot" data-theme="dark" data-subreddit-mode="grid"></script>
+
+<blockquote>
+<p><a href="http://embed.redditjs.com/embed-reddit/" target="_blank" rel="external">Reddit Embed Widgets Guide</a></p>
+</blockquote>
+<hr>
+<h1 id="PDF-Documents"><a href="#PDF-Documents" class="headerlink" title="PDF Documents"></a>PDF Documents</h1><p>To embed PDF files use the “Object” tag, providing a link to download the file if the browser fails to render the interactive viewer.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">object</span> <span class="attr">data</span>=<span class="string">'http://packetlife.net/media/library/23/common_ports.pdf#'</span> </span><br><span class="line">        <span class="attr">type</span>=<span class="string">'application/pdf'</span> </span><br><span class="line">        <span class="attr">width</span>=<span class="string">'100%'</span> </span><br><span class="line">        <span class="attr">height</span>=<span class="string">'1200'</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>It appears your Web browser is not configured to display PDF files. </span><br><span class="line">No worries, just <span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">'http://packetlife.net/media/library/23/common_ports.pdf'</span>&gt;</span>click here to download the PDF file.<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">object</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>The width and height can be adjusted as needed, percentage or absolute values work as seen in the example.</p>
+<p><strong>HTML Output</strong></p>
+<object data="http://packetlife.net/media/library/23/common_ports.pdf#" type="application/pdf" width="100%" height="1200"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="http://packetlife.net/media/library/23/common_ports.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<h1 id="In-Closing"><a href="#In-Closing" class="headerlink" title="In Closing"></a>In Closing</h1><p>I’ll do another post like this if and when I come across more of the same type of stuff. Or I’ll just update this one. Shall see.</p>
+<center><br>    <a title="Standing Ovation" href="http://i.imgur.com/9Ed54yJ.gifv" target="_blank" rel="external"><br>        <video autoplay loop muted><br>            <source type="video/webm" src="http://i.imgur.com/9Ed54yJ.webm"><br>            <source type="video/mp4" src="http://i.imgur.com/9Ed54yJ.mp4"><br>        </video><br>    </a><br></center>
+
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/HTML/" class="post__tag__link">HTML</a></li><li class="post__tag__item"><a href="/tags/GIF/" class="post__tag__link">GIF</a></li><li class="post__tag__item"><a href="/tags/JavaScript/" class="post__tag__link">JavaScript</a></li></ul><a href="/2014/11/07/html-media-code-snippets/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/6/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/8/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

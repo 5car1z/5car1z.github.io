@@ -1,0 +1,626 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-06-12T23:00:00.000Z" class="post__time">June 13, 2016</time><h1 class="post__title"><a href="/2016/06/13/debian8-vps-checklist/">Debian 8 (Jessie) VPS Basic Checklist</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/JXNdLSN.png" alt="VPS Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Here are some base guidelines I follow when setting up a new VPS manually without configuration management. These steps if anything make the system more secure overall and provide a good starting point from which you can setup the services/software’s required for the purpose of the VPS. </p>
+<p>All of these steps in this post are from the context of a <em>droplet</em> (VPS) hosted by <a href="https://m.do.co/c/e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> using the Debian 8.5 x64 kernel images they use as of the above date. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Setup-VPS-User-Account"><a href="#1-–-Setup-VPS-User-Account" class="headerlink" title="1 – Setup VPS User Account"></a>1 – Setup VPS User Account</h1><p>Initial root access for this section is assumed. Adding a registered SSH public key to the droplet creation on Digital Ocean gives pass-wordless root access to the VPS. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh root@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Install the <code>sudo</code> package manually as this is not included with Digital Ocean’s Debian 8 image.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt-get install sudo</span><br></pre></td></tr></table></figure>
+<p>Add your new Linux user to the system. Whenever you see <code>scarlz</code> here in commands it should be replaced with your own preferred username, and substituted in from throughout. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz</span><br></pre></td></tr></table></figure>
+<p>Add the newly created user to the <code>sudo</code> elevation privileges group.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz sudo</span><br></pre></td></tr></table></figure>
+<p>You can also add the user to the <code>adm</code> group which grants read access to system log files if you think this would be useful. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ adduser scarlz adm</span><br></pre></td></tr></table></figure>
+<p>Exit the root SSH session. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Copy-Client-Public-SSH-Key"><a href="#2-–-Copy-Client-Public-SSH-Key" class="headerlink" title="2 – Copy Client Public SSH Key"></a>2 – Copy Client Public SSH Key</h1><p>Install your public key to the new user added in the previous step. </p>
+<p>Do this by running the <code>ssh-copy-id</code> command, supplying it with the the username and IP address of the VPS. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id scarlz@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>The public key (after authentication) will be added to the remote user’s <code>~/.ssh/authorized_keys</code> file. </p>
+<p>As long as the client has the private key tied to the public key just registered, it can be used to log into the VPS. </p>
+<hr>
+<h1 id="3-–-Update-and-Install-System-Packages"><a href="#3-–-Update-and-Install-System-Packages" class="headerlink" title="3 – Update and Install System Packages"></a>3 – Update and Install System Packages</h1><p>SSH back into the VPS as the new user you created previously, which should work without requiring authentication details thanks to the previous step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh scarlz@your.vps.ip.address</span><br></pre></td></tr></table></figure>
+<p>Run this command to ensure the system’s packages are up to date. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Default-SSH-Port-and-Root-Access"><a href="#4-–-Default-SSH-Port-and-Root-Access" class="headerlink" title="4 – Default SSH Port and Root Access"></a>4 – Default SSH Port and Root Access</h1><p>This step removes the assumption any port scanning makes on what port number the SSH service is running on. The default is <code>22</code> so these processes will check for that first and foremost. Changing this number to an ephemeral port can help to reduce the number of attempted malicious login attempts that are made. However there are several finer points as to why you might not want to do this, so decide if this seems worthwhile or not before doing it (see the next link). </p>
+<blockquote>
+<p><strong>Note:</strong> <a href="http://security.stackexchange.com/questions/32308/should-i-change-the-default-ssh-port-on-linux-servers" target="_blank" rel="external">Should I change the default SSH port on linux servers?</a></p>
+</blockquote>
+<p>All I  would say is don’t get into the habit of doing this for other service’s port numbers. If you choose not to do this then Fail2ban (which we install later) will be enough in its place. </p>
+<p>Disabling password authentication for the root user account and relying on the registered SSH key can also put a stop to attempted root logins from unwanted hosts. </p>
+<p>Change the VPS’s default SSH port &amp; disable root login via passwords in the system wide SSH config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p>Change the <code>Port 22</code> entry to any number between <code>1025</code> and <code>65536</code> respectively, if you have decided you want to do this.  </p>
+<p>For example:</p>
+<figure class="highlight bash"><figcaption><span>/etc/ssh/sshd_config</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Port 3267</span><br></pre></td></tr></table></figure>
+<p>Change the <code>PermitRootLogin yes</code> entry to <code>PermitRootLogin without-password</code> instead,</p>
+<p>This as mentioned before means only users with public SSH keys registered in the root authorised keys file can log in as root itself. </p>
+<figure class="highlight bash"><figcaption><span>/etc/ssh/sshd_config</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PermitRootLogin without-password</span><br></pre></td></tr></table></figure>
+<p>Restart SSH so the changes take effect.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service ssh restart</span><br></pre></td></tr></table></figure>
+<p>When accessing the VPS via SSH in the future, you must now append the correct port number to the command e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh scarlz@your.vps.ip.address -p 3267</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Automatic-Security-Upgrades"><a href="#5-–-Automatic-Security-Upgrades" class="headerlink" title="5 – Automatic Security Upgrades"></a>5 – Automatic Security Upgrades</h1><p>Using a package named <code>unattended-upgrades</code> it’s possible to have updates done by the package manager automatically at set intervals. It is advised to only enable security updating and not the normal package upgrading as this could potentially cause problems with conflicts or unwanted changes. </p>
+<p>Install the package to begin with.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unattended-upgrades</span><br></pre></td></tr></table></figure>
+<p>Open/create the <code>10periodic</code> configuration file for this package using your preferred text editor.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apt/apt.conf.d/10periodic</span><br></pre></td></tr></table></figure>
+<p>Add in the lines found in the below code snippet:</p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/10periodic</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">APT::Periodic::Update-Package-Lists <span class="string">"1"</span>;</span><br><span class="line">APT::Periodic::Download-Upgradeable-Packages <span class="string">"1"</span>;</span><br><span class="line">APT::Periodic::AutocleanInterval <span class="string">"7"</span>;</span><br><span class="line">APT::Periodic::Unattended-Upgrade <span class="string">"1"</span>;</span><br></pre></td></tr></table></figure>
+<p>Save your additions and exit the file. </p>
+<p>Now open up another configuration file named <code>50unattended-upgrades</code> for changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apt/apt.conf.d/50unattended-upgrades</span><br></pre></td></tr></table></figure>
+<p>Enable security updates only by adding the line - <code>&quot;origin=Debian,codename=${distro_codename},label=Debian-Security&quot;;</code> to the correct location, as shown in the next code snippet on line 17:</p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/50unattended-upgrades</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Unattended-Upgrade::Origins-Pattern &#123;</span><br><span class="line">        // Codename based matching:</span><br><span class="line">        // This will follow the migration of a release through different</span><br><span class="line">        // archives (e.g. from testing to stable and later oldstable).</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie-proposed-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,n=jessie,l=Debian-Security"</span>;</span><br><span class="line"></span><br><span class="line">        // Archive or Suite based matching:</span><br><span class="line">        // Note that this will silently match a different release after</span><br><span class="line">        // migration to the specified archive (e.g. testing becomes the</span><br><span class="line">        // new stable).</span><br><span class="line">//      <span class="string">"o=Debian,a=stable"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,a=stable-updates"</span>;</span><br><span class="line">//      <span class="string">"o=Debian,a=proposed-updates"</span>;</span><br><span class="line">        <span class="string">"origin=Debian,codename=<span class="variable">$&#123;distro_codename&#125;</span>,label=Debian-Security"</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>Further down in the file add an email address thatcan receive the update reports and uncomment the line itself: </p>
+<figure class="highlight bash"><figcaption><span>/etc/apt/apt.conf.d/50unattended-upgrades</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Send email to this address <span class="keyword">for</span> problems or packages upgrades</span><br><span class="line">// If empty or <span class="built_in">unset</span> <span class="keyword">then</span> no email is sent, make sure that you</span><br><span class="line">// have a working mail setup on your system. A package that provides</span><br><span class="line">// <span class="string">'mailx'</span> must be installed. E.g. <span class="string">"user@example.com"</span></span><br><span class="line">Unattended-Upgrade::Mail <span class="string">"user@email-domain.com"</span>;</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Setup-Dotfiles-Optional"><a href="#6-–-Setup-Dotfiles-Optional" class="headerlink" title="6 – Setup Dotfiles (Optional)"></a>6 – Setup Dotfiles (Optional)</h1><p>Most administrators or developers will have their own customised <em>dotfiles</em> they use to personalise the server and make tasks easier, or introduce extra functionality to the system. Here is where I would setup my own using Git and GitHub.   </p>
+<p>It is unlikely that you’ll want to carry out the commands in this step as these instructions are for my own dotfiles, so only really relevant to me. </p>
+<p><strong>Replace this step with installing and setting up your own equivalent dotfiles!</strong></p>
+<blockquote>
+<p><a href="https://github.com/5car1z/dotfiles" target="_blank" rel="external">https://github.com/5car1z/dotfiles</a></p>
+</blockquote>
+<p>Install Git via the system package manager. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<p>Clone your dotfiles repository onto the system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/dotfiles.git </span><br><span class="line">$ <span class="built_in">cd</span> ~/dotfiles</span><br></pre></td></tr></table></figure>
+<p>Run the two install scripts that add more packages (all the good stuff) and create the necessary symlinks using GNU Stow. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ./install-debian-ubuntu-dotfile-dependencies.sh</span><br><span class="line">$ ./stow-dotfiles.sh</span><br></pre></td></tr></table></figure>
+<p>If there’s any submodule problems update them to their latest remote versions with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ update_submodules</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="7-–-Install-Software-Packages"><a href="#7-–-Install-Software-Packages" class="headerlink" title="7 – Install Software Packages"></a>7 – Install Software Packages</h1><p>Any outstanding or super essential packages that haven’t been brought in by the “dotfiles” step should be considered before moving on. What these are will be known only to you though as everybody’s preferences and needs are different. </p>
+<p>Here are several examples however. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git vim curl cowsay fortune-mod jq vim tmux ranger</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="8-–-Install-and-Run-UFW"><a href="#8-–-Install-and-Run-UFW" class="headerlink" title="8 – Install and Run UFW"></a>8 – Install and Run UFW</h1><p>UFW stands for “Uncomplicated Firewall” and is more concise easier to understand alternative to older firewall implementations like <a href="http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/">iptables</a>.  </p>
+<p>Install on Debian 8 like any other package simply using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install ufw</span><br></pre></td></tr></table></figure>
+<p>Like with other firewalls of this elk it’s common practice to put in place a blanket set of ingress/egress rules then add the exceptions to services and ports on top afterwards. </p>
+<p>Make the default overall action for any incoming traffic to be blocked and denied. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default deny incoming</span><br></pre></td></tr></table></figure>
+<p>Then make the default overall action for outgoing traffic to be permissible and allowed. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw default allow outgoing</span><br></pre></td></tr></table></figure>
+<p>From here, any services you wish to allow that are received by the VPS can be added as an exception. See a separate post that covers the key areas of UFW in itself for information on how to do this. </p>
+<blockquote>
+<p><a href="http://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">Full UFW Guide</a></p>
+</blockquote>
+<p>To continue here, open the SSH port number you chose earlier on by replacing the number <code>3267</code> with your own number, in the following command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw allow 3267/tcp</span><br></pre></td></tr></table></figure>
+<p>Lastly after all the extra rules you need, enable the firewall so the configuration becomes active. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo ufw <span class="built_in">enable</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="9-–-Install-and-Run-Fail2ban"><a href="#9-–-Install-and-Run-Fail2ban" class="headerlink" title="9 – Install and Run Fail2ban"></a>9 – Install and Run Fail2ban</h1><p>This application permanently stops any excessive failed attempts (brute forcing) at connecting to the VPS - it achieves this by banning the offending source IP. This is configurable over various services on the system and not just SSH. </p>
+<p>Install it as done before with the system package manager. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install fail2ban sendmail</span><br></pre></td></tr></table></figure>
+<p>Sendmail can also be used by Fail2ban when sending out notification messages for bans that have occurred, so this is useful to install alongside it. Unless you want to configure it to use a different mail service. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo sed <span class="string">'s/^banaction = .*/banaction = ufw/'</span> /etc/fail2ban/jail.conf &gt; /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
+<p>Start the service and ensure it’s running by ussing the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service fail2ban start</span><br></pre></td></tr></table></figure>
+<p>A more detailed rundown of the configuration involved with Fail2ban is covered in a separate post to this one. </p>
+<blockquote>
+<p><a href="">Full Fail2ban Guide - To Be Added</a></p>
+</blockquote>
+<hr>
+<p>This is a pretty straightforward post, all things considered. Remember that a persons needs for configuring a VPS will be tailored to their own requirements, criteria, and preferences. So these steps are good general outline but mainly the ones I personally follow - other people’s will be different, according to their needs. </p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/initial-server-setup-with-debian-8" target="_blank" rel="external">Digital Ocean - Initial Server Setup with Debian 8</a> – Partial inspiration for this post. </li>
+<li><a href="https://www.reddit.com/r/netsec/comments/4o7wpo/my_first_10_minutes_on_a_server/" target="_blank" rel="external">Reddit Thread - My First 10 Minutes On a Server</a> – Reddit thread that links to an article on best security practives to follow when setting up a VPS/server. </li>
+<li><a href="https://wiki.debian.org/UnattendedUpgrades" target="_blank" rel="external">Debian Wiki - Unattended Upgrades</a> – Helpful explanation and information on how to use the configuration files. </li>
+<li><a href="https://www.digitalocean.com/community/questions/what-is-your-server-security-check-list" target="_blank" rel="external">Digital Ocean - What is your server security check list?</a> – November 29, 2016 Question Thread.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Jessie/" class="post__tag__link">Jessie</a></li><li class="post__tag__item"><a href="/tags/VPS/" class="post__tag__link">VPS</a></li></ul><a href="/2016/06/13/debian8-vps-checklist/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-05-17T23:00:00.000Z" class="post__time">May 18, 2016</time><h1 class="post__title"><a href="/2016/05/18/docker-images-hub/">Docker - Building Images and Docker Hub (5)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker images can be thought of as blueprints and house the software or files required to run your application inside of a container. So far in these Docker posts all container images have been pulled from an online source and no real interaction with the images themselves has been explored. </p>
+<p>However in this post we’re taking a very simple Python Flask application and going through the process of <em>dockerising</em> it. Which in non-jargon terms means we are configuring and creating our own custom Docker image, to then run it in a container like any other image. This usually also involves uploading it to Docker Hub for others to pull down and use, so is covered in the guide. </p>
+<p>The <a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a> post that comes before this one is mostly unrelated so not really a requirement for this post, but still worth checking out overall. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Clone-the-Repository"><a href="#1-–-Clone-the-Repository" class="headerlink" title="1 –  Clone the Repository"></a>1 –  Clone the Repository</h1><p>The example application used in this post is named “Flaskr” and serves as a very simple messaging board. It allows a user to sign in/out, add new written entries to the message board displayed, and does all this using SQLite as the database backend. </p>
+<p>Clone this example application and its code locally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/docker-flaskr.git ~/docker-flaskr</span><br></pre></td></tr></table></figure>
+<p>Change your working directory to the new repository.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/docker-flaskr</span><br></pre></td></tr></table></figure>
+<p>Take a quick glance at the files using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ls</span><br></pre></td></tr></table></figure>
+<p>Which returns: </p>
+<figure class="highlight bash"><figcaption><span>Output </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flaskr.py  flaskr_settings  README  requirements.txt  schema.sql  static  templates  test_flaskr.py</span><br></pre></td></tr></table></figure>
+<p>Then move onto the next step. </p>
+<hr>
+<h1 id="2-–-Configure-the-Application"><a href="#2-–-Configure-the-Application" class="headerlink" title="2 –  Configure the Application"></a>2 –  Configure the Application</h1><p>Most Flask or Python projects contain a file that holds circumstantial configuration values. These settings differ from user to user and when running the application in development/production environments. To run our Flaskr application and build a successful Docker image later on, we must set the values in this file beforehand.  </p>
+<p>Open the <code>flaskr_settings</code> file with your preferred text editor.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim flaskr_settings</span><br></pre></td></tr></table></figure>
+<p>The first two lines containing the database file location and debug status should remain as they are. There is no need to change these for this scenario. </p>
+<figure class="highlight bash"><figcaption><span>flaskr_settings</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># configuration</span></span><br><span class="line">DATABASE = <span class="string">'flaskr.db'</span></span><br><span class="line">DEBUG = False</span><br></pre></td></tr></table></figure>
+<p>Generating a secret key for the third line here is easiest using a Python console.</p>
+<figure class="highlight bash"><figcaption><span>flaskr_settings</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SECRET_KEY = <span class="string">''</span></span><br></pre></td></tr></table></figure>
+<p>Back on the command line outside of the editor run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python</span><br></pre></td></tr></table></figure>
+<p>Import the OS module. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</span><br></pre></td></tr></table></figure>
+<p>Run the associated OS function for generating a string of random bytes (urandom). </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.urandom(<span class="number">24</span>)</span><br></pre></td></tr></table></figure>
+<p>A 24 byte value is returned as output for use as the secret key in the <code>flaskr_settings</code> file. The key value shown here is for demonstration purposes only. </p>
+<figure class="highlight python"><figcaption><span>Example Key Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'\xebqD\x0f\xf3\xcf\xaa\x9e]%\x86\xd7\x11h\x8f\xa3\xa6\xbb=\xf7m\xf2&#123;\xfd'</span></span><br></pre></td></tr></table></figure>
+<p>Copy your own secret key value into the third line of the <code>flaskr_settings</code> file - you can exit the Python console by pressing <code>CTRL</code> + <code>D</code> once the key has been retained. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim flaskr_settings</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><figcaption><span>flaskr_settings</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SECRET_KEY = <span class="string">'\xebqD\x0f\xf3\xcf\xaa\x9e]%\x86\xd7\x11h\x8f\xa3\xa6\xbb=\xf7m\xf2&#123;\xfd'</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Only one set of enclosing apostrophes are required: <code>&#39;&#39;</code> </p>
+</blockquote>
+<p>On the last two lines of the configuration file provide a username and password. These details are used for authentication when logging into the app after it is up and running. </p>
+<p>Add in your own values. </p>
+<figure class="highlight python"><figcaption><span>flaskr_settings</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">USERNAME = <span class="string">'username'</span></span><br><span class="line">PASSWORD = <span class="string">'password'</span></span><br></pre></td></tr></table></figure>
+<p>Save your changes to the <code>flaskr_settings</code> file before continuing, and exit the file. </p>
+<p>My example entries and file look like this when completed:</p>
+<figure class="highlight python"><figcaption><span>flaskr_settings</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># configuration</span></span><br><span class="line">DATABASE = <span class="string">'flaskr.db'</span></span><br><span class="line">DEBUG = <span class="keyword">False</span></span><br><span class="line">SECRET_KEY = <span class="string">'\xebqD\x0f\xf3\xcf\xaa\x9e]%\x86\xd7\x11h\x8f\xa3\xa6\xbb=\xf7m\xf2&#123;\xfd'</span></span><br><span class="line">USERNAME = <span class="string">'scarlz'</span></span><br><span class="line">PASSWORD = <span class="string">'password'</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Create-the-Dockerfile"><a href="#3-–-Create-the-Dockerfile" class="headerlink" title="3 –  Create the Dockerfile"></a>3 –  Create the Dockerfile</h1><p>The build process and configuration parameters for our eventual Docker image get defined in a new file named the “Dockerfile”. </p>
+<p>Create the new Dockerfile using your text editor again, and place each of the upcoming actions on its own separate line. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim Dockerfile</span><br></pre></td></tr></table></figure>
+<p>Tell Docker to use the official Python 2.7 image as a base for our own custom image, on the first line.</p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FROM python:2.7</span><br></pre></td></tr></table></figure>
+<p>Define an environment variable that tells Flaskr the name of the configuration file we completed earlier.</p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ENV FLASKR_SETTINGS flaskr_settings</span><br></pre></td></tr></table></figure>
+<p>Add the <code>requirements.txt</code> file to the file-system of the image we are creating. </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADD requirements.txt /tmp/requirements.txt</span><br></pre></td></tr></table></figure>
+<p>Install the Flaskr application dependencies onto this image - sourced in from the “requirements” file. </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RUN pip install -r /tmp/requirements.txt</span><br></pre></td></tr></table></figure>
+<p>Add the current working directory <code>.</code> of the project and its contents to a new directory on the image’s file-system. </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ADD . /flask-application</span><br></pre></td></tr></table></figure>
+<p>Set the image’s file-system current working directory to the one we are creating. </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WORKDIR /flask-application</span><br></pre></td></tr></table></figure>
+<p>Open port <code>5000</code> on the container so we can map it to a host port later. </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPOSE 5000</span><br></pre></td></tr></table></figure>
+<p>Run the Flaskr app on this image, once the container is launched by the user.  </p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CMD [<span class="string">"python"</span>, <span class="string">"flaskr.py"</span>, <span class="string">"--host"</span>, <span class="string">"0.0.0.0"</span>, <span class="string">"--port"</span>, <span class="string">"5000"</span>]</span><br></pre></td></tr></table></figure>
+<p>The Dockerfile in full:</p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">FROM python:2.7</span><br><span class="line">ENV FLASKR_SETTINGS flaskr_settings</span><br><span class="line">ADD requirements.txt /tmp/requirements.txt</span><br><span class="line">RUN pip install -r /tmp/requirements.txt</span><br><span class="line">ADD . /flaskr-application</span><br><span class="line">WORKDIR /flaskr-application</span><br><span class="line">EXPOSE 5000</span><br><span class="line">CMD [<span class="string">"python"</span>, <span class="string">"flaskr.py"</span>, <span class="string">"--host"</span>, <span class="string">"0.0.0.0"</span>, <span class="string">"--port"</span>, <span class="string">"5000"</span>]</span><br></pre></td></tr></table></figure>
+<p>Make sure your own file’s contents matches the above, and then save the changes. </p>
+<hr>
+<h1 id="4-–-Build-and-Run-the-Image"><a href="#4-–-Build-and-Run-the-Image" class="headerlink" title="4 – Build and Run the Image"></a>4 – Build and Run the Image</h1><p>Using Docker (which you should already <a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">have installed</a>) we’re going to build the custom Flaskr image configured in the previous step. </p>
+<p>When entering this next command be aware that ideally the parameters of <code>-t</code> need to be replaced with your own username and preferred image name. The details are used later on when registering the image externally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build --no-cache -t scarlz/flaskr-application .</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>-t</code> option assigns a <em>tag</em> to the image used by Docker Hub or an image registry service. </p>
+</blockquote>
+<p>Give the build process a few minutes to download and carry out the necessary operations, noting its progress via the output. </p>
+<p>If the Dockerfile was configured properly in the previous step you’ll get a final output similar to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Successfully built c4e546ed282d</span><br></pre></td></tr></table></figure>
+<p>Run the newly built Docker image in a daemonised container, mapping the internal container port <code>5000</code> to the host port <code>32775</code> so we can view the app locally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name flaskr-container -p 32775:5000 <span class="_">-d</span> scarlz/flaskr-application</span><br></pre></td></tr></table></figure>
+<p>Confirm the container has run and is running. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
+<p>Running container details are returned:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE                       COMMAND                  CREATED             STATUS              PORTS                     NAMES</span><br><span class="line">c3937994e66b        scarlz/flaskr-application   <span class="string">"python flaskr.py --h"</span>   3 seconds ago       Up 3 seconds        0.0.0.0:5000-&gt;32775/tcp   flaskr-container</span><br></pre></td></tr></table></figure>
+<p>Preview the Flaskr app in your web browser by visiting:</p>
+<p><code>http://0.0.0.0:32775</code></p>
+<p><img src="http://i.imgur.com/sLe4eCC.png" alt="Flaskr Homepage Image"></p>
+<p>Log in to the application with the authentication details from step 2 if you wish to test it out. </p>
+<p><img src="http://i.imgur.com/wtTvZkZ.png" alt="Flaskr Internal Form Image"></p>
+<hr>
+<h2 id="5-–-Push-the-Image-to-Docker-Hub"><a href="#5-–-Push-the-Image-to-Docker-Hub" class="headerlink" title="5 – Push the Image to Docker Hub"></a>5 – Push the Image to Docker Hub</h2><p>Once images have been built and tested successfully you may want to make them accessible to others through a public or private Docker registry service. The official registry service open to all provided by Docker is known as <a href="https://hub.docker.com/" target="_blank" rel="external">“Docker Hub”</a>. </p>
+<p>Create a free account by registering with the service at the previous link and then go back to the command line and login using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker login</span><br></pre></td></tr></table></figure>
+<p>Enter the authentication details you used to sign up to the service as prompted. </p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Username: </span><br><span class="line">Password: </span><br><span class="line">Email: </span><br><span class="line">Login Succeeded</span><br></pre></td></tr></table></figure>
+<p>Now once successfully authenticated push the image you created earlier to Docker Hub by providing the “tag” name assigned to it. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker push scarlz/flaskr-application:latest</span><br></pre></td></tr></table></figure>
+<p>The <code>:latest</code> suffix ensures the most recently built version of the image is sent. </p>
+<p>Successfully pushing the image will return an output akin to:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">77e39ee82117: Image successfully pushed</span><br></pre></td></tr></table></figure>
+<p>You can see the example image I pushed to Docker Hub at: </p>
+<p><a href="https://hub.docker.com/r/5car1z/flaskr-application" target="_blank" rel="external">https://hub.docker.com/r/5car1z/flaskr-application</a></p>
+<p><img src="http://i.imgur.com/roVLQ0J.png" alt="Docker Hub - Flaskr"></p>
+<hr>
+<p>There are many more practices and nuances not covered here when it comes to building, tagging, and pushing to Docker registries. But hopefully this serves as a simple example of how the process can be carried out. Something to bear in mind perhaps is that Docker Hub has in the past been given bad press in terms of performance (most notably speed) although the service continues to improve as time goes on. it is also for these reasons or similar many use third party private registry platforms in its place e.g. <a href="">Portus</a></p>
+<p>The next and final post in this series takes a glance briefly at some of the extra platforms/toolsets that form up more of the Docker eco-system.</p>
+<ol>
+<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a> </li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Further Administration and Networking (3)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></li>
+<li>Docker - Building Images and Docker Hub (5)</li>
+</ol>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://github.com/5car1z/docker-flaskr" target="_blank" rel="external">GitHub - Docker-Flaskr Repository</a> – Repository for this post cloned at the start.</li>
+<li><a href="http://tiborsimko.org/docker-for-python-applications.html" target="_blank" rel="external">Tibor’s Musings - Using Docker for Developing Python Applications</a> – Basis of what goes on this blog post with adaption for Flaskr.</li>
+<li><a href="">Official Docker Documentation - Build Your Own Images</a> – Probably best source for everything covered here. </li>
+<li><a href="http://prakhar.me/docker-curriculum/" target="_blank" rel="external">Prakhar - Docker for Beginners</a> – Detailed guide on fundamentals of Docker, referred to partly for this post.</li>
+<li><a href="https://community.nitrous.io/docs/creating-custom-docker-images" target="_blank" rel="external">Nitrous.io Documentation - Creating Custom Docker Images</a> – Specific to Nitrous development in parts but relevant overall. </li>
+<li><a href="http://flask.readthedocs.io/en/latest/cli/#command-line-interface" target="_blank" rel="external">Flask Documentation - Command Line Interface</a> – Flask application CLI documentation page. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/05/18/docker-images-hub/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-04-25T23:00:00.000Z" class="post__time">April 26, 2016</time><h1 class="post__title"><a href="/2016/04/26/github-flow/">Contributing to GitHub Projects</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/HLLz1Wv.png" alt="Octocat!"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>GitHub is one of the most popular ways to contribute to open-source projects. Many major and minor organisations keep their open-source code-base hosted there, adopting the idea that anyone who follows the rules can have their own efforts put up for consideration. This post talks about said process, which if anything is referred to as “GitHub Flow”.   </p>
+<p>This information as presented by GitHub is readily available in various forms within their <a href="https://guides.github.com/" target="_blank" rel="external">“GitHub Guides”</a> documentation. More specific links to these are listed at the end of the post. </p>
+<blockquote>
+<p><strong>“As of April 2016, GitHub reports having more than 14 million users and more than 35 million repositories, making it the largest host of source code in the world.”</strong></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="Github-Flow"><a href="#Github-Flow" class="headerlink" title="Github Flow"></a>Github Flow</h1><p>Summarised, the general concept here in terms of public contributions is to:</p>
+<ol>
+<li>Fork, then create a suitable topic branch from master.</li>
+<li>Make some commits to improve the project.</li>
+<li>Push the branch to the forked GitHub project.</li>
+<li>Open a Pull Request for merging on the original GitHub repo.</li>
+<li>Discuss, and optionally continue committing.</li>
+<li>The project owner then merges or closes the Pull Request.</li>
+</ol>
+<p>The upcoming sections cover these steps in more detail.</p>
+<p>This PDF gives a loose impression of how the “flow” process would apply in the context of a formal team working on their project (i.e. the non public workflow): </p>
+<object data="https://guides.github.com/pdfs/githubflow-online.pdf#" type="application/pdf" width="100%" height="900"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="https://guides.github.com/pdfs/githubflow-online.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<hr>
+<h1 id="Public-Pull-Requests"><a href="#Public-Pull-Requests" class="headerlink" title="Public Pull Requests"></a>Public Pull Requests</h1><p>Outside of an internal team back in the public domain, we return to the steps summarised before. These are now covered in greater detail and do not mirror the steps above completely as these are laid out in a more practical manner. </p>
+<h2 id="1-–-Fork-Repository"><a href="#1-–-Fork-Repository" class="headerlink" title="1 – Fork Repository"></a>1 – Fork Repository</h2><p><img src="https://i.gyazo.com/7776cde860e0215dacab1fd81d53894a.png" alt="Flow - Step 1"></p>
+<p>The first step is to find the project on GitHub you want to contribute to, then read through any guidelines they may have in the <code>CONTRIBUTING</code> file, or similarly named. These guidelines are usually code conventions/syntax, feature requests, or nuances specific to the project. </p>
+<p>Project’s often have wiki’s containing information along these lines too (especially the larger ones). This can be accessed from the top of the project page tabs, if it exists. </p>
+<p>Once selected, the next step is to <em>fork</em> the repository by clicking the aptly named button. You must be signed into your GitHub account when doing this.</p>
+<p>Here’s a picture of what the button looks like:</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/forkbutton.png" alt="GitHub Fork Button"></p>
+<p>After a few seconds, you’re taken to your own forked version of the repository. In which everything you do is now separate to the original project.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/fork-a-repo/" target="_blank" rel="external">Pro Git Book - Forking Projects</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Sync-Fork"><a href="#2-–-Sync-Fork" class="headerlink" title="2 – Sync Fork"></a>2 – Sync Fork</h2><p>Any updates or commits that get added to the original repository by the maintainers won’t be included in your fork, so they need to be retrieved and merged. This is so that when it comes to offering up your own changes, they’re in the context of the up to date target project. </p>
+<p>This syncing may not be required right now, but once future commits are made to the <em>upstream</em> repository, you’ll need to pull them into your own fork so it’s kept up to date. </p>
+<p>Clone your forked repository locally then add the original upstream repository as a remote.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add upstream https://github.com/ORIGINAL_OWNER/ORIGINAL_REPOSITORY.git</span><br></pre></td></tr></table></figure>
+<p>Confirm success with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Fetch the branches and their respective commits from the <code>upstream</code> repository. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br></pre></td></tr></table></figure>
+<p>Ensure you’re on the <code>master</code> branch.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>Upstream commits to <code>master</code> are now stored in a local branch named <code>upstream/master</code> . </p>
+<p>Merge the changes from <code>upstream/master</code> into your local <code>master</code> branch; this doesn’t automatically lose any of your own local changes.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge upstream/master</span><br></pre></td></tr></table></figure>
+<p>Assuming there are no merge conflicts you are then safe to push these to your own fork’s remote repo.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>This completes the syncing process, but the merge will need to be carried out each time you want to update your own fork with the original repo’s new commits. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch upstream</span><br><span class="line">$ git checkout master</span><br><span class="line">$ git merge upstream/master</span><br><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<p>A secondary method where you manually <code>pull</code> in the updates is also available, and the steps for it are described <a href="https://help.github.com/articles/merging-an-upstream-repository-into-your-fork/#platform-linux" target="_blank" rel="external">here</a>.</p>
+<blockquote>
+<p><a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/" target="_blank" rel="external">GitHub Help - Configuring a Remote For a Fork</a><br><a href="https://help.github.com/articles/syncing-a-fork/" target="_blank" rel="external">GitHub Help - Syncing a Fork</a></p>
+</blockquote>
+<hr>
+<h2 id="3-–-Make-Changes-on-New-Branch"><a href="#3-–-Make-Changes-on-New-Branch" class="headerlink" title="3 – Make Changes on New Branch"></a>3 – Make Changes on New Branch</h2><p><img src="https://i.gyazo.com/0e84174ca44be84d385dd7c7055d79d2.png" alt="Flow - Step 2"></p>
+<p>Creating a new branch based off of the master branch and then implementing your changes in there, is good practice when working on a project. It’s possible to make changes directly to the master branch, but even just for the sake of etiquette, avoid doing this. It also means you can push follow-up commits if you need to update the future pull request.</p>
+<p>Your branch names should be descriptive (e.g. refactor-authentication, user-content-cache-key, make-retina-avatars) etc. </p>
+<p>Create a new branch with <code>-b</code> and a suitable name.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>From here on you’re good to make the changes and improvements you need for your eventual Pull Request. </p>
+<p>Remember to add, commit, and push your branch changes to the remote version of the fork once finished. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"message"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="4-–-Create-Pull-Request"><a href="#4-–-Create-Pull-Request" class="headerlink" title="4 – Create Pull Request"></a>4 – Create Pull Request</h2><p><img src="https://i.gyazo.com/1e20c1f9ad9618972aa7e78fdbf85337.png" alt="Flow - Step 3"></p>
+<p>Pull requests allow the original project’s maintainer(s) to compare your branch to their existing master branch, and decide whether or not to incorporate (merge) your changes.</p>
+<p>You can open a Pull Request at any point during the development process, but ideally should be when you’re ready for someone to review your work. Using GitHub’s “@mention” system in your Pull Request message means you can target specific people or teams for feedback, as they’ll be individually notified. </p>
+<p>Click the green “New Pull Request” button on your GitHub fork webpage, and you’ll see a screen that compares the two target repositories. Add as much detail as possible to the Pull Request description to make clear the changes.</p>
+<p><img src="https://git-scm.com/book/en/v2/book/06-github/images/blink-03-pull-request-open.png" alt="Pro Git Book - Create Pull Request View"></p>
+<p>When you hit “Create Pull Request” to confirm - the project owners of the original repo will get a notification that someone has suggested a new changes or features, and get access to the summary of the request. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/using-pull-requests/" target="_blank" rel="external">GitHub Help - Using Pull Requests</a></p>
+</blockquote>
+<hr>
+<h2 id="5-–-Discuss-Changes"><a href="#5-–-Discuss-Changes" class="headerlink" title="5 – Discuss Changes"></a>5 – Discuss Changes</h2><p><img src="https://i.gyazo.com/48268c6e0a225557ac97ca1ca1714aee.png" alt="Flow - Step 4"></p>
+<p>Pull Requests often initiate discussion about your proposed changes. This comes in the form of he maintainer or his team asking questions and suggesting further improvements. Other users on GitHub can see the Pull Request details too, and may chime in - the review process is not limited to just official project members.</p>
+<blockquote>
+<p><strong>“Pull Requests are designed to encourage and capture this type of conversation.”</strong></p>
+</blockquote>
+<p>If you are asked to make some changes to your Pull Request, simply add new commits to your dedicated branch locally and push them again. These get automatically placed into the existing Pull Request.</p>
+<p>On a final note here user comments are written in Markdown, and you can embed images, emoji, use pre-formatted code blocks, and add other supported formatting. Remember the “@mention” system too. </p>
+<hr>
+<h2 id="6-–-Testing-Optional"><a href="#6-–-Testing-Optional" class="headerlink" title="6 – Testing (Optional)"></a>6 – Testing (Optional)</h2><p><img src="https://i.gyazo.com/01f4248fb138526a54c021a898a34069.png" alt="Flow - Step 5"></p>
+<p>This is generally not something you have to worry about; unless you’ve been asked to include/run some unit tests in your changes. Most of the other “production” tests that verify whether your changes work in a live environment or not (TravisCI, Jenkins, etc), are run by the maintainer and performed automatically. </p>
+<p>As long as these pass you’re fine. If the branch commits do causes issues you should amend your work as instructed by a maintainer - in the same manner as before. </p>
+<hr>
+<h2 id="7-–-Pull-Request-Merges-Closes"><a href="#7-–-Pull-Request-Merges-Closes" class="headerlink" title="7 – Pull Request Merges/Closes"></a>7 – Pull Request Merges/Closes</h2><p><img src="https://i.gyazo.com/098018f3096144cbc5bf434f98c4aff2.png" alt="Flow - Step 6"></p>
+<p>Now that your changes have been approved, maybe iterated on, and tested to work in production, your Pull Request <strong>may</strong> get merged. </p>
+<p>If your Pull Request gets merged by the end of it all  that’s great. If not there was probably good reason. Take any feedback you receive and don’t worry about it too much - it happens a lot. </p>
+<p>If merged successfully however, the Pull Request is preserved and a record of the changes become a part of the project’s Git history.</p>
+<hr>
+<h1 id="Collaborator-Method"><a href="#Collaborator-Method" class="headerlink" title="Collaborator Method"></a>Collaborator Method</h1><p>There are despite all the above not just one but two methods of contributing to a project. When working as part of a team on GitHub or organisation, things become a bit easier and less informal. The PDF from the “Flow” section applies more here too, but not completely as a team could still be comprised of public users. </p>
+<h2 id="1-–-Become-a-Collaborator"><a href="#1-–-Become-a-Collaborator" class="headerlink" title="1 – Become a Collaborator"></a>1 – Become a Collaborator</h2><p>Owners of a repository can add more users to work as “collaborators” for the project. Giving them read and write permissions to a repository.  Repositories owned by GitHub “organisations” have more controls over granting collaborators permissions. </p>
+<p>In general though users can be added as collaborators under your repository’s “Settings” page, by clicking the “Collaborators &amp; teams” tab. Then entering the username you wish to add into the search field.</p>
+<p><img src="https://help.github.com/assets/images/help/repository/repo-settings-collab-autofill.png" alt="Collaborators Search Field"></p>
+<p>Giving them write privileges should they need them, and clicking the “Add collaborator” button to confirm.  </p>
+<blockquote>
+<p><a href="https://help.github.com/categories/managing-repository-collaborators/" target="_blank" rel="external">GitHub Help - Managing Repository Collaborators</a></p>
+</blockquote>
+<hr>
+<h2 id="2-–-Clone-Repository"><a href="#2-–-Clone-Repository" class="headerlink" title="2 – Clone Repository"></a>2 – Clone Repository</h2><p>The targeted collaborator can now clone the repo to make changes and improvements to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git</span><br></pre></td></tr></table></figure>
+<p>Notice there is no need to fork the repository like previously as any changes committed and pushed will be instantly merged and approved into the remote version on GitHub. </p>
+<hr>
+<h2 id="3-–-Make-Changes"><a href="#3-–-Make-Changes" class="headerlink" title="3 – Make Changes"></a>3 – Make Changes</h2><p>As before make your changes in the same way (still abiding by the new branch workflow). </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b branch_name</span><br></pre></td></tr></table></figure>
+<p>But remember if changing contents of the master branch, that these are merged instantly when pushed. Any errors/mistakes can be reverted or undone thanks to Git, but still be careful as the master branch is often used for live deployment setups and in conjunction with the automated CI tools mentioned earlier. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ git add .</span><br><span class="line">$ git commit -m <span class="string">"messsage"</span></span><br><span class="line">$ git push origin branch_name</span><br></pre></td></tr></table></figure>
+<p>Consider the next two options available to you after pushing. </p>
+<hr>
+<h2 id="Option-A-–-Merge-Changes"><a href="#Option-A-–-Merge-Changes" class="headerlink" title="Option A – Merge Changes"></a>Option A – Merge Changes</h2><p>There are two options on offer to you once you have your feature or fixes committed and pushed to the new remote branch. </p>
+<p>If you’re confident the work can be merged into master, and happy to fix any merge conflicts yourself (and also have the permissions). Then you can merge the changes on the command line. </p>
+<p>Before merging make sure you are on the master branch and it’s up to date locally. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br><span class="line">$ git pull origin master</span><br></pre></td></tr></table></figure>
+<p>Merge the new target branch into master.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>Fix any merge conflicts and push the changes to the remote master branch on GitHub. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Option-B-–-Create-Pull-Request"><a href="#Option-B-–-Create-Pull-Request" class="headerlink" title="Option B – Create Pull Request"></a>Option B – Create Pull Request</h2><p>An alternative choice and one better suited to those who want approval or simply for other team members to first see their proposed merges - is to instead create a pull request that visualises the process, and shows up on GitHub. </p>
+<p>After pushing the branch to GitHub’s remote repo, a new “Compare &amp; pull request” button appears on the project page:</p>
+<p><img src="https://i.gyazo.com/2767fdac556f907d3bb77f0d8703415f.png" alt="Compare &amp; pull request Button"></p>
+<p>If this is not present the usual “New pull request” button is available to compare the two branches, with the view to merging.  </p>
+<p><img src="https://i.gyazo.com/cf3c19b47ab83c86bc88270b9ba57597.png" alt="New pull request Button"></p>
+<p>Either way this new request can be commented on, verified, improved further and resolved of any merge conflicts before merging. Which can be done by someone else in the team who has the permissions or power of approval. All thorough GitHub like in the case of a regular public pull request. </p>
+<p><img src="https://i.gyazo.com/84b2b2c365ee221affd3838d6bd551ab.png" alt="Merge pull request Button"></p>
+<hr>
+<h2 id="Protected-Branches"><a href="#Protected-Branches" class="headerlink" title="Protected Branches"></a>Protected Branches</h2><p>One last point worth mentioning that revolves around collaborators and teams is the concept of “Protected Branches”. This idea ensures that approved collaborators cannot make irrevocable changes to branches on repositories. This is intended to keep your project and pull requests organised and safe. </p>
+<p>Specifically these administrator designated branches cannot be force pushed, cannot be deleted, and cannot have changes merged into them until required status checks have passed. </p>
+<blockquote>
+<p><a href="https://help.github.com/articles/about-protected-branches/" target="_blank" rel="external">GitHub Help - About Protected Branches</a><br><a href="https://help.github.com/articles/configuring-protected-branches/" target="_blank" rel="external">GitHub Help - Configuring Protected Branches</a></p>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://guides.github.com/activities/contributing-to-open-source/" target="_blank" rel="external">GitHub Guides - Contributing to Open Source on GitHub</a></li>
+<li><a href="https://guides.github.com/introduction/flow/index.html" target="_blank" rel="external">GitHub Guides - Understanding the GitHub Flow</a></li>
+<li><a href="https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project" target="_blank" rel="external">Pro Git Book - Contributing to a Project</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/GitHub/" class="post__tag__link">GitHub</a></li></ul><a href="/2016/04/26/github-flow/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-03-14T00:00:00.000Z" class="post__time">March 14, 2016</time><h1 class="post__title"><a href="/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. </p>
+<p>This post works thorough these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
+<p>This is post four on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a>. Go back and read the latter half of that post to see how to network containers together so they can properly communicate back and forth, if you need to. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Creating-Data-Volumes"><a href="#1-–-Creating-Data-Volumes" class="headerlink" title="1 – Creating Data Volumes"></a>1 – Creating Data Volumes</h1><p>A “data volume” is a marked directory inside of a container that exists to hold persistent or commonly shared data. Assigning these volumes is done when creating a new container. </p>
+<p>Any data already present as part of the Docker image in a targeted volume directory is carried forward into the new container and not lost. This however is not true when mounting a local host directory (covered later) as the data is temporarily covered by the new volume. </p>
+<iframe width="1080" height="500" src="https://www.youtube.com/embed/e1yXmc7-mU4" frameborder="1" allowfullscreen><br></iframe> 
+
+<p>You can add a data volume to a container using the <code>-v</code> flag in conjunction with the <code>create</code> or <code>run</code> command. You can use the -<code>v</code> multiple times to mount multiple data volumes.</p>
+<p>This next command will create a data volume inside a new container in the <code>/webapp</code> directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name <span class="built_in">test</span>-container -v /webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>Data volumes are very useful as once designated and created they can be shared and included as part of other containers. It’s also important to note that any changes to data volumes are not included when you update an image, but conversely data volumes will persist even if the container itself is deleted.</p>
+<blockquote>
+<p><strong>Note:</strong> The <code>VOLUME</code> instruction in a <code>Dockerfile</code> will add one or more new volumes to any containers created from the image.</p>
+</blockquote>
+<p>This preservation is due to the fact that data volumes are meant to persist independent of a container’s life cycle. In turn this also means Docker never <em>garbage collects</em> volumes that are no longer in use by a container. </p>
+<hr>
+<h1 id="2-–-Creating-Host-Data-Volumes"><a href="#2-–-Creating-Host-Data-Volumes" class="headerlink" title="2 – Creating Host Data Volumes"></a>2 – Creating Host Data Volumes</h1><p>You can instead mount a directory from your Docker daemon’s <strong>host</strong> into a container; you may have seen this used once or twice in the previous posts. </p>
+<p>Mounting a host directory can be useful for testing. For example, you can mount source code inside a container. Then, change the source code and see its effect on the application in real time. The directory on the host must be specified as an absolute path and if the directory doesn’t exist Docker will automatically create it for you. This auto-creation of the host path has been deprecated.</p>
+<p>The next example command mounts the host directory <code>/src/webapp</code> into the container at the <code>/opt/webapp</code> directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name <span class="built_in">test</span>-container -v /src/webapp:/opt/webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>Some internal rules and behaviours for this process are:</p>
+<ul>
+<li><p>The targeted container directory must always take an absolute full file-system path.</p>
+</li>
+<li><p>The host source directory can be either an absolute path or a name value. </p>
+</li>
+<li><p>If the targeted container path already exists inside the container’s image, the host directory mount overlays but does not remove the destination content. Once the mount is removed, the destination content is accessible again. </p>
+</li>
+</ul>
+<p>Docker volumes default to mounting as both a dual read-write mode, but you can set them to mount as read-only if you like.</p>
+<p>Here the same <code>/src/webapp</code> directory is linked again but the extra <code>:ro</code> option makes the mount read-only.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> It’s not possible to mount a host directory using a <code>Dockerfile</code> because by convention built images should be portable and flexible, and a specific host directory might not be available on all potential hosts.</p>
+</blockquote>
+<hr>
+<h1 id="3-–-Mounting-Individual-Host-Files"><a href="#3-–-Mounting-Individual-Host-Files" class="headerlink" title="3 – Mounting Individual Host Files"></a>3 – Mounting Individual Host Files</h1><p>The <code>-v</code> flag used so far can target a single file instead of entire directories from the host machine. This is done by mapping the specific file on each side of the container. </p>
+<p>A great interactive example of this that creates a new container and drops you into a bash shell with your bash history from the host, is as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm -it -v ~/.bash_history:/root/.bash_history ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<p>Furthermore when you exit the container, the host version of the file will have the the commands typed from the inside of the container - written to the the <code>.bash_history</code> file. </p>
+<hr>
+<h1 id="4-–-Creating-Dedicated-Data-Volume-Containers"><a href="#4-–-Creating-Dedicated-Data-Volume-Containers" class="headerlink" title="4 – Creating Dedicated Data Volume Containers"></a>4 – Creating Dedicated Data Volume Containers</h1><p>A popular practice with Docker data sharing is to create a dedicated container that holds all of your persistent shareable data resources, mounting the data inside of it into other containers once created and setup. </p>
+<p>This example taken from the Docker documentation uses the <code>postgres</code> SQL training image as a base for the data volume container. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker create -v /data-store --name data-store training/postgres /bin/<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> <code>/bin/true</code> - returns a <code>0</code> and does nothing if the command was successful. </p>
+</blockquote>
+<p>The <code>--volumes-from</code> flag is then used to mount the <code>/data-store</code> volume inside of other containers:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --volumes-from data-store --name database-container-1 training/postgres</span><br></pre></td></tr></table></figure>
+<p>This process is repeated for additional new containers:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --volumes-from data-store --name database-container-2  training/postgres</span><br></pre></td></tr></table></figure>
+<p>Be aware that you can use multiple <code>--volumes-from</code> flags in one command to combine data volumes from multiple other dedicated data containers. </p>
+<p>An alternative idea is to mount the volumes from each subsequent container to the next, instead of the original dedicated container linking to new ones. </p>
+<p>This forms a chain that would begin by using: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --name database-container-3 --volumes-from database-container-2  training/postgres</span><br></pre></td></tr></table></figure>
+<p>Remember that If you remove containers that mount volumes, the volume store and its data will not be deleted. Docker preserves it. </p>
+<p>To fully delete a volume from the file-system you must run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm -v &lt;container name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where <code>&lt;container name&gt;</code> is “the last container with a reference to the volume.”</p>
+<blockquote>
+<p><strong>Note:</strong> There is no cautionary Docker warning provided when removing a container without  the <code>-v</code> option.  So if a container has volumes mounted the <code>-v</code> must be passed to fully remov them. </p>
+</blockquote>
+<h2 id="Dangling-Volumes"><a href="#Dangling-Volumes" class="headerlink" title="Dangling Volumes"></a>Dangling Volumes</h2><p>“Dangling volumes” refers to container volumes that are no longer referenced by a container.</p>
+<p>Fortunately there is a command to list out all the stray volumes on a system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume ls <span class="_">-f</span> dangling=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>To remove a volume that’s no longer needed use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume rm &lt;volume name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where <code>&lt;volume name&gt;</code> is substituted for the dangling volume name shown in the previous <code>ls</code> output. </p>
+<hr>
+<h1 id="5-–-Backing-Up-and-Restoring-Data-Volumes"><a href="#5-–-Backing-Up-and-Restoring-Data-Volumes" class="headerlink" title="5 – Backing Up and Restoring Data Volumes"></a>5 – Backing Up and Restoring Data Volumes</h1><p>How are data volumes maintained when it comes to things like backups, restoration, and migration? Well here is one solution that takes care of these necessities by showing how you can achieve this with a dedicated data container. </p>
+<p>To backup a volume:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container -v $(<span class="built_in">pwd</span>):/backup ubuntu tar cvf /backup/backup.tar /data-store</span><br></pre></td></tr></table></figure>
+<p>Here’s how the previous command works:</p>
+<ol>
+<li>The <code>--volumes-from</code> flag creates a new nameless container that mounts the data volume  inside <code>data-container</code> you wish to backup. </li>
+<li>A localhost directory is mounted as <code>/backup</code> . Then <code>tar</code> archives the contents of the <code>/data-store</code> volume to a <code>backup.tar</code> file inside the local <code>/backup</code> directory. </li>
+<li>The container will be <code>--rm</code> removed once it eventually ends and exits. </li>
+</ol>
+<p>We are left with a backup of the <code>/data-store</code> volume on the localhost. </p>
+<p>From here you could restore the volume in whatever way you wish.</p>
+<p>To restore into a new container run: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /data-store --name data-container-2 ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<p>Then extract the backup file contents into the the new container’s data volume:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container-2 -v $(<span class="built_in">pwd</span>):/backup ubuntu bash -c <span class="string">"cd /data-store &amp;&amp; tar -zxvf /backup/backup.tar"</span></span><br></pre></td></tr></table></figure>
+<p>Now the new container is up and running with the files from the original <code>/data-store</code> volume. </p>
+<hr>
+<h1 id="6-–-Volume-and-Data-Container-Issues"><a href="#6-–-Volume-and-Data-Container-Issues" class="headerlink" title="6 – Volume and Data Container Issues"></a>6 – Volume and Data Container Issues</h1><ul>
+<li><p><strong>Orphan Volumes</strong> – Referred to as dangling volumes earlier on. These are the leftover untracked volumes that aren’t removed from the system once a container is removed/deleted. </p>
+</li>
+<li><p><strong>Security</strong> – Other than the usual Unix file permissions and the ability to set read-only or read-write privileges. Docker volumes or data containers have no additional security placed on them. </p>
+</li>
+<li><p><strong>Data Integrity</strong> – Sharing data using volumes and data containers provides no trsl level of data integrity protection. Data protection features are not yet built into Docker i.e. data snapshot, automatic data replication, automatic backups, etc. So data management has to be handled by the administrator or the container itself. </p>
+</li>
+<li><p><strong>External Storage</strong> –  The current design does not take into account the ability to use a Docker volume spanning from one host to another. They must be on the same host although this needs verifying on my end. </p>
+</li>
+</ul>
+<hr>
+<p>It seems like a large amount of information has been covered here but really only two ideas have been explored. That of singular data volumes and that of the preferred independent data container. There are also new updates to Docker on the horizon as always so some of the issues raised here are hopefully soon to be resolved. The next post on Docker covers building images using Dockerfiles, and likewise with Docker Compose. </p>
+<ol>
+<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
+<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Further Administration and Networking (3)</a></li>
+<li>Docker - Data Volumes and Data Containers (4)</li>
+</ol>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/engine/userguide/dockervolumes/" target="_blank" rel="external">Official Docker Documentation – Manage Data in Containers</a> – Main source material used for this post. </li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-work-with-docker-data-volumes-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Work with Docker Data Volumes on Ubuntu 14.04</a> – Breaks down the topic further and has some Nginx logging volume mount examples. </li>
+<li><a href="http://www.computerweekly.com/feature/Docker-storage-101-How-storage-works-in-Docker" target="_blank" rel="external">Docker storage 101: How storage works in Docker</a> – Article from April 2015 that goes over the general ideas and practices discussed here. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/03/14/docker-data-volumes/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-02-24T00:00:00.000Z" class="post__time">February 24, 2016</time><h1 class="post__title"><a href="/2016/02/24/bowtie-static-site-service/">BowTie Static Web Hosting Service</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/ZIQzKNY.png" alt="BowTie Banner Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Static sites continue to surge in popularity and show no sign of falling out of favour anytime soon. It’s only natural then that content management platforms centered around static websites make an appearance. Thus comes BowTie!</p>
+<p><a href="https://bowtie.io/" target="_blank" rel="external">https://bowtie.io/</a></p>
+<blockquote>
+<p><strong>“BowTie is an enhanced static hosting environment that lets you deploy feature-rich static sites and applications without needing to build the same services over and over.”</strong></p>
+</blockquote>
+<p>In this post I’ll go through the bare-bones project creation after registering with the service. This will be just enough to get you introduced to BowTie and comes from the context of a client machine running Linux. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Introduction"><a href="#1-–-Introduction" class="headerlink" title="1 – Introduction"></a>1 – Introduction</h1><p>BowTie caters primarily to the technical users out there who host and run their own static sites as it gives free reign over the code and source files for all of its projects. That being said it’s very simple to get started with and beginners or newer users interested in static site development have a great tool at their disposal to begin learning from. </p>
+<p>It also has the utility provided to hand over the control of a site and its contents to non-developers or everyday end-users, in the same way a CMS/Wordpress platform would.  </p>
+<p>To deliver this service and solution BowTie provides private Git repos, domain and SSL configuration, policy controls, Stripe payment/subscription support, and the tried and tested Jekyll platform for all of its content generation. </p>
+<hr>
+<h1 id="2-–-Sign-Up"><a href="#2-–-Sign-Up" class="headerlink" title="2 – Sign Up"></a>2 – Sign Up</h1><p>Free trials are available to anyone interested. </p>
+<p>Simply sign up to the BowTie service at the below link to begin your free trial: </p>
+<blockquote>
+<p><a href="https://bowtie.io/owners/sign_up" target="_blank" rel="external">https://bowtie.io/owners/sign_up</a></p>
+</blockquote>
+<p>The SSO (Single Sign On) option for authentication with a GitHub account is even quicker and gives the service a gateway to your assets there.  </p>
+<p><img src="http://i.imgur.com/oTwBYGf.png" alt="BowTie Signup Form Image"></p>
+<hr>
+<h1 id="3-–-Project-Name-and-Template"><a href="#3-–-Project-Name-and-Template" class="headerlink" title="3 – Project Name and Template"></a>3 – Project Name and Template</h1><p>Once registered and logged in it’s time to create your first BowTie project.</p>
+<p>Give the project a suitable name - this can be the domain name you want to use for hosting when you add the appropriate extension to the entry. Like in my example (pictured) a new domain for the name is not mandatory however.  </p>
+<p><img src="http://i.imgur.com/vapa4aV.png" alt="Project Name Image"></p>
+<p>The second selection is the type of template you want to use for this site/project and mainly dictates your starting site layout, components, and functionality you begin with. </p>
+<p>There are quite a few options here to choose from, and the choice will depend upon your own needs and requirements. </p>
+<p>For example purposes and simplicitys sake I’m selecting the “just a blog” option.</p>
+<p><img src="http://i.imgur.com/8dUYPPE.png" alt="Template Selection Image"></p>
+<hr>
+<h1 id="4-–-Roll-Out-and-Dashboard"><a href="#4-–-Roll-Out-and-Dashboard" class="headerlink" title="4 – Roll Out and Dashboard"></a>4 – Roll Out and Dashboard</h1><p>After confirming the previous choice BowTie takes several minutes to generate and setup the project. Patience is key here but it doesn’t take too much time overall. </p>
+<p><img src="http://i.imgur.com/36WseTX.png" alt="Progress Bars Image"></p>
+<p>Click the green “Roll Out” button to launch the project dashboard:</p>
+<p><img src="http://i.imgur.com/V9C4Vrp.png" alt="Project Dashboard Image"></p>
+<hr>
+<h1 id="5-–-Add-Public-SSH-Key-to-BowTie"><a href="#5-–-Add-Public-SSH-Key-to-BowTie" class="headerlink" title="5 – Add Public SSH Key to BowTie"></a>5 – Add Public SSH Key to BowTie</h1><p>From within the dashboard menus and sub-menus, locate the SSH key section pictured in the next screenshot.</p>
+<p><img src="http://i.imgur.com/1NOVzKM.png" alt="Public Keys Form"></p>
+<p>If you can’t find the page, use the URL below whilst logged in to BowTie to be taken to it. </p>
+<blockquote>
+<p><a href="https://bowtie.io/keys/new" target="_blank" rel="external">https://bowtie.io/keys/new</a></p>
+</blockquote>
+<p>Next locate your client machine’s public SSH key and copy the contents into the form on this “Keys” page. </p>
+<p>On Linux systems SSH keys stored in <code>~/.ssh/</code> are easily copied to the system clipboard using xclip.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ xclip -selection c -i ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
+<p>If you don’t have an SSH key you can generate one using the <code>ssh-keygen</code> program:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -b 4096</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Install-the-BowTie-Client"><a href="#6-–-Install-the-BowTie-Client" class="headerlink" title="6 – Install the BowTie Client"></a>6 – Install the BowTie Client</h1><p>Have Ruby (at least version 2.0) installed on your system. This is required for running and installing BowTie.</p>
+<p>Details on how to install Ruby are located in full here:</p>
+<blockquote>
+<p><a href="https://www.ruby-lang.org/en/documentation/installation/" target="_blank" rel="external">https://www.ruby-lang.org/en/documentation/installation/</a></p>
+</blockquote>
+<p>Once Ruby is installed issue the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem install bowtie-io</span><br></pre></td></tr></table></figure>
+<p>This installs the BowTie client we need. </p>
+<hr>
+<h1 id="7-–-Clone-Your-Project’s-Git-Repository"><a href="#7-–-Clone-Your-Project’s-Git-Repository" class="headerlink" title="7 – Clone Your Project’s Git Repository"></a>7 – Clone Your Project’s Git Repository</h1><p>With your Git SSH clone URL - which is found on the BowTie website project dashboard and looks similar to this:</p>
+<p><img src="http://i.imgur.com/sFpmQcz.png" alt="BowTie Git Clone URL Image"></p>
+<p>Clone the project’s Git repository onto your local file-system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@git.bowtie.io:tricksofthetrades.git</span><br></pre></td></tr></table></figure>
+<p>Remember this example is for my own project. You must substitute in <strong>your</strong> repo address from the BowTie dashboard when using the previous command. </p>
+<hr>
+<h1 id="8-–-Run-the-BowTie-Test-Server"><a href="#8-–-Run-the-BowTie-Test-Server" class="headerlink" title="8 – Run the BowTie Test Server"></a>8 – Run the BowTie Test Server</h1><p>Change the current working directory to the cloned repository from the previous step (yours will be named differently).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> tricksofthetrades</span><br></pre></td></tr></table></figure>
+<p>Run the BowTie test server to generate and host the static HTML content.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bowtie serve</span><br></pre></td></tr></table></figure>
+<p>If the build process succeeds a variation of the following output is returned:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Configuration file: /home/scarlz/tricksofthetrades/_config.yml</span><br><span class="line">            Source: /home/scarlz/tricksofthetrades</span><br><span class="line">       Destination: /home/scarlz/tricksofthetrades/_site</span><br><span class="line"> Incremental build: disabled. Enable with --incremental</span><br><span class="line">      Generating... </span><br><span class="line">                    <span class="keyword">done</span> <span class="keyword">in</span> 1.103 seconds.</span><br><span class="line"> Auto-regeneration: enabled <span class="keyword">for</span> <span class="string">'/home/scarlz/tricksofthetrades'</span></span><br><span class="line">Configuration file: /home/scarlz/tricksofthetrades/_config.yml</span><br><span class="line">Configuration file: /home/scarlz/tricksofthetrades/_config.yml</span><br><span class="line">[2016-02-22 17:58:51] INFO  WEBrick 1.3.1</span><br><span class="line">[2016-02-22 17:58:51] INFO  ruby 2.3.0 (2015-12-25) [i686-linux]</span><br><span class="line">[2016-02-22 17:58:51] INFO  WEBrick::HTTPServer<span class="comment">#start: pid=7149 port=4000</span></span><br></pre></td></tr></table></figure>
+<p>In the event that the build process fails - any extra Jekyll gems you might need to successfully build and run the project are highlighted as dependencies in the error message. </p>
+<p>These dependencies are installed simply by using the name of the gem with the Ruby command from earlier. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gem install &lt;dependency-name&gt;</span><br></pre></td></tr></table></figure>
+<p>After the server runs successfully; visit the address below on your client machine’s web browser.  </p>
+<blockquote>
+<p><a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a></p>
+</blockquote>
+<p>You should at this address see the BowTie static webpages for the template style you chose at the beginning!</p>
+<p><img src="http://i.imgur.com/Dy2bqdd.png" alt="Blog Template Page Image"></p>
+<hr>
+<h1 id="9-–-Read-the-Docs"><a href="#9-–-Read-the-Docs" class="headerlink" title="9 – Read the Docs"></a>9 – Read the Docs</h1><p>From here on out as a developer you’ll of course want to customise the site files in the local Git repo, and commit then push the changes. For those who aren’t sure what to do next take a look at the project dashboard again as well as some of the documentation in this step of the post.</p>
+<p>It’s also from the project dashboard you can gain access to the live site hosted through BowTie. </p>
+<p><img src="http://i.imgur.com/WV2hizc.png" alt="BowTie Live Project Button"></p>
+<p>All in all the instructions in this post are pretty brief. To read a much more thorough walkthrough of this process consult the official post:</p>
+<ul>
+<li><a href="https://bowtie.io/help/getting-started-with-bowtie/" target="_blank" rel="external">https://bowtie.io/help/getting-started-with-bowtie/</a></li>
+</ul>
+<p>As mentioned the next step is to learn how to customise, refine, and re-design the site templates. So check this out:</p>
+<ul>
+<li><a href="https://bowtie.io/help/style-customize-bowtie-frontend/" target="_blank" rel="external">https://bowtie.io/help/style-customize-bowtie-frontend/</a></li>
+</ul>
+<p>Furthermore refer to these individual guides that show how to add content to the different types of projects on offer:</p>
+<ul>
+<li><a href="https://bowtie.io/examples/" target="_blank" rel="external">https://bowtie.io/examples/</a></li>
+</ul>
+<p>And for any other concerns look into the general BowTie documentation hosted at:</p>
+<ul>
+<li><a href="https://bowtie.io/docs/#what-is-8904-bowtie" target="_blank" rel="external">https://bowtie.io/docs/#what-is-8904-bowtie</a></li>
+</ul>
+<hr>
+<p>The free trial lasts 14 days in total with the lowest tier payment plan currently costing a very cheap $5.00 a month; allowing one hosted project and access to all of the BowTie services.</p>
+<p>The subsequent and higher tier pricing plans on offer are explained here:</p>
+<blockquote>
+<p><a href="https://bowtie.io/pricing/" target="_blank" rel="external">https://bowtie.io/pricing/</a></p>
+</blockquote>
+<p>Have fun designing and hosting your static sites! </p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://bowtie.io/support/" target="_blank" rel="external">BowTie’s Support Page</a> – Has FAQ’s and links to the Docs plus a Slack support channel link. </li>
+<li><a href="https://bowtie.io/blog/" target="_blank" rel="external">BowTie’s Official Blog</a> – BowTie’s official news blog. </li>
+<li><a href="https://github.com/bowtie-io/bowtie-io" target="_blank" rel="external">BowTie.io on GitHub</a> – Source for the Ruby client downloaded and organisation page.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/HTML/" class="post__tag__link">HTML</a></li><li class="post__tag__item"><a href="/tags/Static/" class="post__tag__link">Static</a></li><li class="post__tag__item"><a href="/tags/Jekyll/" class="post__tag__link">Jekyll</a></li></ul><a href="/2016/02/24/bowtie-static-site-service/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
+(document,"script","totts","count");
+</script></body></html>

@@ -1457,7 +1457,7 @@
     <link href="http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/"/>
     <id>http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/</id>
     <published>2016-02-10T00:00:00.000Z</published>
-    <updated>2017-06-02T18:28:42.139Z</updated>
+    <updated>2017-06-11T14:56:59.126Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Ansible is one of many configuration management tools but has its own unique set of differences. The platform aims to provide solutions for the entirety of a setup. With consideration for infrastructure provisioning, application deployment, and overall orchestration taken into account.  </p>
@@ -1475,7 +1475,15 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S ansible</span><br></pre></td></tr></table></figure>
 <p>The AUR also has a package build that pulls directly from GitHub called <code>ansible-git</code> . Any Aurum helper can be used to automatically build and install this</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yaourt -S ansible-git</span><br></pre></td></tr></table></figure>
-<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>Install the common software properties package if you don’t already have it. </p>
+<h2 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h2><p>Open up the Debian software sources file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apt/sources.list</span><br></pre></td></tr></table></figure>
+<p>Add the following line to /etc/apt/sources.list:</p>
+<p><code>deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main</code></p>
+<p>Add the Ansible software repository key to the system; it’s the same source as the Ubuntu PPA. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367</span><br></pre></td></tr></table></figure>
+<p>Update the package manager to verify the changes and then install Ansible itself:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install ansible</span><br></pre></td></tr></table></figure>
+<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><p>Install the common software properties package if you don’t already have it. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install software-properties-common</span><br></pre></td></tr></table></figure>
 <p>Add the official Ansible package repository to the system and update the package manager database. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-add-repository ppa:ansible/ansible</span><br><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
@@ -2458,13 +2466,13 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
-    
       <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
     
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
       <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
+    
+      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
   </entry>
   

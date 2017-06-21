@@ -122,6 +122,12 @@
 </blockquote>
 <p>Or shown in the official documentation. </p>
 <hr>
+<h1 id="7-–-Ansible-Temp-Directory-Permissions"><a href="#7-–-Ansible-Temp-Directory-Permissions" class="headerlink" title="7 – Ansible Temp Directory Permissions"></a>7 – Ansible Temp Directory Permissions</h1><p>Should the permissions and or ownership rights of the below directory become allocated to <em>root</em>, Ansible will not be able to write to this directory (and thereby fail to run).    </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /home/<span class="variable">$USER</span>/.ansible/tmp/</span><br></pre></td></tr></table></figure>
+<p>Here’s how the permissions should look; substituted with your own Linux username.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drwx------ 2 scarlz scarlz 4096 Jun 21 15:12 ./</span><br><span class="line">drwx------ 3 scarlz scarlz 4096 Jun 21 15:12 ../</span><br></pre></td></tr></table></figure>
+<p>Simply make sure the user you are running Ansible as posseses sufficient permissions to utilise this directory. If this is not the case either alter the permissions with <code>chmod</code> / <code>chown</code> or failing that delete the directory then re-run Ansible.  </p>
+<hr>
 <iframe width="1080" height="500" src="https://www.youtube.com/embed/ZNB1at8mJWY" frameborder="1" allowfullscreen><br></iframe>
 
 <p>What’s been covered in this post is the very basics of Ansible and only goes a short way towards demonstrating its ability as a configuration management tool. There are still a variety of pieces to fit into the puzzle such as modules, inventory items, and most importantly the playbooks. Which all make up and achieve the aims of the software described in the premable. </p>

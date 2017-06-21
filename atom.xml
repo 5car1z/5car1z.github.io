@@ -572,11 +572,11 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
+      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
     
       <category term="Networking" scheme="http://www.tricksofthetrades.net/tags/Networking/"/>
     
-      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
+      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
     
   </entry>
   
@@ -1457,7 +1457,7 @@
     <link href="http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/"/>
     <id>http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/</id>
     <published>2016-02-10T00:00:00.000Z</published>
-    <updated>2017-06-11T16:53:11.494Z</updated>
+    <updated>2017-06-21T14:50:01.964Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Ansible is one of many configuration management tools but has its own unique set of differences. The platform aims to provide solutions for the entirety of a setup. With consideration for infrastructure provisioning, application deployment, and overall orchestration taken into account.  </p>
@@ -1582,6 +1582,12 @@
 <p><a href="https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg" target="_blank" rel="external">https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg</a></p>
 </blockquote>
 <p>Or shown in the official documentation. </p>
+<hr>
+<h1 id="7-–-Ansible-Temp-Directory-Permissions"><a href="#7-–-Ansible-Temp-Directory-Permissions" class="headerlink" title="7 – Ansible Temp Directory Permissions"></a>7 – Ansible Temp Directory Permissions</h1><p>Should the permissions and or ownership rights of the below directory become allocated to <em>root</em>, Ansible will not be able to write to this directory (and thereby fail to run).    </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /home/<span class="variable">$USER</span>/.ansible/tmp/</span><br></pre></td></tr></table></figure>
+<p>Here’s how the permissions should look; substituted with your own Linux username.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drwx------ 2 scarlz scarlz 4096 Jun 21 15:12 ./</span><br><span class="line">drwx------ 3 scarlz scarlz 4096 Jun 21 15:12 ../</span><br></pre></td></tr></table></figure>
+<p>Simply make sure the user you are running Ansible as posseses sufficient permissions to utilise this directory. If this is not the case either alter the permissions with <code>chmod</code> / <code>chown</code> or failing that delete the directory then re-run Ansible.  </p>
 <hr>
 <iframe width="1080" height="500" src="https://www.youtube.com/embed/ZNB1at8mJWY" frameborder="1" allowfullscreen><br></iframe>
 

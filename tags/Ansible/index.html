@@ -378,7 +378,7 @@
 <p>Or shown in the official documentation. </p>
 <hr>
 <h1 id="7-–-Ansible-Temp-Directory-Permissions"><a href="#7-–-Ansible-Temp-Directory-Permissions" class="headerlink" title="7 – Ansible Temp Directory Permissions"></a>7 – Ansible Temp Directory Permissions</h1><p>Should the permissions and or ownership rights of the below directory become allocated to <em>root</em>, Ansible will not be able to write to this directory (and thereby fail to run).    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /home/<span class="variable">$USER</span>/.ansible/tmp/</span><br></pre></td></tr></table></figure>
+<p><code>/home/$USER/.ansible/tmp/</code></p>
 <p>Here’s how the permissions should look; substituted with your own Linux username.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drwx------ 2 scarlz scarlz 4096 Jun 21 15:12 ./</span><br><span class="line">drwx------ 3 scarlz scarlz 4096 Jun 21 15:12 ../</span><br></pre></td></tr></table></figure>
 <p>Simply make sure the user you are running Ansible as posseses sufficient permissions to utilise this directory. If this is not the case either alter the permissions with <code>chmod</code> / <code>chown</code> or failing that delete the directory then re-run Ansible.  </p>

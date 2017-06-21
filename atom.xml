@@ -1155,9 +1155,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
-    
       <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
+    
+      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
     
   </entry>
   
@@ -1457,7 +1457,7 @@
     <link href="http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/"/>
     <id>http://www.tricksofthetrades.net/2016/02/10/ansible-installing-running/</id>
     <published>2016-02-10T00:00:00.000Z</published>
-    <updated>2017-06-21T14:50:01.964Z</updated>
+    <updated>2017-06-21T14:55:32.187Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Ansible is one of many configuration management tools but has its own unique set of differences. The platform aims to provide solutions for the entirety of a setup. With consideration for infrastructure provisioning, application deployment, and overall orchestration taken into account.  </p>
@@ -1584,7 +1584,7 @@
 <p>Or shown in the official documentation. </p>
 <hr>
 <h1 id="7-–-Ansible-Temp-Directory-Permissions"><a href="#7-–-Ansible-Temp-Directory-Permissions" class="headerlink" title="7 – Ansible Temp Directory Permissions"></a>7 – Ansible Temp Directory Permissions</h1><p>Should the permissions and or ownership rights of the below directory become allocated to <em>root</em>, Ansible will not be able to write to this directory (and thereby fail to run).    </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ /home/<span class="variable">$USER</span>/.ansible/tmp/</span><br></pre></td></tr></table></figure>
+<p><code>/home/$USER/.ansible/tmp/</code></p>
 <p>Here’s how the permissions should look; substituted with your own Linux username.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drwx------ 2 scarlz scarlz 4096 Jun 21 15:12 ./</span><br><span class="line">drwx------ 3 scarlz scarlz 4096 Jun 21 15:12 ../</span><br></pre></td></tr></table></figure>
 <p>Simply make sure the user you are running Ansible as posseses sufficient permissions to utilise this directory. If this is not the case either alter the permissions with <code>chmod</code> / <code>chown</code> or failing that delete the directory then re-run Ansible.  </p>
@@ -2476,9 +2476,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

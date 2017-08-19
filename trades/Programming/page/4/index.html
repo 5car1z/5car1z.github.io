@@ -1,4 +1,185 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-11-16T00:00:00.000Z" class="post__time">November 16, 2015</time><h1 class="post__title"><a href="/2015/11/16/hexo-tag-plugins/">Hexo Tag Plugins and Packages</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/1EHS2qR.png" alt="Hexo Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="ToTT"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-11-30T00:00:00.000Z" class="post__time">November 30, 2015</time><h1 class="post__title"><a href="/2015/11/30/django-modwsgi-apache/">Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. </p>
+<p>More popular methods of running and hosting Django are mentioned at the end of the post. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Update-amp-Install-Packages"><a href="#1-–-Update-amp-Install-Packages" class="headerlink" title="1 – Update &amp; Install Packages"></a>1 – Update &amp; Install Packages</h1><p>Update and upgrade the server’s system packages:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
+<p>Install Apache, mod-wsgi, and Python’s pip package manager.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2 libapache2-mod-wsgi python-pip</span><br></pre></td></tr></table></figure>
+<p>Also the <code>virtualenv</code> package is required for the next step. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install virtualenv</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Setup-Virtual-Environment"><a href="#2-–-Setup-Virtual-Environment" class="headerlink" title="2 – Setup Virtual Environment"></a>2 – Setup Virtual Environment</h1><p>Decide where you want to keep your Django project. </p>
+<p>There are several places form which you could run the project. One that is very common is the user’s <code>home</code> directory. Another suitable place is the <code>/srv/</code> system directory. A final place could be directly inside the system’s web server directories i.e. <code>/var/www</code> and down. </p>
+<p>In my example I’ll be using a Linux user’s home directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/django-project &amp;&amp; <span class="built_in">cd</span> ~/django-project</span><br></pre></td></tr></table></figure>
+<p>Inside the new project folder create a dedicated Python virtual environment:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv django-virt-env</span><br></pre></td></tr></table></figure>
+<p>Activate the environment and enter into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Now you’re within the environment (prompt will change) install Django with pip into it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install django</span><br></pre></td></tr></table></figure>
+<p>Once Django is installed, use the <code>deactivate</code> command to exit the environment prompt.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="3-–-Create-or-Import-Django-Project"><a href="#3-–-Create-or-Import-Django-Project" class="headerlink" title="3 – Create or Import Django Project"></a>3 – Create or Import Django Project</h1><p>To start from scratch you can use the Django installation in the virtual environment and make a brand new Django project. Or instead import your Django project files from something like version control. </p>
+<p>For this tutorial we’ll go down the path of importing a a pre-existing Django project from Git. </p>
+<p>Before this though, here are the initial steps for starting a brand new Django project. </p>
+<h2 id="Create-Project"><a href="#Create-Project" class="headerlink" title="Create Project"></a>Create Project</h2><p>Skip past this section to instead import an existing Django project.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
+<p>Create the new project and give it a name, where <code>project_name</code> is replaced with your name you want to give it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ django-admin.py startproject project-name .</span><br></pre></td></tr></table></figure>
+<p>Run initial migration: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py migrate</span><br></pre></td></tr></table></figure>
+<p>Create a superuser for the project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py createsuperuser</span><br></pre></td></tr></table></figure>
+<p>Open up the <code>settings.py</code> file for editing:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim project-name/settings.py</span><br></pre></td></tr></table></figure>
+<p>Add this new line to the bottom section of the file:</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project_name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STATIC_ROOT = os.path.join(BASE_DIR, <span class="string">"static/"</span>)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Copy static content into the directory set in the previous <code>STATIC_ROOT</code> directive:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./manage.py collectstatic</span><br></pre></td></tr></table></figure>
+<p>Test the server runs correctly:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py runserver 0.0.0.0:8000</span><br></pre></td></tr></table></figure>
+<p>You can test the project works in a web browser at: <code>your.vps.ip.address:8000</code></p>
+<p><img src="https://i.gyazo.com/a0ca362f8a25159e68f4df71b43b6a0b.png" alt="It Worked Django Image"></p>
+<p><code>CTRL</code> + <code>C</code> once checked to exit the server process. </p>
+<p>Then <code>deactivate</code> once again to leave the Python virtual env prompt. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
+<h2 id="Import"><a href="#Import" class="headerlink" title="Import"></a>Import</h2><p>This is the assumption I’m following for the rest of the post, that you already have a Django project created and want to host it. You could still however carry on with the new blank project from before. </p>
+<p>Import the Django project into our local project’s root folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git ~/django-project</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
+</blockquote>
+<p>Then move on to setting up the virtual host.</p>
+<hr>
+<h1 id="4-–-Setup-Apache-Virtual-Host"><a href="#4-–-Setup-Apache-Virtual-Host" class="headerlink" title="4 – Setup Apache Virtual Host"></a>4 – Setup Apache Virtual Host</h1><p>Using your preferred text editor open the default Apache <em>vhost</em> for writing, or a <em>dedicated vhost</em> instead. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apache2/sites-available/000-default.conf</span><br></pre></td></tr></table></figure>
+<p>The complete main block of the virtual host should contain the following:</p>
+<figure class="highlight apache"><figcaption><span>/etc/apache2/sites-available/000-default.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute"><span class="nomarkup">ServerName</span></span> exampledomain.com</span><br><span class="line"><span class="attribute">ServerAlias</span> www.exampledomain.com</span><br><span class="line"><span class="attribute">ServerAdmin</span> server-administrator@emaildomain.com</span><br><span class="line">    </span><br><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br><span class="line"></span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project&gt;</span></span><br><span class="line">    <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">        <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">    <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> project-name</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<p>What follows are the broken down areas of the above virtual host, and how to set them.</p>
+<p><strong>Static Alias</strong></p>
+<p>The first option to set is an alias, and needs to point to the <code>static</code> directory we generated when either creating or importing the Django project files. </p>
+<p>So username needs to be your Linux username, and <code>django-project</code> needs to be substituted for whatever you named the very first folder we created. Back at the start of <strong>Step 3</strong>. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br></pre></td></tr></table></figure>
+<p><strong>Static Directory Access</strong></p>
+<p>The web server must also allow access to the directory we aliased for <code>static</code>. Do this with a directory block that looks like this. Except again with the same values as before substituted in.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">  <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>wsgi.py Access</strong></p>
+<p>The <code>wsgi.py</code> file inside your <code>project-name</code> directory should also be open for access. Add this second directory block to ensure it’s accessible.</p>
+<p>Again <code>project_name</code> and the previous values need altering to your own.</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/project-name&gt;</span></span><br><span class="line">  <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">  <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
+<p><strong>WSGI Settings</strong><br>The gateway interface mod for Apache uses <code>wsgi.py</code> to handle passing clients to the Django web app. Set it up with a daemon process path, process group name, and alias to the <code>wsgi.py</code> file location. </p>
+<p>Some things to note are that the latter half of the <code>python-path</code> setting should point to your virtual environment’s Python site packages, and not your system wide ones. The <code>:</code> character delimits separate paths. </p>
+<p>For the <code>WSGIDaemonProcess</code> and <code>WSGIProcessGroup</code> name (<code>project-name</code> in my example) you can set it to any suitable name. </p>
+<p>All relevant values here once again should be replaced with your own. </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> django-project</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Apache-Permissions"><a href="#5-–-Apache-Permissions" class="headerlink" title="5 – Apache Permissions"></a>5 – Apache Permissions</h1><p>Change the system permissions so that the Linux group owner of the database file can read and write. </p>
+<p>The database file is named  <code>db.sqlite3</code> by default and is in the root project directory if not moved previously. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod 664 ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>Apache runs under the <code>www-data</code> system group, give said group ownership of the database file:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
+<p>In order for the <code>www-data</code> Apache group to properly write to the database file, we also need to give it ownership of the database file’s parent directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/myproject</span><br></pre></td></tr></table></figure>
+<p>Restart Apache to implement the changes we just made:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service apache2 restart</span><br></pre></td></tr></table></figure>
+<p>Assuming your firewall is setup correctly you should now be able to access your Django site by going to your server’s domain name or IP address in a browser. </p>
+<hr>
+<h1 id="Live-Deployment-Considerations"><a href="#Live-Deployment-Considerations" class="headerlink" title="Live Deployment Considerations"></a>Live Deployment Considerations</h1><h1 id="1-–-Django-Project-Settings"><a href="#1-–-Django-Project-Settings" class="headerlink" title="1 – Django Project Settings"></a>1 – Django Project Settings</h1><p>The <code>settings.py</code> file usually contains sensitive data values such as passwords, <em>secret keys</em>, and user credentials. Which are at risk of being exposed when stored in the Project’s version control (at least if public version control is used). </p>
+<p>The exact details set in <code>settings.py</code> are also likely to differ from user to user. As different directives and values may be required depending upon the installation context and user in question. For example <code>DEBUG</code> being set to <code>TRUE</code> on a local environment versus a live environment. </p>
+<p>It’s for these reasons it’s advisable to instead import these values into <code>settings.py</code> from another local <em>credentials</em> file. One that the user fills out manually upon setting up the project locally for the first time. </p>
+<p>The same “credentials” file must then be permanently ignored by the version control system, so the user specific details and passwords are kept private, but still imported into <code>settings.py</code> . </p>
+<p>Here is what an example template for this credentials file might look like:</p>
+<script src="https://gist.github.com/5car1z/6b014dd95f216780b1ce.js"></script>
+
+<p>Once created the <code>credentials.py</code> file and it’s stored directives can all then be imported inside the main Django settings file. </p>
+<p>Via this line of code: </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Imports sensitive/user config variable values.</span></span><br><span class="line"><span class="keyword">from</span> credentials <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
+<p>It’s a good idea to use a template file like the one above to replace the <code>credentials.py</code> in version control. So new users and installs can make a copy of it, and fill in the details required. </p>
+<hr>
+<h1 id="2-–-Live-Specific-Directives"><a href="#2-–-Live-Specific-Directives" class="headerlink" title="2 – Live Specific Directives"></a>2 – Live Specific Directives</h1><p>As mentioned in the previous section, some directives will need to be set differently for different situations. </p>
+<p>Here are some of the directives defined in <code>credentials.py</code> (or an equivalent user specific settings file) that are suitable for a live setup.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>Setting this next directive is optional more than anything but provides a means of helping with debugging errors and exceptions raised while rendering the apps templates.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATE_DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
+<p>This line and directive can be kept directly in <code>settings.py</code> unlike the other directives, although it doesn’t hurt to place in <code>credentials.py</code> anyway. Once <code>DEBUG</code> is set to <code>false</code> , this allows only the specified FQDN’s access to your Django site. </p>
+<p>It’s wise to ensure you <a href="https://github.com/DigitalOcean-User-Projects/Articles-and-Tutorials/blob/master/set_hostname_fqdn_on_ubuntu_centos.md" target="_blank" rel="external">have a valid FQDN hostname set on your server</a> if experiencing any problems with this directive.</p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">'127.0.0.1'</span>, <span class="string">'localhost'</span>, <span class="string">'.leagueofyorkshire.co.uk'</span>]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> it is unwise to add a <code>*</code> symbol to the <code>ALLOWED_HOSTS</code> directive, as this would give access to any and all potential requests. </p>
+</blockquote>
+<p>Django uses the <code>STATIC_ROOT</code> directive to tell Apache where the generated <em>static</em> files are located. If the <code>./manage.py collectstatic</code> is run with live settings then the <code>STATIC_ROOT</code> directive must be set to something other than the previous <code>static</code> directory. In this case in the below code it’s set to generate it in a directory named <code>assets</code>. The other commented directives also need enabling in here for this to work:  </p>
+<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span></span><br><span class="line"><span class="comment"># STATIC_URL = '/static/'</span></span><br><span class="line"><span class="comment"># STATIC_ROOT = os.path.join(BASE_DIR, "assets/")</span></span><br><span class="line"><span class="comment"># STATICFILES_DIRS = (os.path.join('static'),)</span></span><br></pre></td></tr></table></figure>
+<p>These previous directives are not <strong>all</strong> the ones you will find or define in the credentials file, but are mostly the ones to consider when working with a live deployment install of the project. </p>
+<p>See here for detailed information about more of these:</p>
+<blockquote>
+<p><a href="https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-ADMINS" target="_blank" rel="external">Django Official Documentation - Settings</a></p>
+</blockquote>
+<hr>
+<h1 id="3-–-Web-Server-Permissions"><a href="#3-–-Web-Server-Permissions" class="headerlink" title="3 – Web Server Permissions"></a>3 – Web Server Permissions</h1><p>We set some permissions on the database file and parent directory in an earlier step, however the other Django files hosted by your web server have their own permissions to consider. </p>
+<p>The main file to take into account when setting permission is the file that holds your live environment specific directives, and user sensitive data. In our example this was the <code>credentials.py</code> file, created from a template that takes it’s place in version control. </p>
+<p>Consider taking away read and write privileges to <em>everyone else</em> / <em>other</em> for this file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o-rw ~/django-project/project-name/credentials.py</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Error-Reporting-amp-Logging"><a href="#4-–-Error-Reporting-amp-Logging" class="headerlink" title="4 – Error Reporting &amp; Logging"></a>4 – Error Reporting &amp; Logging</h1><blockquote>
+<p><strong>Section To Be Added</strong></p>
+</blockquote>
+<hr>
+<h1 id="5-–-gitignore"><a href="#5-–-gitignore" class="headerlink" title="5 – .gitignore"></a>5 – .gitignore</h1><p>Here is a .gitignore containing lots of potential file types and directories you likely don’t want to track for live or in general. Some are Django specific, others are Python project related. </p>
+<script src="https://gist.github.com/5car1z/2bd1ade7177fbccca339.js"></script>
+
+<hr>
+<h1 id="Further-Considerations"><a href="#Further-Considerations" class="headerlink" title="Further Considerations"></a>Further Considerations</h1><p>There are other alternatives to this entire procedure that have their own advantages and merits. These should be considered as an alternative or more specialised way of running Django. </p>
+<p><strong>Gunicorn</strong> </p>
+<p>“Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX. It’s a pre-fork worker model ported from Ruby’s Unicorn project. The Gunicorn server is broadly compatible with various web frameworks, simply implemented, light on server resources, and fairly speedy.”</p>
+<blockquote>
+<p><a href="http://gunicorn.org/" target="_blank" rel="external">http://gunicorn.org/</a></p>
+</blockquote>
+<p><strong>uWSGI</strong></p>
+<p>“The uWSGI project aims at developing a full stack for building hosting services. Versatility, performance, low-resource usage and reliability are the strengths of the project “</p>
+<blockquote>
+<p><a href="https://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html" target="_blank" rel="external">Quickstart for Python/WSGI applications</a></p>
+</blockquote>
+<p><strong>Tornado</strong></p>
+<p>“Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.”</p>
+<blockquote>
+<p><a href="http://www.tornadoweb.org/en/stable/wsgi.html" target="_blank" rel="external">tornado.wsgi — Interoperability with other Python frameworks and servers</a></p>
+</blockquote>
+<p><strong>Other Python Web Frameworks/Servers</strong></p>
+<ul>
+<li><a href="http://www.cherrypy.org/" target="_blank" rel="external">CherryPy</a></li>
+<li><a href="http://twistedmatrix.com/trac/wiki/TwistedWeb" target="_blank" rel="external">Twisted Web</a></li>
+<li><a href="http://waitress.readthedocs.org/en/latest/" target="_blank" rel="external">Waitress WSGI Server</a></li>
+</ul>
+<hr>
+<p><strong>More Information</strong> </p>
+<ul>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Serve Django Applications with Apache and mod_wsgi on Ubuntu 14.04</a> – Main source of inspiration and workflow for this blog post. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps" target="_blank" rel="external">Digital Ocean – How to Run Django with mod_wsgi and Apache with a virtualenv Python environment on a Debian VPS</a> – Similar to the first link here but with different approaches and older. </p>
+</li>
+<li><p><a href="https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/modwsgi/" target="_blank" rel="external">Official Django Documentation - How to use Django with Apache and mod_wsgi</a> – Good general purpose information. </p>
+</li>
+<li><p><a href="http://www.slideshare.net/GrahamDumpleton/getting-started-with-modwsgi" target="_blank" rel="external">Graham Dumpleton - PyCon AU 2010 - Getting Started With Apache/mod_wsgi</a> – Slides that are useful for troubleshooting Django errors, is a bit outdated now ion parts however. </p>
+</li>
+<li><p><a href="http://modwsgi.readthedocs.org/en/develop/index.html" target="_blank" rel="external">Official Documentation for mod_wsgi</a> – Anything and everything for mod_wsgi. </p>
+</li>
+<li><p><a href="http://www.djangobook.com/en/2.0/chapter12.html" target="_blank" rel="external">“Django Book” - Chapter 12: Deploying Django</a> – Overall good deployment practices. </p>
+</li>
+<li><p><a href="https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications" target="_blank" rel="external">https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications</a> – The python web frameworks/servers from the last step. </p>
+</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Apache/" class="post__tag__link">Apache</a></li><li class="post__tag__item"><a href="/tags/Python/" class="post__tag__link">Python</a></li><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Django/" class="post__tag__link">Django</a></li></ul><a href="/2015/11/30/django-modwsgi-apache/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-11-16T00:00:00.000Z" class="post__time">November 16, 2015</time><h1 class="post__title"><a href="/2015/11/16/hexo-tag-plugins/">Hexo Tag Plugins and Packages</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/1EHS2qR.png" alt="Hexo Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Tag plugins are ported from Octopress and provide a useful way for you to quickly add specific content to your Hexo posts. I don’t use all of these in my own posts but they do come in useful on the odd occasion. </p>
 <blockquote>
 <p><a href="https://hexo.io/docs/tag-plugins.html" target="_blank" rel="external">Official Hexo Documentation - Tag Plugins</a></p>
@@ -565,62 +746,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-09-09T23:00:00.000Z" class="post__time">September 10, 2015</time><h1 class="post__title"><a href="/2015/09/10/slack-irssi-connection/">Slack IRC Gateway Authentication with irssi</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/PVgdIPJ.png" alt="Slack Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Slack’s web interface isn’t too shabby, but at times it’s more preferable and easier to instead have a command line alternative. Also when working on a server or command line orientated environment, you might not have access to a web browser to login to Slack. So running an IRC client with access to the gateway provided, is the supported solution and remedy for this. The rest of this post shows one relatively straight forward way of using irssi IRC chat client to connect and authenticate with the gateway. </p>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Enable-IRC-on-Slack-Team"><a href="#1-–-Enable-IRC-on-Slack-Team" class="headerlink" title="1 – Enable IRC on Slack Team"></a>1 – Enable IRC on Slack Team</h1><p>In the Slack team’s web browser session navigate to:</p>
-<p><strong>Team settings &gt; Permissions &gt; Gateways &gt; Expand</strong></p>
-<p>Tick “Enable IRC gateway (SSL only)” and then click Save Settings.</p>
-<p><img src="http://i.imgur.com/1G1TH3u.png" alt="Slack Tick-boxes"></p>
-<p>XMPP as pictured can also be enabled here for services such as <em>Jabber</em></p>
-<hr>
-<h1 id="2-–-Install-irssi"><a href="#2-–-Install-irssi" class="headerlink" title="2 – Install irssi"></a>2 – Install irssi</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S irssi</span><br></pre></td></tr></table></figure>
-<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install irssi</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="3-–-Run-irssi"><a href="#3-–-Run-irssi" class="headerlink" title="3 – Run irssi"></a>3 – Run irssi</h1><p>Here are two methods, either on its own:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ irssi</span><br></pre></td></tr></table></figure>
-<p>Or in a screen session:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -S irssi-irc-client irssi</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="4-–-Slack-Team-Gateway-Credentials"><a href="#4-–-Slack-Team-Gateway-Credentials" class="headerlink" title="4 – Slack Team Gateway Credentials"></a>4 – Slack Team Gateway Credentials</h1><p>Navigate to the new page that contains your team’s Slack gateway credentials.</p>
-<p><strong>Account &amp; Profile &gt; Settings tab &gt; Gateways &gt; Gateway configuration</strong><br>Here are the details you need for the next few steps in order to setup IRC authentication to the Slack team.</p>
-<p><img src="http://i.imgur.com/sabrQRA.png" alt="Slack Gateway Details"></p>
-<p>Refer back to them as needed for these next steps.</p>
-<hr>
-<h1 id="5-–-Add-Slack-Network-Details"><a href="#5-–-Add-Slack-Network-Details" class="headerlink" title="5 – Add Slack Network Details"></a>5 – Add Slack Network Details</h1><p>Where <code>&lt;slack-username&gt;</code> is your Slack username, and <code>loy-slack</code> is the name you want the network to be remembered as.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/network add -nick &lt;slack-username&gt; loy-slack</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="6-–-Add-Slack-Server-Details"><a href="#6-–-Add-Slack-Server-Details" class="headerlink" title="6 – Add Slack Server Details"></a>6 – Add Slack Server Details</h1><p>Now add the server details to the network defined in the previous step, the command to do this comes next. Remember to replace <code>loy-slack</code> with the name you gave the network, and substitute the details from your Slack team’s IRC credentials into the command.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/server add -auto -ssl -network loy-slack &lt;slack-teamname&gt;.irc.slack.com 6667 &lt;slack-password&gt;</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="7-–-Save-Default-Slack-Channels"><a href="#7-–-Save-Default-Slack-Channels" class="headerlink" title="7 – Save Default Slack Channels"></a>7 – Save Default Slack Channels</h1><p>Entering this command will ensure irssi always joins the channel and network name whenever you connect to the server:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/channel add -auto <span class="comment">#general loy-slack</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="8-–-Save-Configuration"><a href="#8-–-Save-Configuration" class="headerlink" title="8 – Save Configuration"></a>8 – Save Configuration</h1><p>Save all changes to the irssi configuration file in your user’s Linux home directory. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/save</span><br></pre></td></tr></table></figure>
-<p>Then quit the program:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/quit</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="9-–-Run-irssi"><a href="#9-–-Run-irssi" class="headerlink" title="9 – Run irssi"></a>9 – Run irssi</h1><p>Once again run the program as down in the earlier step:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ irssi</span><br></pre></td></tr></table></figure>
-<p>Or in a screen session:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen -S irssi-irc-client irssi</span><br></pre></td></tr></table></figure>
-<p>The below output or similar appears upon launch of irssi:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">3:43 -!- Irssi: Looking up &lt;slack-teamname&gt;.irc.slack.com</span><br><span class="line">13:43 -!- Irssi: Connecting to &lt;slack-teamname&gt;.irc.slack.com [52.6.30.134] port 6667</span><br><span class="line">13:43 -!- Irssi: Connection to &lt;slack-teamname&gt;.irc.slack.com established</span><br><span class="line">13:43 slackbot [] requested CTCP VERSION from &lt;user-name&gt;: </span><br><span class="line">13:43 -!- IRC-SLACK gateway</span><br><span class="line">13:43 -!- Welcome to Slack IRC Gateway server &lt;user-name&gt;!~&lt;user-name&gt;@10.0.23.98</span><br><span class="line">13:43 -!- MAP SILENCE=15 WHOX WALLCHOPS WALLVOICES USERIP CPRIVMSG CNOTICE MODES=6 MAXCHANNELS=100 SAFELIST are supported by this server</span><br><span class="line">13:43 -!- NICKLEN=32 TOPICLEN=160 AWAYLEN=160 CHANTYPES=<span class="comment"># PREFIX=(ov)@+ CHANMODES=b,k,l,rimnpst CASEMAPPING=rfc1459 are supported by this server</span></span><br><span class="line">13:43 -!- there are 11 users </span><br><span class="line">13:43 -!- Message of the day</span><br><span class="line">13:43 -!- WELCOME TO SLACK...</span><br><span class="line">13:43 -!- End of MOTD <span class="built_in">command</span></span><br><span class="line">13:43 -!- Mode change [] <span class="keyword">for</span> user &lt;user-name&gt;:+i</span><br></pre></td></tr></table></figure>
-<p>The persistent Slack connection is now setup and will be active each time you run irssi.</p>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="http://www.pilgrimbreak.com/how-to-access-slack-with-command-line-irc-client-irssi/" target="_blank" rel="external">How to Access Slack with the Command Line</a> – Most of the images and content were gleaned from here. </li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/irssi/" class="post__tag__link">irssi</a></li><li class="post__tag__item"><a href="/tags/IRC/" class="post__tag__link">IRC</a></li><li class="post__tag__item"><a href="/tags/Slack/" class="post__tag__link">Slack</a></li></ul><a href="/2015/09/10/slack-irssi-connection/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

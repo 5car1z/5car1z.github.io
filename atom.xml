@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-08-19T16:25:31.246Z</updated>
+  <updated>2017-08-19T16:28:07.300Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/"/>
     <id>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</id>
     <published>2017-08-20T23:00:00.000Z</published>
-    <updated>2017-08-19T16:25:31.246Z</updated>
+    <updated>2017-08-19T16:28:07.300Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>One of the many purposes of Ansible is to easily, quickly, and efficiently <em>provision</em> new server infrastructure. The use of configuration management tools in server provisioning can be quite essential, as it provides a very flexible solution in regards to deploying and managing new hosts. This post goes through a very simple example playbook that uses Ansible roles to break up and organise the provisioning process. If you haven’t used Ansible to setup a server before this is a good place to start. The idea can then be expanded upon to add more individual components or specific ideas. </p>
@@ -217,6 +217,8 @@
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
     
       <category term="CM" scheme="http://www.tricksofthetrades.net/tags/CM/"/>
+    
+      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
       <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
     

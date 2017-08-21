@@ -4,7 +4,7 @@
   <url>
     <loc>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</loc>
     
-    <lastmod>2017-08-19T16:28:07.300Z</lastmod>
+    <lastmod>2017-08-21T14:23:36.245Z</lastmod>
     
   </url>
   
@@ -30,13 +30,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/</loc>
-    
-    <lastmod>2017-06-02T18:28:42.139Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2017/04/10/ansible-playbooks/</loc>
     
     <lastmod>2017-06-02T18:28:42.139Z</lastmod>
@@ -45,6 +38,13 @@
   
   <url>
     <loc>http://www.tricksofthetrades.net/2016/06/13/debian8-vps-checklist/</loc>
+    
+    <lastmod>2017-06-02T18:28:42.139Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/</loc>
     
     <lastmod>2017-06-02T18:28:42.139Z</lastmod>
     
@@ -79,6 +79,13 @@
   </url>
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
@@ -86,14 +93,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -142,7 +142,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -163,7 +163,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -198,14 +198,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -275,6 +275,13 @@
   </url>
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2014/11/07/html-media-code-snippets/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
@@ -290,13 +297,6 @@
   
   <url>
     <loc>http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/07/html-media-code-snippets/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     

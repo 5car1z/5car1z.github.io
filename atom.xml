@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-08-21T14:23:36.245Z</updated>
+  <updated>2017-08-21T14:30:32.665Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,11 +20,11 @@
     <link href="http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/"/>
     <id>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</id>
     <published>2017-08-20T23:00:00.000Z</published>
-    <updated>2017-08-21T14:23:36.245Z</updated>
+    <updated>2017-08-21T14:30:32.665Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>One of the many purposes of Ansible is to easily, quickly, and efficiently <em>provision</em> new server infrastructure. The use of configuration management tools in server provisioning can be quite essential, as it provides a very flexible solution in regards to deploying and managing new hosts. This post goes through a very simple example playbook that uses Ansible roles to break up and organise the provisioning process. If you haven’t used Ansible to setup a server before this is a good place to start. The idea can then be expanded upon to add more individual components or specific ideas. </p>
-<p>The Playbook is intended for Linux hosts running Debian 8 (Jessie) and is tested using a suitable <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant VM</a>. After the testing, towards the end of the post, the playbook is then deployed to several newly created Debian 8 droplets on <a href="https://www.digitalocean.com/" target="_blank" rel="external">Digital Ocean</a>. </p>
+<p>The Playbook is intended for Linux hosts running Debian 8 (Jessie) and is tested using a suitable <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant VM</a>. After the testing, towards the end of the post, the playbook is then deployed to several newly created Debian 8 droplets on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a>. </p>
 <a id="more"></a>
 <hr>
 <h1 id="1-–-Playbook-Repository"><a href="#1-–-Playbook-Repository" class="headerlink" title="1 – Playbook Repository"></a>1 – Playbook Repository</h1><p>The entirety of this post was tested on a Xubuntu 16.04 VM using the below version of Ansible and Python:</p>
@@ -183,7 +183,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkdir /etc/ansible/group_vars/</span><br><span class="line">$ sudo vim /etc/ansible/group_vars/testing</span><br></pre></td></tr></table></figure>
 <p>Setup a group variable for the <code>testing</code> group, so they use the <code>root</code> user with Ansible’s SSH operations. </p>
 <figure class="highlight bash"><figcaption><span>/etc/ansible/group_vars/testing</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">ansible_user=root</span><br></pre></td></tr></table></figure>
-<p>In the root level of the repository, run our provisioning Ansible playbook, at your <code>testing</code> group’s live Digital Ocean droplets.  </p>
+<p>In the root level of the repository, run our provisioning Ansible playbook at your <code>testing</code> group’s live Digital Ocean droplets.  </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook <span class="_">-l</span> testing playbook.yml</span><br></pre></td></tr></table></figure>
 <p>Watch the output once again to confirm the playbook’s success. </p>
 <hr>
@@ -209,7 +209,7 @@
     
       &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/9HBs9cy.png&quot; alt=&quot;Ansible Logo&quot;&gt;&lt;/p&gt;
 &lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;One of the many purposes of Ansible is to easily, quickly, and efficiently &lt;em&gt;provision&lt;/em&gt; new server infrastructure. The use of configuration management tools in server provisioning can be quite essential, as it provides a very flexible solution in regards to deploying and managing new hosts. This post goes through a very simple example playbook that uses Ansible roles to break up and organise the provisioning process. If you haven’t used Ansible to setup a server before this is a good place to start. The idea can then be expanded upon to add more individual components or specific ideas. &lt;/p&gt;
-&lt;p&gt;The Playbook is intended for Linux hosts running Debian 8 (Jessie) and is tested using a suitable &lt;a href=&quot;https://www.vagrantup.com/&quot;&gt;Vagrant VM&lt;/a&gt;. After the testing, towards the end of the post, the playbook is then deployed to several newly created Debian 8 droplets on &lt;a href=&quot;https://www.digitalocean.com/&quot;&gt;Digital Ocean&lt;/a&gt;. &lt;/p&gt;
+&lt;p&gt;The Playbook is intended for Linux hosts running Debian 8 (Jessie) and is tested using a suitable &lt;a href=&quot;https://www.vagrantup.com/&quot;&gt;Vagrant VM&lt;/a&gt;. After the testing, towards the end of the post, the playbook is then deployed to several newly created Debian 8 droplets on &lt;a href=&quot;https://www.digitalocean.com/?refcode=e91058dbfc7b&quot;&gt;Digital Ocean&lt;/a&gt;. &lt;/p&gt;
     
     </summary>
     
@@ -2687,9 +2687,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

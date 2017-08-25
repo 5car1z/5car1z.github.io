@@ -66,10 +66,12 @@
 <p>Generating a hashed password is as simple as running:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkpasswd --method=sha-512</span><br></pre></td></tr></table></figure>
 <p>A separate way of doing this is to use Python’s crypt module/library:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python -c <span class="string">'import crypt; print crypt.crypt("Enter Password Here", "$1$eixaeMai$")'</span></span><br></pre></td></tr></table></figure>
-<p><code>Enter Password Here</code> is of course replaced by the plain-text password you want to use. Whilst <code>SomeSalt</code> needs to be replaced by a salt; a random string of characters. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python -c <span class="string">'import crypt; print crypt.crypt("EnterPasswordHere", "SomeSalt")'</span></span><br></pre></td></tr></table></figure>
+<p><code>Enter Password Here</code> is of course replaced by the plain-text password you want to use. Whilst <code>SomeSalt</code> needs to be replaced by a salt - a random string of characters. </p>
 <p>You could use <code>pwgen</code> to generate salts, should you want to:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install pwgen</span><br><span class="line">$ pwgen</span><br></pre></td></tr></table></figure>
+<p>A final alternative is via the <code>openssl</code> package.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ openssl passwd -salt SomeSalt -1 EnterPasswordHere</span><br></pre></td></tr></table></figure>
 <p>Pick one of the values from the output to use for your <code>encrypted_password:</code> keys. </p>
 <hr>
 <h1 id="5-–-Roles-UFW"><a href="#5-–-Roles-UFW" class="headerlink" title="5 – Roles: UFW"></a>5 – Roles: UFW</h1><p>The “UFW” role configures the firewall settings for servers. There are only two configuration files to be aware of. </p>

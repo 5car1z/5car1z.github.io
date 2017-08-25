@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-08-21T14:30:32.665Z</updated>
+  <updated>2017-08-25T13:17:28.938Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/"/>
     <id>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</id>
     <published>2017-08-20T23:00:00.000Z</published>
-    <updated>2017-08-21T14:30:32.665Z</updated>
+    <updated>2017-08-25T13:17:28.938Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>One of the many purposes of Ansible is to easily, quickly, and efficiently <em>provision</em> new server infrastructure. The use of configuration management tools in server provisioning can be quite essential, as it provides a very flexible solution in regards to deploying and managing new hosts. This post goes through a very simple example playbook that uses Ansible roles to break up and organise the provisioning process. If you haven’t used Ansible to setup a server before this is a good place to start. The idea can then be expanded upon to add more individual components or specific ideas. </p>
@@ -90,10 +90,12 @@
 <p>Generating a hashed password is as simple as running:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkpasswd --method=sha-512</span><br></pre></td></tr></table></figure>
 <p>A separate way of doing this is to use Python’s crypt module/library:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python -c <span class="string">'import crypt; print crypt.crypt("Enter Password Here", "$1$eixaeMai$")'</span></span><br></pre></td></tr></table></figure>
-<p><code>Enter Password Here</code> is of course replaced by the plain-text password you want to use. Whilst <code>SomeSalt</code> needs to be replaced by a salt; a random string of characters. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python -c <span class="string">'import crypt; print crypt.crypt("EnterPasswordHere", "SomeSalt")'</span></span><br></pre></td></tr></table></figure>
+<p><code>Enter Password Here</code> is of course replaced by the plain-text password you want to use. Whilst <code>SomeSalt</code> needs to be replaced by a salt - a random string of characters. </p>
 <p>You could use <code>pwgen</code> to generate salts, should you want to:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install pwgen</span><br><span class="line">$ pwgen</span><br></pre></td></tr></table></figure>
+<p>A final alternative is via the <code>openssl</code> package.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ openssl passwd -salt SomeSalt -1 EnterPasswordHere</span><br></pre></td></tr></table></figure>
 <p>Pick one of the values from the output to use for your <code>encrypted_password:</code> keys. </p>
 <hr>
 <h1 id="5-–-Roles-UFW"><a href="#5-–-Roles-UFW" class="headerlink" title="5 – Roles: UFW"></a>5 – Roles: UFW</h1><p>The “UFW” role configures the firewall settings for servers. There are only two configuration files to be aware of. </p>

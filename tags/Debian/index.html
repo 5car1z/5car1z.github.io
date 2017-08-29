@@ -591,7 +591,7 @@
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
 </div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-01-15T00:00:00.000Z" class="post__time">January 15, 2015</time><h1 class="post__title"><a href="/2015/01/15/web-deployment-git-hooks/">Git Version Control (4) - Web Server Deployment with Git Hooks</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/p0i25Hx.png" alt="Github Logo"></p>
-<p>A basic example showing how to use a Git hook for web server deployment, on Debian 7 (Wheezy). </p>
+<p>This brief post demonstrates a basic example of how to use a Git hook for web server deployment on Debian 7 (Wheezy). </p>
 <ul>
 <li>Web server live directory: <code>/var/www</code></li>
 <li>Web server live directory with virtual hosts: <code>/var/www/www.exampledomain.com</code></li>
@@ -599,15 +599,17 @@
 </ul>
 <a id="more"></a>
 <hr>
-<p>SSH into the server or VPS and create the following folders in the respective directories. </p>
+<p>Firstly SSH into your server or VPS and create the following folders in their respective directories. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> /var</span><br><span class="line">$ mkdir repository-name</span><br><span class="line">$ <span class="built_in">cd</span> repository-name</span><br><span class="line">$ mkdir project-name </span><br><span class="line">$ <span class="built_in">cd</span> project-name</span><br></pre></td></tr></table></figure>
-<p>Use <code>--bare</code> to initialise only the version control components of Git and not any other of the source files. </p>
+<p>You will of course need Git version control installed on this server! If you haven’t do it now:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<p>Next use <code>--bare</code> to initialise only the version control components of Git and not any other of the source files. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git init --bare</span><br></pre></td></tr></table></figure>
 <p>Change into the <code>hooks</code> directory and create a text file named <code>post-receive</code> and begin writing to it. I’m using Vim in this example. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> hooks</span><br><span class="line">$ vim post-receive</span><br></pre></td></tr></table></figure>
 <p>Enter the following lines for a single web server host, or <strong>skip</strong> to the next code block for multiple virtual hosts. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www --git-dir=/var/loy-web/loy-website checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
-<p>For multiple virtual hosts enter this coding instead:</p>
+<p>For multiple virtual hosts enter these set of commands instead:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line">git --work-tree=/var/www/www.example-domain.com --git-dir=/var/repo-name/project-name checkout <span class="_">-f</span></span><br></pre></td></tr></table></figure>
 <p>Turn the newly created and completed <code>post-receive</code> file into a an executable file. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x post-receive</span><br></pre></td></tr></table></figure>
@@ -615,6 +617,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add live ssh://user@vps_address/var/repo-name/project-name</span><br></pre></td></tr></table></figure>
 <p>Push to the ‘live’ remote on the ‘master’ branch, which will then update the specified web server hosting directory. Which in this case was <code>/var/www</code> <strong>or</strong> <code>/var/www/www.example-domain.com</code> for multiple virtual hosts. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push live master</span><br></pre></td></tr></table></figure>
+<p>Assuming your permissions are correct on your server (and the web server itself is running correctly) you can now visit your web server’s address in a browser, to see the website/files held in the aforementioned Git repository!</p>
 <p>That’s all there is to it - a primitive example of how to deploy the contents of a Git repository to a live web hosted directory, using Git hooks. </p>
 <p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Git posts can be found on the Trades page.</a></p>
 <blockquote>

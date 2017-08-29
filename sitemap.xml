@@ -4,7 +4,7 @@
   <url>
     <loc>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</loc>
     
-    <lastmod>2017-08-29T14:35:46.955Z</lastmod>
+    <lastmod>2017-08-29T14:40:23.540Z</lastmod>
     
   </url>
   
@@ -79,7 +79,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -93,13 +93,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2015/07/12/pwgen-unix-password-generator/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
@@ -107,7 +100,21 @@
   </url>
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2015/02/05/zsh-basic-configuration/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/2014/12/23/screenshots-2014/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -128,13 +135,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/05/03/using-cvim/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2015/06/09/notes-arch-gyazo/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
@@ -142,7 +142,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/05/03/using-cvim/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -156,21 +163,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/02/05/zsh-basic-configuration/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/10/05/minecraft-server-debian/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -198,7 +198,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/10/05/minecraft-server-debian/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -212,13 +212,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
@@ -226,14 +219,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/</loc>
+    <loc>http://www.tricksofthetrades.net/2016/05/18/docker-images-hub/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/05/18/docker-images-hub/</loc>
+    <loc>http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -254,7 +247,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
+    <loc>http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -262,6 +255,13 @@
   
   <url>
     <loc>http://www.tricksofthetrades.net/2014/10/18/hexo-strict-theme-styling-alterations/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     

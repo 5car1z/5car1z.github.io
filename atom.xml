@@ -10,7 +10,7 @@
   
   <author>
     <name>Scarlz</name>
-    <email>count.elmsley@protonmail.ch</email>
+    <email>count.elmsley@protonmail.com</email>
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
@@ -1394,9 +1394,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
-    
       <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
+    
+      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
     
   </entry>
   
@@ -2715,9 +2715,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
       <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
+    
+      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
   </entry>
   

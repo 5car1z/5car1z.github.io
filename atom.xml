@@ -1221,11 +1221,11 @@
   </entry>
   
   <entry>
-    <title>Contributing to GitHub Projects</title>
+    <title>Git Version Control - Contributing to GitHub Projects (3)</title>
     <link href="http://www.tricksofthetrades.net/2016/04/26/github-flow/"/>
     <id>http://www.tricksofthetrades.net/2016/04/26/github-flow/</id>
     <published>2016-04-25T23:00:00.000Z</published>
-    <updated>2017-05-26T17:54:37.555Z</updated>
+    <updated>2017-08-29T20:07:50.393Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/HLLz1Wv.png" alt="Octocat!"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>GitHub is one of the most popular ways to contribute to open-source projects. Many major and minor organisations keep their open-source code-base hosted there, adopting the idea that anyone who follows the rules can have their own efforts put up for consideration. This post talks about said process, which if anything is referred to as “GitHub Flow”.   </p>
@@ -1360,6 +1360,7 @@
 <blockquote>
 <p><a href="https://help.github.com/articles/about-protected-branches/" target="_blank" rel="external">GitHub Help - About Protected Branches</a><br><a href="https://help.github.com/articles/configuring-protected-branches/" target="_blank" rel="external">GitHub Help - Configuring Protected Branches</a></p>
 </blockquote>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Git posts can be found on the Trades page.</a></p>
 <hr>
 <p><strong>More Information</strong></p>
 <ul>
@@ -2691,9 +2692,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

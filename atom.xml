@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-08-27T15:46:06.183Z</updated>
+  <updated>2017-08-29T14:28:03.711Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/"/>
     <id>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</id>
     <published>2017-08-20T23:00:00.000Z</published>
-    <updated>2017-08-27T15:46:06.183Z</updated>
+    <updated>2017-08-29T14:28:03.711Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>One of the many purposes of Ansible is to easily, quickly, and efficiently <em>provision</em> new server infrastructure. The use of configuration management tools in server provisioning can be quite essential, as it provides a very flexible solution in regards to deploying and managing new hosts. This post goes through a very simple example playbook that uses Ansible roles to break up and organise the provisioning process. If you haven’t used Ansible to setup a server before this is a good place to start. The idea can then be expanded upon to add more individual components or specific ideas. </p>
@@ -132,7 +132,7 @@
 <hr>
 <h1 id="7-–-Vagrant-Local-Testing"><a href="#7-–-Vagrant-Local-Testing" class="headerlink" title="7 – Vagrant Local Testing"></a>7 – Vagrant Local Testing</h1><p>You can run through the playbook in a test environment to ensure it works as intended, before applying it to real servers. A containerisation/virtualisation tool like Vagrant or Docker is great for this purpose. In my example testing I’m going with Vagrant, but Docker is probably a more modern choice and certainly worth pursing instead if preferred. Be aware that container’s are meant to be abstracted stripped down layers of a full OS image however, so may in fact not be better suited than a Vagrant VM.  </p>
 <blockquote>
-<p><a href="[http://www.tricksofthetrades.net/2017/05/17/vagrant-started/">How to Install and Get Started with Vagrant in 2017</a></p>
+<p><a href="http://www.tricksofthetrades.net/2017/05/17/vagrant-started/">How to Install and Get Started with Vagrant in 2017</a></p>
 </blockquote>
 <p>If you haven’t already you’ll need to clone the GitHub repository to carry out the testing in this step:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/ansible-debian-provisioning.git</span><br></pre></td></tr></table></figure>
@@ -407,9 +407,9 @@
     
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
-      <category term="Vagrant" scheme="http://www.tricksofthetrades.net/tags/Vagrant/"/>
-    
       <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
+    
+      <category term="Vagrant" scheme="http://www.tricksofthetrades.net/tags/Vagrant/"/>
     
   </entry>
   
@@ -2715,9 +2715,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

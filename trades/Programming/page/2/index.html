@@ -59,9 +59,10 @@
 <p>Similarly any host variables defined in:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/ansible/host_vars/server-name-1.yml</span><br></pre></td></tr></table></figure>
 <p>Are applied to the host named <code>server-name-1</code> from the original <code>hosts</code> file. </p>
-<p>Further segmentation and organisation of the host/inventory files is followed but not covered in this post, see <a href="http://rosstuck.com/multistage-environments-with-ansible/" target="_blank" rel="external">Multistage Environments with Ansible</a> for more information on how this is done. </p>
+<p>Further segmentation and organisation of the host/inventory files is followed but not covered in this post, see <a href="http://rosstuck.com/multistage-environments-with-ansible/" target="_blank" rel="external">Multistage Environments with Ansible</a> for more information on how this is done.</p>
 <hr>
 <p>A future third post on Ansible will describe the <em>modules</em> in place that can be run as part of a playbook, or as ad-hoc based commands. </p>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Ansible posts can be found on the Trades page.</a></p>
 <p><strong>More Information</strong></p>
 <ul>
 <li><a href="http://docs.ansible.com/ansible/intro_inventory.html" target="_blank" rel="external">Official Ansible Documentation - Inventory</a> – The concepts on this page are what I based most of this blosg post on. </li>
@@ -299,13 +300,7 @@
 <hr>
 <p>There are many more practices and nuances not covered here when it comes to building, tagging, and pushing to Docker registries. But hopefully this serves as a simple example of how the process can be carried out. Something to bear in mind perhaps is that Docker Hub has in the past been given bad press in terms of performance (most notably speed) although the service continues to improve as time goes on. it is also for these reasons or similar many use third party private registry platforms in its place e.g. <a href="">Portus</a></p>
 <p>The next and final post in this series takes a glance briefly at some of the extra platforms/toolsets that form up more of the Docker eco-system.</p>
-<ol>
-<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a> </li>
-<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
-<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Further Administration and Networking (3)</a></li>
-<li><a href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></li>
-<li>Docker - Building Images and Docker Hub (5)</li>
-</ol>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
 <p><strong>More Information</strong></p>
 <ul>
 <li><a href="https://github.com/5car1z/docker-flaskr" target="_blank" rel="external">GitHub - Docker-Flaskr Repository</a> – Repository for this post cloned at the start.</li>
@@ -463,7 +458,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/GitHub/" class="post__tag__link">GitHub</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2016/04/26/github-flow/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-03-14T00:00:00.000Z" class="post__time">March 14, 2016</time><h1 class="post__title"><a href="/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/GitHub/" class="post__tag__link">GitHub</a></li></ul><a href="/2016/04/26/github-flow/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-03-14T00:00:00.000Z" class="post__time">March 14, 2016</time><h1 class="post__title"><a href="/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. </p>
 <p>This post works thorough these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
 <p>This is post four on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a>. Go back and read the latter half of that post to see how to network containers together so they can properly communicate back and forth, if you need to. </p>
@@ -564,12 +559,7 @@
 </ul>
 <hr>
 <p>It seems like a large amount of information has been covered here but really only two ideas have been explored. That of singular data volumes and that of the preferred independent data container. There are also new updates to Docker on the horizon as always so some of the issues raised here are hopefully soon to be resolved. The next post on Docker covers building images using Dockerfiles, and likewise with Docker Compose. </p>
-<ol>
-<li><a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></li>
-<li><a href="http://www.tricksofthetrades.net/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></li>
-<li><a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Further Administration and Networking (3)</a></li>
-<li>Docker - Data Volumes and Data Containers (4)</li>
-</ol>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
 <p><strong>More Information</strong></p>
 <ul>
 <li><a href="https://docs.docker.com/engine/userguide/dockervolumes/" target="_blank" rel="external">Official Docker Documentation – Manage Data in Containers</a> – Main source material used for this post. </li>

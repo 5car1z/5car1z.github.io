@@ -407,9 +407,9 @@
     
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
-      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
-    
       <category term="Vagrant" scheme="http://www.tricksofthetrades.net/tags/Vagrant/"/>
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
     
   </entry>
   
@@ -551,7 +551,7 @@
     <link href="http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/"/>
     <id>http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/</id>
     <published>2017-03-20T00:00:00.000Z</published>
-    <updated>2017-09-25T18:32:32.415Z</updated>
+    <updated>2017-09-25T18:42:40.933Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Several ad hoc commands were shown in the previous post but no real detail was given as to what they can fully offer. These <em>ad hoc</em> commands are often cited as being a good starter point for learning what’s possible with Ansible; without having to dive straight into writing a playbook. Most of them incorporate the use of a <em>module</em> into their structure, so this post introduces modules too. Both from the point of view of an ad hoc command, and within the context of a task. Towards the end, the “special” Ansible module types are shown. </p>
@@ -593,7 +593,9 @@
 <h2 id="Practical-Ad-Hoc-Module-Example"><a href="#Practical-Ad-Hoc-Module-Example" class="headerlink" title="Practical Ad Hoc Module Example"></a>Practical Ad Hoc Module Example</h2><p>The first command updates the Apt package index - similar to running the usual <code>apt-get update</code> command. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible coreservers -b -K -m apt <span class="_">-a</span> update_cache=yes</span><br></pre></td></tr></table></figure>
 <p>Continuing on from before, upgrading the system packages (like with <code>apt-get upgrade</code>) uses: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ansible coreservers -b -K -m apt <span class="_">-a</span> upgrade=yes</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">Performing a `dist-upgrade` uses the `full` switch instead of just <span class="string">"yes"</span>.</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">$ ansible coreservers -b -K -m apt <span class="_">-a</span> upgrade=full</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible coreservers -b -K -m apt <span class="_">-a</span> upgrade=yes</span><br></pre></td></tr></table></figure>
+<p>Performing a <code>dist-upgrade</code> uses the <code>full</code> switch instead of just “yes”.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible coreservers -b -K -m apt <span class="_">-a</span> upgrade=full</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="Module-Index"><a href="#Module-Index" class="headerlink" title="Module Index"></a>Module Index</h2><p><a href="http://docs.ansible.com/ansible/modules_by_category.html" target="_blank" rel="external">Here’s a page from the official Ansible documentation</a> that acts as a catalogue for all the registered inbuilt modules available. There are many many modules, to cater for all specific needs. </p>
 <hr>
@@ -816,11 +818,11 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
+      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
     
       <category term="Networking" scheme="http://www.tricksofthetrades.net/tags/Networking/"/>
     
-      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
+      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
     
   </entry>
   
@@ -2697,9 +2699,9 @@
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

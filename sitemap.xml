@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/</loc>
+    
+    <lastmod>2017-09-25T18:32:32.415Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/2015/01/15/web-deployment-git-hooks/</loc>
     
     <lastmod>2017-08-29T20:25:21.089Z</lastmod>
@@ -16,14 +23,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/</loc>
+    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
     
     <lastmod>2017-08-29T20:07:50.393Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/</loc>
     
     <lastmod>2017-08-29T20:07:50.393Z</lastmod>
     
@@ -47,13 +54,6 @@
     <loc>http://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/</loc>
     
     <lastmod>2017-08-29T18:20:49.682Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2017/03/20/ansible-adhoc-modules/</loc>
-    
-    <lastmod>2017-08-29T18:20:07.778Z</lastmod>
     
   </url>
   
@@ -142,7 +142,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/10/02/terraria-tdsm-server/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -156,21 +156,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/21/summer-in-space-3/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -184,28 +170,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/07/14/notes-arch-system-install/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/07/04/notes-pass-unix-password-manager/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/06/14/notes-bash-env-variables/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/12/23/screenshots-2014/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -219,13 +184,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2015/07/12/pwgen-unix-password-generator/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
@@ -233,14 +191,56 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/12/23/screenshots-2014/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/07/14/notes-arch-system-install/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/16/hexo-tag-plugins/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/06/14/notes-bash-env-variables/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/07/04/notes-pass-unix-password-manager/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/10/02/terraria-tdsm-server/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/11/21/summer-in-space-3/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/10/05/minecraft-server-debian/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -254,21 +254,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/02/16/arch-vm-base/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -282,13 +268,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/02/18/arch-vm-main/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2014/11/07/html-media-code-snippets/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
@@ -296,7 +275,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/10/05/minecraft-server-debian/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/16/hexo-tag-plugins/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -324,6 +310,20 @@
   </url>
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2015/02/16/arch-vm-base/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/02/18/arch-vm-main/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/contact/index.html</loc>
     
     <lastmod>2017-05-25T22:20:40.188Z</lastmod>
@@ -338,14 +338,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/10/13/vps-basic-checklist/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/10/15/magical-technology/</loc>
     
     <lastmod>2014-10-12T23:00:00.000Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/10/15/magical-technology/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/10/13/vps-basic-checklist/</loc>
     
     <lastmod>2014-10-12T23:00:00.000Z</lastmod>
     

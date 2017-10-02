@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2017-10-02T17:23:33.290Z</updated>
+  <updated>2017-10-02T17:30:30.073Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2017/10/02/ansible-local-playbooks/"/>
     <id>http://www.tricksofthetrades.net/2017/10/02/ansible-local-playbooks/</id>
     <published>2017-10-01T23:00:00.000Z</published>
-    <updated>2017-10-02T17:23:33.290Z</updated>
+    <updated>2017-10-02T17:30:30.073Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/9HBs9cy.png" alt="Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>There are a several ways to run Ansible on a local system that I could find whilst searching the net. In this I’m covering three of the ones that were the most popular or the most prevalent. The first two seem great for their different contexts, and the third is not as necessary but worth considering perhaps.  </p>
@@ -34,7 +34,7 @@
 <p>Run it as usual like any standard playbook - inclusive of  <code>-K</code> as it’ll need <code>sudo</code> privileges to complete. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -K playbook.yml</span><br></pre></td></tr></table></figure>
 <hr>
-<h1 id="2-–-Repository-Config-and-Hosts-File"><a href="#2-–-Repository-Config-and-Hosts-File" class="headerlink" title="2 – Repository Config and Hosts File"></a>2 – Repository Config and Hosts File</h1><p>This second method works best in the context of a version control repository, which features multiple local playbook files and is intended to be passed around from person to person or host to host. It works by forcing Ansible to use a custom config file and in turn local hosts file. This seems to be the case at least, I can’t be one hundred percent sure. </p>
+<h1 id="2-–-Repository-Config-and-Hosts-File"><a href="#2-–-Repository-Config-and-Hosts-File" class="headerlink" title="2 – Repository Config and Hosts File"></a>2 – Repository Config and Hosts File</h1><p>This second method works best in the context of a version control repository, which features multiple local playbook files and is intended to be passed around from person to person or host to host. It works by forcing Ansible to use a custom config file and in turn local hosts file.  </p>
 <p>Here are the step you’d need to carry out in order to set this up in a Git repository, after setting up the repo itself. There’s also no commands for checking in, writing, and pushing files to the remote.</p>
 <p>In the Git repository, create the custom <code>ansible.cfg</code> file.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ansible.cfg</span><br></pre></td></tr></table></figure>
@@ -50,8 +50,8 @@
 <p>You’ll need to provide your <code>sudo</code> password with this again, to run the playbook.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -K playbook.yml</span><br></pre></td></tr></table></figure>
 <hr>
-<h1 id="3-–-Global-Inventory-Hosts-Group"><a href="#3-–-Global-Inventory-Hosts-Group" class="headerlink" title="3 – Global Inventory Hosts Group"></a>3 – Global Inventory Hosts Group</h1><p>One further alternative solution (in a non version control scenario where there’s no need for portability) is to instead add the <code>[local]</code> host group to your global <code>/etc/ansible/hosts</code> file. This however</p>
-<p>These would be the commands; substituting in your chosen text editor. </p>
+<h1 id="3-–-Global-Inventory-Hosts-Group"><a href="#3-–-Global-Inventory-Hosts-Group" class="headerlink" title="3 – Global Inventory Hosts Group"></a>3 – Global Inventory Hosts Group</h1><p>One further alternative solution (in a non version control scenario where there’s no need for portability) is to instead add the <code>[local]</code> host group to your global <code>/etc/ansible/hosts</code> file. </p>
+<p>These would be the commands:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/ansible/hosts</span><br></pre></td></tr></table></figure>
 <p>Append this new host group to the file. </p>
 <figure class="highlight bash"><figcaption><span>/etc/ansible/hosts</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">local</span>]</span><br><span class="line">localhost ansible_connection=<span class="built_in">local</span></span><br></pre></td></tr></table></figure>
@@ -60,7 +60,7 @@
 <p>Then afterwards when you want to run a playbook locally, use the <code>-l</code> switch and provide the <code>local</code> group or  <code>localhost</code> as the target host. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -K <span class="_">-l</span> localhost playbook.yml</span><br></pre></td></tr></table></figure>
 <p>It’s still wise and maybe more convenient to keep local playbook execution isolated to one directory or Git repository however (using the method in the former step). I would probably not recommend this method over the other two, but whatever works best for your particular needs I guess. </p>
-<p>Thanks for reading, and I hope this has helped you out in some way or another.  </p>
+<p>Thanks for reading, and I hope this has helped you out with local playbook execution in some way or another.  </p>
 <hr>
 <p><strong>More Information</strong></p>
 <ul>

@@ -1,4 +1,189 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-11-30T00:00:00.000Z" class="post__time">November 30, 2015</time><h1 class="post__title"><a href="/2015/11/30/django-modwsgi-apache/">Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-12-23T00:00:00.000Z" class="post__time">December 23, 2015</time><h1 class="post__title"><a href="/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a <em>container</em>. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.</p>
+<p>This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installing-Docker"><a href="#1-–-Installing-Docker" class="headerlink" title="1 – Installing Docker"></a>1 – Installing Docker</h1><p>The first “main method” in this step should always ensure you have an up to date version of Docker installed on your system, and is the recommended route to installing Docker. It uses an install script from one of their official domains, and is suggested by the developers.</p>
+<h2 id="Main-Method"><a href="#Main-Method" class="headerlink" title="Main Method"></a>Main Method</h2><blockquote>
+<p><strong>“Docker requires a 64-bit installation regardless of your Debian/Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version is also acceptable.”</strong></p>
+</blockquote>
+<p>Install using ether:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>Or:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
+<p>Then start the <code>docker</code> service:</p>
+<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="Package-Managers-Method"><a href="#Package-Managers-Method" class="headerlink" title="Package Managers Method"></a>Package Managers Method</h2><p>It’s advised to use the first “main method” of installing Docker in order to always install the latest version, and not to use the build packages included in your Linux system’s package manager.</p>
+<p>Here’s how to use up to date package versions manually if you do wish to do so however.</p>
+<h2 id="Arch-Linux-1"><a href="#Arch-Linux-1" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using <code>pacman</code> package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S docker</span><br></pre></td></tr></table></figure>
+<p>Using an Aurum helper like Yaourt you can get access to another package that is built off of the Docker Git <em>master</em> branch:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yaourt -S docker-git</span><br></pre></td></tr></table></figure>
+<p>Remember to start the <code>docker</code> service:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
+<p>More information can be found at:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/archlinux/" target="_blank" rel="external">Docker Installation Documentation - Arch Linux</a></p>
+</blockquote>
+<h2 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h2><p>For Debian to get an up to date version of Docker you must add and update the <em>apt</em> repository by following the steps here:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/debian/" target="_blank" rel="external">Docker Installation Documentation - Debian</a></p>
+</blockquote>
+<p>Then run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><p>For Ubuntu to get an up to date version of Docker you must add and update the <em>apt</em> repository, and set up any of the relevant “prerequisites” by following the steps here:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/installation/ubuntulinux/" target="_blank" rel="external">Docker Installation Documentation - Ubuntu</a></p>
+</blockquote>
+<p>Then run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Docker-User-Group"><a href="#2-–-Docker-User-Group" class="headerlink" title="2 – Docker User Group"></a>2 – Docker User Group</h1><p>After installing Docker a message is returned that reads:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">If you would like to use Docker as a non-root user, you should now consider</span><br><span class="line">adding your user to the <span class="string">"docker"</span> group with something like:</span><br><span class="line"></span><br><span class="line">  sudo usermod <span class="_">-a</span>G docker &lt;username&gt;</span><br><span class="line"></span><br><span class="line">Remember that you will have to <span class="built_in">log</span> out and back <span class="keyword">in</span> <span class="keyword">for</span> this to take effect!</span><br></pre></td></tr></table></figure>
+<p>This if followed allows you to run Docker as a non-root user; with the user you add to the group. While this may seem like a great idea, be aware of the potential implications involved in adding users to this group.</p>
+<p>The Docker daemon requires root privileges to carry it out its work, so only trusted users and user accounts should be added to this group, and given control of the Docker daemon.</p>
+<p>Read this page on Docker security for reasoning and a better explanation of why this is potentially a security risk:</p>
+<blockquote>
+<p><a href="https://docs.docker.com/engine/articles/security/#docker-daemon-attack-surface" target="_blank" rel="external">Docker Daemon Attack Surface</a></p>
+</blockquote>
+<p>Once you understand this if you want to add your Linux user to the Docker group use the next command.</p>
+<p>Where <code>scarlz</code> is replaced by the username you wish to add.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermod <span class="_">-a</span>G docker scarlz</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Now log out and back into your Linux system.</li>
+</ul>
+<p>The rest of this tutorial assumes your are entering the commands in each step as a user that has been added to the <code>docker</code> group. IF you did not do this simply append <code>sudo</code> to each Docker command where necessary.</p>
+<hr>
+<h1 id="3-–-Containers-amp-Images"><a href="#3-–-Containers-amp-Images" class="headerlink" title="3 – Containers &amp; Images"></a>3 – Containers &amp; Images</h1><iframe width="1080" height="500" src="https://www.youtube.com/embed/klzLdzpPcQw" frameborder="1" allowfullscreen><br></iframe>
+
+<p>Docker uses the concept of <em>containers</em> to provide the benefits and functionality mentioned in the preamble. A container is a very lightweight bare-bones stripped version of an operating system (Linux OS). Only containing the necessary essential parts for whatever purpose it needs to server.</p>
+<p><em>Images</em> are loaded into a container and are the service or program you want to be run as a docker process. This could be anything from personally created custom images to official web servers, databases, etc. The official images of these are held by “Docker Hub” which is explained more in an upcoming section.</p>
+<p>Enter this command to run an example “hello world” image in a Docker container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run hello-world</span><br></pre></td></tr></table></figure>
+<p>This is what the <code>hello-world</code> image should have output:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hello from Docker.</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker Hub account:</span><br><span class="line"> https://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
+<p>Here’s also what happened internally with the previous command:</p>
+<p><img src="http://i.imgur.com/mSdE5yh.png?1" alt="hello-world Docker Image"></p>
+<ul>
+<li>Docker checked to see if the <code>hello-world</code> software image was present on the host machine’s local file-system.</li>
+<li>The <code>hello-world</code> image was not found so Docker downloaded the image from Docker Hub.</li>
+<li>After it finished downloading it was then loaded as an image into a container and “run” successfully.</li>
+</ul>
+<p>Images can be very simple (like this one) or can be designed to carry out more complex high-level tasks.</p>
+<p>It can also be tempting to think of containers as “lightweight” virtual machines, and although this is generally a good analogy to some small degree, it does not account for and explain everything Docker containers are about.</p>
+<p><blockquote align="center" class="twitter-tweet" data-partner="tweetdeck"><p lang="en" dir="ltr">&quot;Containers are not lightweight VMs, there is much more to it&quot;, says Arnaud Porterie. <a href="https://twitter.com/hashtag/DockerCon?src=hash" target="_blank" rel="external">#DockerCon</a></p>&mdash; sushan ghimire (@sixev) <a href="https://twitter.com/sixev/status/666246458333622272" target="_blank" rel="external">November 16, 2015</a></blockquote></p>
+<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<hr>
+<h1 id="4-–-Docker-Hub"><a href="#4-–-Docker-Hub" class="headerlink" title="4 – Docker Hub"></a>4 – Docker Hub</h1><p>Who built the “hello-world” software image? Docker did, but anyone can and is welcome to contribute to the online catalogue of Docker images known colloquially as Docker Hub.</p>
+<blockquote>
+<p><a href="https://hub.docker.com/explore/" target="_blank" rel="external">Docker Hub Official Repositories</a></p>
+</blockquote>
+<p>The Docker Hub houses most of the more familiar and popular software and services you’re accustomed to. We will look one or two of these later.</p>
+<p>For now pull a second example image from Docker Hub by typing into the search-bar <code>whalesay</code> on the Docker Hub website, and then finding the official <code>docker/whalesay</code> image.</p>
+<p>The page for it looks like this:</p>
+<p><img src="http://i.imgur.com/fHOBrlp.png" alt="Whalesay Dock Hub Page"></p>
+<p>Image descriptions, pull commands, instructions, and owners are always listed here for any type of image.</p>
+<p>Run the command as shown by the page:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run docker/whalesay cowsay boo</span><br></pre></td></tr></table></figure>
+<p>Which runs the image in a container resulting in:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Unable to find image <span class="string">'docker/whalesay:latest'</span> locally</span><br><span class="line">latest: Pulling from docker/whalesay</span><br><span class="line"></span><br><span class="line">2880a3395ede: Pull complete</span><br><span class="line">515565c29c94: Pull complete</span><br><span class="line">98b15185dba7: Pull complete</span><br><span class="line">2ce633e3e9c9: Pull complete</span><br><span class="line">35217eff2e30: Pull complete</span><br><span class="line">326bddfde6c0: Pull complete</span><br><span class="line">3a2e7fe79da7: Pull complete</span><br><span class="line">517de05c9075: Pull complete</span><br><span class="line">8f17e9411cf6: Pull complete</span><br><span class="line">ded5e192a685: Pull complete</span><br><span class="line">Digest: sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> docker/whalesay:latest</span><br><span class="line"> _____</span><br><span class="line">&lt; boo &gt;</span><br><span class="line"> -----</span><br><span class="line">    \</span><br><span class="line">     \</span><br><span class="line">      \     </span><br><span class="line">                    <span class="comment">##        .            </span></span><br><span class="line">              <span class="comment">## ## ##       ==            </span></span><br><span class="line">           <span class="comment">## ## ## ##      ===            </span></span><br><span class="line">       /<span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span>___/ ===        </span><br><span class="line">  ~~~ &#123;~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~   </span><br><span class="line">       \______ o          __/            </span><br><span class="line">        \    \        __/             </span><br><span class="line">          \____\______/</span><br></pre></td></tr></table></figure>
+<p>Furthermore here’s the <em>dockerfile</em> (configuration file) for the whalesay image we just ran:</p>
+<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install cowsay, and move the "default.cow" out of the way so we can overwrite it with "docker.cow"</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y cowsay --no-install-recommends &amp;&amp; rm -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; mv /usr/share/cowsay/cows/default.cow /usr/share/cowsay/cows/orig-default.cow</span><br><span class="line"></span><br><span class="line"><span class="comment"># "cowsay" installs to /usr/games</span></span><br><span class="line">ENV PATH <span class="variable">$PATH</span>:/usr/games</span><br><span class="line"></span><br><span class="line">COPY docker.cow /usr/share/cowsay/cows/</span><br><span class="line">RUN ln -sv /usr/share/cowsay/cows/docker.cow /usr/share/cowsay/cows/default.cow</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"cowsay"</span>]</span><br></pre></td></tr></table></figure>
+<p>it’s also possible to search for images by keyword from the command line:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker search ubuntu</span><br></pre></td></tr></table></figure>
+<p>This like the website search shows you a list of the currently available public repositories on the Docker Hub which match the provided keyword.</p>
+<p>Some final considerations for Docker Hub are:</p>
+<ul>
+<li><p>You can sign up for a free Docker Hub account to upload your own Docker images. Private repositories for organisation wide images also exist.  </p>
+</li>
+<li><p>Automated Builds allow you to auto-create new images when you make changes to a targeted source, GitHub repo, or Bitbucket repo.</p>
+</li>
+<li><p>Inbuilt webhooks let you trigger actions after a successful push to a repository (or successful automated build).</p>
+</li>
+<li><p>General GitHub and Bitbucket integration adds the Hub and Docker images to your current workflows.</p>
+</li>
+</ul>
+<hr>
+<h1 id="5-–-Running-Docker-Containers"><a href="#5-–-Running-Docker-Containers" class="headerlink" title="5 – Running Docker Containers"></a>5 – Running Docker Containers</h1><p>In this step there’s more containers to be run alongside the specifics of how Docker command structures work.</p>
+<p>To start with run yet another example command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run ubuntu:14.04 /bin/<span class="built_in">echo</span> <span class="string">'Hello world'</span></span><br></pre></td></tr></table></figure>
+<p>In this last command <code>docker run</code> starts us off by creating a brand new container, just like before. Then the image we asked for is this time not just a program/service but <code>ubuntu:14.04</code> - an entire Linux OS environment. Bear in mind the quote from earlier!</p>
+<p>As we don’t have this Docker image (it’s still classed and used as an image by Docker) it must be downloaded from Docker Hub.</p>
+<p>After this we asked Docker to run a shell command inside the new container’s environment, which was:</p>
+<p><code>/bin/echo &quot;Hello World&quot;</code></p>
+<p>We then saw the result of this whole sequence as output on the command line.</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello world</span><br></pre></td></tr></table></figure>
+<p>Docker containers only run as long as the command you specify is active. So as soon as Hello World was <em>echoed</em>, the container stopped.</p>
+<p>Try this new command that has some options and calls a shell.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -t -i ubuntu:14.04 /bin/bash</span><br></pre></td></tr></table></figure>
+<p>The <code>-t</code> option assigns/begins a pseudo-tty or terminal inside the new container.</p>
+<p>The <code>-i</code> option allows us to make an interactive connection by grabbing the standard in (STDIN) of the container.</p>
+<p>Which as we’ve called <code>bash</code> shell will take us to a bash command prompt inside of the container.</p>
+<p>The usual commands will work in this shell and file-system. It’s just a contained version of a regular Ubuntu OS environment.</p>
+<p>Use <code>exit</code> or <code>CTRL</code> + <code>D</code> to end the session, thereby also ending and stopping this container.</p>
+<p>Although these are useful examples most of the time it’s more likely and common you’ll use Docker with “daemonised” programs or services.</p>
+<p>Here’s how this looks with the “Hello World” example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> ubuntu:14.04 /bin/sh -c <span class="string">"while true; do echo hello world; sleep 1; done"</span></span><br></pre></td></tr></table></figure>
+<p>The differences here are the command line options and <em>do while</em> loop.</p>
+<p>The <code>-d</code> option tells Docker to run the container but put it in the background, to “daemonise” it. The loop contains a command that permanently echoes “hello world” into the container with a short delay in between.</p>
+<p>You will have noticed that as it’s been daemonised, instead of seeing any output, a long string comprised of digits and numbers has been returned:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f54eb8a426307e63684040eee69e0a6cf43859bee08c3f6a9086b195213df052</span><br></pre></td></tr></table></figure>
+<p>This is known as a container ID; it uniquely identifies a container instance so we can work with it.</p>
+<p>This next step shows how you can monitor, examine, and find out what’s going on inside of  daemonised containers.</p>
+<hr>
+<h1 id="6-–-Docker-CLI-Client"><a href="#6-–-Docker-CLI-Client" class="headerlink" title="6 – Docker CLI Client"></a>6 – Docker CLI Client</h1><p>We can use the container ID to see what’s happening inside of our daemonised hello world container.</p>
+<p>First let’s list all of the currently running containers and their details:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
+<p>The <code>docker ps</code> command queries the Docker daemon for information about all the containers it has tied to it.</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">f54eb8a42630        ubuntu:14.04        <span class="string">"/bin/sh -c 'while tr"</span>   11 minutes ago      Up 10 minutes                           amazing_jepsen</span><br></pre></td></tr></table></figure>
+<p>Note the shortened container ID in the first column, and the auto-assigned name in the end column.</p>
+<p>To check on the inner workings of the container and see if our earlier “hello world” loop is still running use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker logs amazing_jepsen</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> You can use either the container ID or name as a parameter.</p>
+</blockquote>
+<p>The output confirms it’s working as intended:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
+<p>Lastly for this, stopping and ending a container is achieved by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop amazing_jepsen</span><br></pre></td></tr></table></figure>
+<p>Autocomplete works for this last command too when entering the name.</p>
+<p>To start the container again simply replace <code>stop</code> in the last command with <code>start</code> . Or to delete the container entirely use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm amazing_jepsen</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Removing a container is permanent, once it’s deleted it’s gone.</p>
+</blockquote>
+<p>So the container from before is now gone. The Ubuntu image we have been using is still present on the system however.</p>
+<p>To see images that have been downloaded and still present enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
+<p>Which will give a similar output to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">ubuntu              14.04               89d5d8e8bafb        13 days ago         187.9 MB</span><br><span class="line">hello-world         latest              0a6ba66e537a        9 weeks ago         960 B</span><br><span class="line">docker/whalesay     latest              ded5e192a685        7 months ago        247 MB</span><br></pre></td></tr></table></figure>
+<p>To delete and remove images use this command with the image name as a parameter e.g.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi ubuntu:14.04</span><br></pre></td></tr></table></figure>
+<p>Autocomplete works for the image names and multiple names can be passed as parameters.</p>
+<p>A successful deletion gives output similar to:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Untagged: ubuntu:14.04</span><br><span class="line">Deleted: 89d5d8e8bafb6e279fa70ea444260fa61cc7c5c7d93eff51002005c54a49c918</span><br><span class="line">Deleted: e24428725dd6f8e354a0c6080570f90d40e9e963c6878144291c6ba9fd39b25f</span><br><span class="line">Deleted: 1796d1c62d0c3bad665cc4fbe4b6a051e26c22f14aa5e0e2490e528783764ca0</span><br><span class="line">Deleted: 0bf0561619131d3dc0432a2b40a9438bd48f4a84e89ff128cc5147a089c114e4</span><br></pre></td></tr></table></figure>
+<p>If an error message is returned claiming another container is using the image as a reference <strong>and</strong> you know this is not true.</p>
+<p>Try using the <code>-f</code> force option with the <code>rmi</code> removal command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi <span class="_">-f</span> ubuntu:14.04</span><br></pre></td></tr></table></figure>
+<p>With this we complete the cycle of downloading, creating, and removing an image and its containers.</p>
+<hr>
+<p>Docker is an amazing step forward in the world of virtualisation and resource efficiency, but these examples here are for demonstration purposes only, and are meant to teach the basics. As much as possible try to to think of how this concept could benefit a large hosting provider, or business that serves web applications to many.</p>
+<p>Post number two on Docker goes into more detail on administering and handling containers. With some examples of real services and apps running under Docker. </p>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/" target="_blank" rel="external">Official Docker Documentation</a> – Is updated and maintained pretty well.</li>
+<li><a href="https://docs.docker.com/engine/userguide/" target="_blank" rel="external">Official Docker User Guide</a> – The main source of inspiration and command content for this post.</li>
+<li><a href="https://github.com/docker/docker" target="_blank" rel="external">Docker GitHub Project Page</a> – The Readme contains some very clear explanations of why Docker is such an asset.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2015/12/23/installing-running-docker/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-11-30T00:00:00.000Z" class="post__time">November 30, 2015</time><h1 class="post__title"><a href="/2015/11/30/django-modwsgi-apache/">Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. </p>
 <p>More popular methods of running and hosting Django are mentioned at the end of the post. </p>
 <a id="more"></a>
@@ -580,174 +765,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-09-25T23:00:00.000Z" class="post__time">September 26, 2015</time><h1 class="post__title"><a href="/2015/09/26/git-version-control-two/">Git Version Control - Concepts, Terminology, and Further Commands (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a follow up from the <a href="http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/">previous Git post</a> and covers some of the areas not mentioned in the original.</p>
-<blockquote>
-<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
-</blockquote>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-VCS-Background"><a href="#1-–-VCS-Background" class="headerlink" title="1 – VCS Background"></a>1 – VCS Background</h1><ul>
-<li><p><strong>Local Version Control</strong> – A singular database on local storage media that keeps insertions and deletions to the code-base. Very primitive and not interconnected between a team and its members.</p>
-</li>
-<li><p><strong>Centralized Version Control</strong> – The many drawbacks and limitations of local version control brought about a new practice of centralised version control. Allowing multiple developers to work on the same code or content. Progress of coding could be tracked and viewed by all involved leading to better communication as well has giving more power over access rights.</p>
-</li>
-<li><p><strong>Distributed Version Control</strong> – Instead of housing the code in a single repository like in CVS, the code-base is shared locally across all clients involved. This way if the remote central server fails or is compromised, many backups exist and developers can continue to work in the mean time. <em>Mirrored</em> backups can also be used to restore central servers if needed.</p>
-</li>
-</ul>
-<hr>
-<h1 id="2-–-Git-Principles"><a href="#2-–-Git-Principles" class="headerlink" title="2 – Git Principles"></a>2 – Git Principles</h1><ul>
-<li><p><strong>Snapshots</strong> – Git stores data in a file-system made up of multiple snapshots. Each time you update or change your project’s content with a <em>commit</em>, Git creates a snapshot of the altered object (e.g. file) and stores a reference to it.</p>
-</li>
-<li><p><strong>Local Operations</strong> – Git is mostly designed to cache data and work with locally held information. Instead of continually going over the network to another server, to retrieve core information.</p>
-</li>
-<li><p><strong>Tracking</strong> – Anything and everything within the project’s Git repository can be tracked for changes or removal. Which makes it function as an alternate backup service if needed.</p>
-</li>
-<li><p><strong>Data Integrity</strong> – Git is designed with security and potential data corruption in mind. Making it very difficult for a third party to intefere with a commit’s contents. Whilst at the same time taking measures to ensure data that is sent is confirmed as arriving intact.</p>
-</li>
-</ul>
-<hr>
-<h1 id="3-–-Git-Terminology"><a href="#3-–-Git-Terminology" class="headerlink" title="3 – Git Terminology"></a>3 – Git Terminology</h1><p>Files in a Git repository can exist in three main states:</p>
-<ol>
-<li><strong>Modified</strong> – The file has been altered but its changes have not been saved to anything Git related.</li>
-<li><strong>Staged</strong> – The previously changed file has had its changed tracked but not committed to the database.</li>
-<li><strong>Committed</strong> – The previously tracked file is now committed and securely stored in the local Git database.</li>
-</ol>
-<p><img src="http://i.imgur.com/DSgJ1QV.png" alt="Main States Image"></p>
-<p>A local Git repository has three main areas:</p>
-<ol>
-<li><strong>Working Directory</strong> – The current files and their local state reside here.</li>
-<li><strong>Index</strong> – The area local file changes are stored before being confirmed as valid alterations.  </li>
-<li><strong>Head</strong> – Points to the most recent commit made in the project.</li>
-</ol>
-<hr>
-<h1 id="4-–-Stashing-Changes"><a href="#4-–-Stashing-Changes" class="headerlink" title="4 – Stashing Changes"></a>4 – Stashing Changes</h1><p>If you’ve made some changes locally but need to pull, fetch, whilst still keeping your local edits, use the <em>stash</em> command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash</span><br></pre></td></tr></table></figure>
-<p>This is useful for when you in general don’t want to lose any changes. All this does is temporarily hide the changes then give you a clean working directory. To retrieve the changes and apply them to your working directory use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git stash apply</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="5-–-Remotes"><a href="#5-–-Remotes" class="headerlink" title="5 – Remotes"></a>5 – Remotes</h1><p>With <em>cloned</em> repositories, Git automatically gives the name <code>origin</code> to the remote server from which you cloned. As well as the name <code>master</code> to your local default branch.</p>
-<p><strong>Remote Repositories Diagram</strong></p>
-<p><img src="http://i.imgur.com/PyWO8kj.png" alt="Remote Repositories Diagram"></p>
-<p>To see all current locally added remotes in a repository enter:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
-<p>The <code>-v</code> switch shows the remote’s URL’s as part of the output.</p>
-<figure class="highlight bash"><figcaption><span>Example Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">remote1 https://github.com/remote1/example (fetch)</span><br><span class="line">remote1 https://github.com/remote1/example (push)</span><br><span class="line">remote2 https://github.com/remote2/example (fetch)</span><br><span class="line">remote2 https://github.com/remote2/example (push)</span><br><span class="line">remote3 https://github.com/remote3/example (fetch)</span><br><span class="line">remote3 https://github.com/remote3/example (push)</span><br></pre></td></tr></table></figure>
-<p>To add a remote to the local repository you would use the next command.</p>
-<p>The <code>remote4</code> parameter should be the <em>shortname</em> of the remote.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote add remote4 https://github.com/remote4/example</span><br></pre></td></tr></table></figure>
-<p>If you need to rename a remote’s short name, make use of:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rename remote4 remote5</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> Be aware that the <em>rename</em> command also alters the names of the respective remote branches e.g. remote4/master would change to remote5/master in the last example.</p>
-</blockquote>
-<p>To remove a remote for the local repository when contributor has left the team, or the server URL has changed use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git remote rm remote5</span><br></pre></td></tr></table></figure>
-<h2 id="Fetching"><a href="#Fetching" class="headerlink" title="Fetching"></a>Fetching</h2><p>Fetching is the name given to pulling data you don’t currently have from a remote’s project, in order to update your local repository.</p>
-<p>Here is the command to do it, where <code>remote4</code> is the remote’s shorthand name:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch remote4</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> You should also possess the references to all branches for that specific remote when fetching from it.</p>
-</blockquote>
-<p>For cloned repositories, you can use the command <code>git fetch origin</code> to pull down any of the new changes that were pushed to it, since you originally cloned or last issued the <code>fetch</code> command.</p>
-<h2 id="Pulling"><a href="#Pulling" class="headerlink" title="Pulling"></a>Pulling</h2><p>The <code>fetch</code> command only pulls new data to a local repository; it does not at any point <em>merge</em> changes with or attempt to modify your local work. The <code>pull</code> command however allows for both fetching and automatic merging at the same time.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull remote4</span><br></pre></td></tr></table></figure>
-<p>See the More Information Section for a more detailed thread about he differences between <code>fetch</code> and <code>pull</code> commands.</p>
-<hr>
-<h1 id="6-–-Fixing-amp-Reverting-Changes"><a href="#6-–-Fixing-amp-Reverting-Changes" class="headerlink" title="6 – Fixing &amp; Reverting Changes"></a>6 – Fixing &amp; Reverting Changes</h1><p>For editing of your last commit there’s the <code>--amend</code> parameter. This works if no file changes have been made since the last commit (the one you are wanting to change the message of).</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m amend <span class="string">"The last commit message should really be this message instead."</span></span><br></pre></td></tr></table></figure>
-<p><strong>History Diagram</strong></p>
-<p><img src="http://i.imgur.com/kGHejcc.png" alt="History Diagram"></p>
-<p>This also works if you want to add more modified files to the previous commit.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git add modified-file.md</span><br><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure>
-<p>When <code>git reset --hard</code> is used, Git will overwrite any and all changes in the working directory, permanently destroying uncommitted changes.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard</span><br></pre></td></tr></table></figure>
-<p><strong>Reset Diagram</strong></p>
-<p><img src="http://i.imgur.com/RAf1UVE.png" alt="Reset Diagram"></p>
-<p>To get rid of changes resulting from a previous commit, we can use the <code>git revert</code> command. This command does not technically revert everything, but instead creates a new most recent commit that undoes the changes introduced in your specified past commit. Preventing Git from losing any of its history. This is in stark contrast to the <code>reset</code> command which actually alters the existing previous commit history.</p>
-<p>The hash value identifies the commit to be reverted.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert ed04fb96992698248d240ed545b104f2414a61ed</span><br></pre></td></tr></table></figure>
-<p><strong>Revert Diagram</strong></p>
-<p><img src="http://i.imgur.com/obncGjG.png?1" alt="Revert Diagram"></p>
-<p>To do the last commit you can simply provide it with <code>HEAD</code> in its place:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git revert HEAD</span><br></pre></td></tr></table></figure>
-<p>Another way of resetting staged file changes back to the last commit, is to use the <code>checkout</code> command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout modified-file.md</span><br></pre></td></tr></table></figure>
-<p>This is different to <code>reset</code> as it mechanically erases any changes made to the file by <strong>copying</strong> HEAD’s file version over it.</p>
-<p><strong>Checkout Diagram</strong></p>
-<p><img src="http://i.imgur.com/f9sk5h8.png" alt="Checkout Diagram"></p>
-<hr>
-<h1 id="7-–-Rebasing"><a href="#7-–-Rebasing" class="headerlink" title="7 – Rebasing"></a>7 – Rebasing</h1><p>In Git, <em>Rebasing</em> is an alternative to merging.</p>
-<p>It works by using the <em>diffs</em> resulting from each last commit of your current branch and the one you want to rebase into. Both commits are stored in temporary files, and then the “current branch” gets reset to the same commit as that of the branch you are targeting. Last but not least, all the changes are then applied to the latter branch.</p>
-<p><strong>Rebasing Process Diagram</strong></p>
-<p><img src="http://i.imgur.com/fgrpfC4.png" alt="Rebasing Process Diagram"></p>
-<p>The main difference between merging is:</p>
-<blockquote>
-<p>“The rebasing process rewrites a project’s history by replaying all changes committed on one branch to another one, leading to cleaner application of commits on a remote branch and a linear history.””</p>
-</blockquote>
-<p>As an example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout <span class="built_in">test</span>-branch</span><br><span class="line">$ git rebase master</span><br></pre></td></tr></table></figure>
-<p>There are opposing viewpoints regarding merging and rebasing. The general arguments and differences between the two are:</p>
-<p><strong>Merging</strong> – The true commit history of a repository should not be altered because it’s a log and record of occurrences.</p>
-<p><strong>Rebasing</strong> – Commit histories should be polished and well edited, and rebasing provides this.</p>
-<hr>
-<h1 id="8-–-Tags"><a href="#8-–-Tags" class="headerlink" title="8 – Tags"></a>8 – Tags</h1><p>Git has a feature that allows it to flag certain points in a project’s history as being significant or of some importance.</p>
-<p><strong>Tags Diagram</strong></p>
-<p><img src="http://i.imgur.com/uxjfzpe.png" alt="Tags Diagram"></p>
-<p>Listing current tags in a project is done with:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag</span><br></pre></td></tr></table></figure>
-<p>There are two types of tags you can choose to create.</p>
-<p><strong>Lightweight</strong> – This type of tag points to a particular commit.</p>
-<p><strong>Annotated</strong> – These tags are kept in the Git database as a <em>full object</em>, they contain a tagging message, tagger name, email address, and tag date. Annotated Tags are also often signed and verified with GNU Privacy Guard (GPG). The best practice is to use annotated tags whenever possible.</p>
-<p>Lightweight tags only hold a checksum and the commit value it points to.</p>
-<p>To create a lightweight tag, use the command below <strong>without</strong> any extra command line options:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag v3.0</span><br></pre></td></tr></table></figure>
-<p>Create an annotated tag like this:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag <span class="_">-a</span> v3.0 -m “version 3.1”</span><br></pre></td></tr></table></figure>
-<p>The <code>-m</code> option passes a message for the tag.</p>
-<p>See the tag once it’s created via the <code>show</code> parameter:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git show v3.0</span><br></pre></td></tr></table></figure>
-<p>Users must explicitly push tags to remote servers after creation as by default <code>git push</code> does not send tags as part of its data.</p>
-<p>Use the <code>--tags</code> option with the git push command to include them.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push --tags</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="9-–-Ignoring-Files"><a href="#9-–-Ignoring-Files" class="headerlink" title="9 – Ignoring Files"></a>9 – Ignoring Files</h1><p>At some point you’ll come across a situation where you don’t want Git to track certain files. There are a few ways to tell Git which files to <em>ignore</em> and not take into account.</p>
-<p><strong>Repository Wide .gitignore</strong></p>
-<p>Creating a file named <code>.gitignore</code> in your repository allows Git to ignore the file names it holds. They will not be included in any commits or changes.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim .gitignore</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>“GitHub maintains an official list of recommended <code>.gitignore</code> files for many popular operating systems, environments, and languages in the <a href="https://github.com/github/gitignore" target="_blank" rel="external">github/gitignore public repository</a>.”</p>
-</blockquote>
-<p>The <code>.gitignore</code> file itself should be tracked and committed to Git so others using the repository can incorporate the same ignore rules.</p>
-<p>This Gist has some less specific general purpose ignore rules you may want to add to your own file:</p>
-<script src="//gist.github.com/9257657.js?file=.gitignore"></script>
-<p><strong>Global Repositories .gitignore</strong></p>
-<p>It is also possible to create a global <code>.gitignore</code> file. Which differs from the above in that it is a list of rules for ignoring files in <em>every</em> Git repository on your local machine.</p>
-<p>To create this make a file at <code>~/.gitignore_global</code> and add your desired global rules to it.</p>
-<p>Afterwards run the following in your terminal:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.excludesfile ~/.gitignore_global</span><br></pre></td></tr></table></figure>
-<p>If in either of the two main examples above (repository wide or global) you want to ignore a file that has already been checked in, and the current version is in turn kept on a remote. You must untrack the file first fully, ignoring it with this next command. Before then ignoring it as usual.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm --cached example-file</span><br></pre></td></tr></table></figure>
-<p>This removes the file contents from the index, which means on committing the change it removes it from <code>HEAD</code> and thereby the remote upon pushing changes.</p>
-<hr>
-<p>The vast majority of the content in this post is derived from a Git guide provided by <a href="https://www.udemy.com/" target="_blank" rel="external">Udemy</a>.</p>
-<p>The Udemy post can be accessed at this link on their blog:</p>
-<blockquote>
-<p><a href="https://blog.udemy.com/git-tutorial-a-comprehensive-guide/" target="_blank" rel="external">https://blog.udemy.com/git-tutorial-a-comprehensive-guide/</a></p>
-</blockquote>
-<p>Be sure to read the rest of it for the areas of Git not covered here.</p>
-<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Git posts can be found on the Trades page.</a></p>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="http://stackoverflow.com/questions/292357/what-are-the-differences-between-git-pull-and-git-fetch" target="_blank" rel="external">Stack Overflow Git fetch/pull Difference Thread</a> – Stack Overflow thread discussing differences.</li>
-<li><a href="http://stackoverflow.com/questions/3639342/whats-the-difference-between-git-reset-and-git-checkout" target="_blank" rel="external">Stack Overflow Git checkout/reset Difference Thread</a> – Stack Overflow thread discussing differences.</li>
-<li><a href="https://www.atlassian.com/git/" target="_blank" rel="external">Getting Git Right Tutorials</a> – Very well presented Git tutorials from Atlassian, diagrams originate from here.</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li></ul><a href="/2015/09/26/git-version-control-two/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2017 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

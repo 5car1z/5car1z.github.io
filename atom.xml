@@ -1478,9 +1478,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
-    
       <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
+    
+      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
     
   </entry>
   
@@ -1489,11 +1489,11 @@
     <link href="http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/"/>
     <id>http://www.tricksofthetrades.net/2016/03/14/docker-data-volumes/</id>
     <published>2016-03-14T00:00:00.000Z</published>
-    <updated>2017-10-25T16:32:41.614Z</updated>
+    <updated>2017-10-25T16:54:42.750Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><blockquote>
-<p><strong><a href="https://docs.docker.com/engine/admin/volumes/volumes/#differences-between--v-and---mount-behavior" target="_blank" rel="external">This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this!</a></strong></p>
+<p><strong><a href="https://docs.docker.com/engine/admin/volumes/volumes/" target="_blank" rel="external">This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this!</a></strong></p>
 </blockquote>
 <p>Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. </p>
 <p>This post works thorough these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
@@ -1612,7 +1612,7 @@
     
       &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/poo8Rai.png&quot; alt=&quot;Docker Logo&quot;&gt;&lt;/p&gt;
 &lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://docs.docker.com/engine/admin/volumes/volumes/#differences-between--v-and---mount-behavior&quot;&gt;This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this!&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://docs.docker.com/engine/admin/volumes/volumes/&quot;&gt;This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this!&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. &lt;/p&gt;
 &lt;p&gt;This post works thorough these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.&lt;/p&gt;

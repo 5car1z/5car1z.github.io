@@ -84,7 +84,7 @@
 <p>To restore into a new container run: </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /data-store --name data-container-2 ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
 <p>Then extract the backup file contents into the the new container’s data volume:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container-2 -v $(<span class="built_in">pwd</span>):/backup ubuntu bash -c <span class="string">"cd /data-store &amp;&amp; tar -zxvf /backup/backup.tar"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container-2 -v $(<span class="built_in">pwd</span>):/backup ubuntu bash -c <span class="string">"cd /data-store &amp;&amp; tar -xvf /backup/backup.tar"</span></span><br></pre></td></tr></table></figure>
 <p>Now the new container is up and running with the files from the original <code>/data-store</code> volume. </p>
 <hr>
 <h1 id="6-–-Volume-and-Data-Container-Issues"><a href="#6-–-Volume-and-Data-Container-Issues" class="headerlink" title="6 – Volume and Data Container Issues"></a>6 – Volume and Data Container Issues</h1><ul>

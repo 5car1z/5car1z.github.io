@@ -1,10 +1,10 @@
 <!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Docker - Data Volumes and Data Containers (4) - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-03-14T00:00:00.000Z" class="post__time">March 14, 2016</time><h1 class="post__title"><a href="/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><blockquote>
-<p><strong><a href="https://docs.docker.com/engine/admin/volumes/volumes/" target="_blank" rel="external">This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this!</a></strong></p>
+<p><strong><a href="https://docs.docker.com/engine/admin/volumes/volumes/" target="_blank" rel="external">This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this kind of thing!</a></strong></p>
 </blockquote>
 <p>Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. </p>
-<p>This post works thorough these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
-<p>This is post four on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a>. Go back and read the latter half of that post to see how to network containers together so they can properly communicate back and forth, if you need to. </p>
+<p>This post works through these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
+<p>This is post four on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a>. Go back and read the latter half of that post to see how to network containers together so they can properly communicate back and forth - if you need to. </p>
 <a id="more"></a>
 <hr>
 <h1 id="1-–-Creating-Data-Volumes"><a href="#1-–-Creating-Data-Volumes" class="headerlink" title="1 – Creating Data Volumes"></a>1 – Creating Data Volumes</h1><p>A “data volume” is a marked directory inside of a container that exists to hold persistent or commonly shared data. Assigning these volumes is done when creating a new container. </p>
@@ -21,7 +21,7 @@
 <p>This preservation is due to the fact that data volumes are meant to persist independent of a container’s life cycle. In turn this also means Docker never <em>garbage collects</em> volumes that are no longer in use by a container. </p>
 <hr>
 <h1 id="2-–-Creating-Host-Data-Volumes"><a href="#2-–-Creating-Host-Data-Volumes" class="headerlink" title="2 – Creating Host Data Volumes"></a>2 – Creating Host Data Volumes</h1><p>You can instead mount a directory from your Docker daemon’s <strong>host</strong> into a container; you may have seen this used once or twice in the previous posts. </p>
-<p>Mounting a host directory can be useful for testing. For example, you can mount source code inside a container. Then, change the source code and see its effect on the application in real time. The directory on the host must be specified as an absolute path and if the directory doesn’t exist Docker will automatically create it for you. This auto-creation of the host path has been deprecated.</p>
+<p>Mounting a host directory can be useful for testing. For example, you can mount source code inside a container. Then, change the source code and see its effect on the application in real time. The directory on the host must be specified as an absolute path and if the directory doesn’t exist Docker will automatically create it for you. </p>
 <p>The next example command mounts the host directory <code>/src/webapp</code> into the container at the <code>/opt/webapp</code> directory. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name <span class="built_in">test</span>-container -v /src/webapp:/opt/webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
 <p>Some internal rules and behaviours for this process are:</p>
@@ -37,7 +37,7 @@
 <p>Here the same <code>/src/webapp</code> directory is linked again but the extra <code>:ro</code> option makes the mount read-only.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p><strong>Note:</strong> It’s not possible to mount a host directory using a <code>Dockerfile</code> because by convention built images should be portable and flexible, and a specific host directory might not be available on all potential hosts.</p>
+<p><strong>Note:</strong> It’s not possible to mount a host directory using a <code>Dockerfile</code> because by convention images should be portable and flexible, and a specific host directory might not be available on all potential hosts.</p>
 </blockquote>
 <hr>
 <h1 id="3-–-Mounting-Individual-Host-Files"><a href="#3-–-Mounting-Individual-Host-Files" class="headerlink" title="3 – Mounting Individual Host Files"></a>3 – Mounting Individual Host Files</h1><p>The <code>-v</code> flag used so far can target a single file instead of entire directories from the host machine. This is done by mapping the specific file on each side of the container. </p>
@@ -78,7 +78,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container -v $(<span class="built_in">pwd</span>):/backup ubuntu tar cvf /backup/backup.tar /data-store</span><br></pre></td></tr></table></figure>
 <p>Here’s how the previous command works:</p>
 <ol>
-<li>The <code>--volumes-from</code> flag creates a new nameless container that mounts the data volume  inside <code>data-container</code> you wish to backup. </li>
+<li>The <code>--volumes-from</code> flag creates a new nameless container that mounts the data volume inside <code>data-container</code> you wish to backup. </li>
 <li>A localhost directory is mounted as <code>/backup</code> . Then <code>tar</code> archives the contents of the <code>/data-store</code> volume to a <code>backup.tar</code> file inside the local <code>/backup</code> directory. </li>
 <li>The container will be <code>--rm</code> removed once it eventually ends and exits. </li>
 </ol>
@@ -95,9 +95,9 @@
 </li>
 <li><p><strong>Security</strong> – Other than the usual Unix file permissions and the ability to set read-only or read-write privileges. Docker volumes or data containers have no additional security placed on them. </p>
 </li>
-<li><p><strong>Data Integrity</strong> – Sharing data using volumes and data containers provides no trsl level of data integrity protection. Data protection features are not yet built into Docker i.e. data snapshot, automatic data replication, automatic backups, etc. So data management has to be handled by the administrator or the container itself. </p>
+<li><p><strong>Data Integrity</strong> – Sharing data using volumes and data containers provides no level of data integrity protection. Data protection features are not yet built into Docker i.e. data snapshot, automatic data replication, automatic backups, etc. So data management has to be handled by the administrator or the container itself. </p>
 </li>
-<li><p><strong>External Storage</strong> –  The current design does not take into account the ability to use a Docker volume spanning from one host to another. They must be on the same host although this needs verifying on my end. </p>
+<li><p><strong>External Storage</strong> –  The current design does not take into account the ability to use a Docker volume spanning from one host to another. They must be on the same host. </p>
 </li>
 </ul>
 <hr>

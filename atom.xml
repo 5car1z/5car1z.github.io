@@ -899,11 +899,11 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
+      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
     
       <category term="Networking" scheme="http://www.tricksofthetrades.net/tags/Networking/"/>
     
-      <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
+      <category term="IP" scheme="http://www.tricksofthetrades.net/tags/IP/"/>
     
   </entry>
   
@@ -1152,9 +1152,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
       <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
+    
+      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
       <category term="VPS" scheme="http://www.tricksofthetrades.net/tags/VPS/"/>
     
@@ -1478,9 +1478,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
-    
       <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
+    
+      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
     
   </entry>
   

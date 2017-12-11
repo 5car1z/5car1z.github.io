@@ -34,8 +34,11 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">You need a Passphrase to protect your secret key.</span><br><span class="line"></span><br><span class="line">Enter passphrase:</span><br></pre></td></tr></table></figure>
 <p>As the next prompt says type on the keyboard, move the mouse, and perform some actions that read/write to the machine’s hard drives. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">We need to generate a lot of random bytes. It is a good idea to perform</span><br><span class="line">some other action (<span class="built_in">type</span> on the keyboard, move the mouse, use the</span><br><span class="line">disks) during the prime generation; this gives the random number</span><br><span class="line">generator a better chance to gain enough entropy.</span><br></pre></td></tr></table></figure>
-<p>If this is not enough or does not seem to update and complete after sometime, open up a new shell session and carry out these commands:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install rng-tools</span><br><span class="line">$ sudo rngd -r /dev/urandom</span><br></pre></td></tr></table></figure>
+<p>If this is not enough or does not seem to update and complete after sometime, open up a new shell session and install the <a href="https://wiki.archlinux.org/index.php/Haveged" target="_blank" rel="external"><em>haveged</em></a> package:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install haveged</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> There are several other ways of generating more entrophy (some more appropriate than others) and the best method will differ from setup to setup.</p>
+</blockquote>
 <p>The process should now continue and include your new key’s location, value, and details. </p>
 <p>With the main line reading:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public and secret key created and signed.</span><br></pre></td></tr></table></figure>

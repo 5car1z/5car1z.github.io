@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>Tricks of the Trades</title>
+  <title>C.J. Scarlett</title>
   <subtitle>The palest ink lasts longer than the most retentive memory.</subtitle>
   <link href="/atom.xml" rel="self"/>
   
@@ -82,7 +82,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -136,7 +136,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
@@ -213,7 +213,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -429,7 +429,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -615,7 +615,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
@@ -748,7 +748,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -860,7 +860,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -1028,7 +1028,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Firewall" scheme="http://www.tricksofthetrades.net/tags/Firewall/"/>
@@ -1130,7 +1130,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -1281,7 +1281,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
@@ -1429,7 +1429,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
@@ -1605,7 +1605,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
@@ -1752,7 +1752,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
@@ -1897,7 +1897,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="HTML" scheme="http://www.tricksofthetrades.net/tags/HTML/"/>
@@ -2074,7 +2074,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
@@ -2263,7 +2263,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
@@ -2489,7 +2489,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
@@ -2702,7 +2702,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
@@ -2911,7 +2911,7 @@
     
     </summary>
     
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
       <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
@@ -2988,7 +2988,7 @@
     
     </summary>
     
-      <category term="EVE-Online" scheme="http://www.tricksofthetrades.net/trades/EVE-Online/"/>
+      <category term="EVE-Online" scheme="http://www.tricksofthetrades.net/topics/EVE-Online/"/>
     
     
       <category term="Spaceships" scheme="http://www.tricksofthetrades.net/tags/Spaceships/"/>

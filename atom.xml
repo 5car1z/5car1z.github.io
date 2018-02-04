@@ -96,6 +96,58 @@
   </entry>
   
   <entry>
+    <title>Kernal Updates for Meltdown and Spectre CPU Exploits</title>
+    <link href="http://www.tricksofthetrades.net/2018/01/11/kernel-update-for-meltdown-spectre/"/>
+    <id>http://www.tricksofthetrades.net/2018/01/11/kernel-update-for-meltdown-spectre/</id>
+    <published>2018-01-11T00:00:00.000Z</published>
+    <updated>2018-02-04T16:22:02.671Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/TEnht2h.jpg" alt="Meltdown and Spectre Logos"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any <a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown and Spectre</a> fixes. A reboot is required after the updates for kernel changes to take effect. </p>
+<p>Without configuration management or any automation tools it’s pretty simple.</p>
+<a id="more"></a>
+<hr>
+<p>On Debian and Ubuntu:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get dist-upgrade</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<p>On RPM based distros like Redhat and CentOS this would be:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<p>On Fedora it’s <code>dnf</code> instead:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dnf update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<hr>
+<p>Further updates, more information, and perhaps even a targeted approach to circumventing these exploits could be available in the future. So keep up to date with both of the two issues as best as possible.</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-protect-your-server-against-the-meltdown-and-spectre-vulnerabilities" target="_blank" rel="external">DigitalOcean - How To Protect Your Server Against the Meltdown and Spectre Vulnerabilities</a></li>
+<li><a href="https://www.cyberciti.biz/faq/patch-meltdown-cpu-vulnerability-cve-2017-5754-linux/" target="_blank" rel="external">Nixcraft: How to patch Meltdown CPU Vulnerability CVE-2017-5754 on Linux</a></li>
+<li><a href="https://www.cyberciti.biz/faq/patch-spectre-vulnerability-cve-2017-5753-cve-2017-5715-linux/" target="_blank" rel="external">Nixcraft: How to patch Spectre Vulnerability CVE-2017-5753/CVE-2017-5715 on Linux</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/TEnht2h.jpg&quot; alt=&quot;Meltdown and Spectre Logos&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any &lt;a href=&quot;https://meltdownattack.com/&quot;&gt;Meltdown and Spectre&lt;/a&gt; fixes. A reboot is required after the updates for kernel changes to take effect. &lt;/p&gt;
+&lt;p&gt;Without configuration management or any automation tools it’s pretty simple.&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+    
+    
+      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Meltdown" scheme="http://www.tricksofthetrades.net/tags/Meltdown/"/>
+    
+      <category term="Spectre" scheme="http://www.tricksofthetrades.net/tags/Spectre/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Ansible - Local Playbook Execution</title>
     <link href="http://www.tricksofthetrades.net/2017/10/02/ansible-local-playbooks/"/>
     <id>http://www.tricksofthetrades.net/2017/10/02/ansible-local-playbooks/</id>
@@ -988,58 +1040,6 @@
   </entry>
   
   <entry>
-    <title>Kernal Updates for Meltdown and Spectre CPU Exploits</title>
-    <link href="http://www.tricksofthetrades.net/2017/01/05/kernel-update-for-meltdown-spectre/"/>
-    <id>http://www.tricksofthetrades.net/2017/01/05/kernel-update-for-meltdown-spectre/</id>
-    <published>2017-01-05T00:00:00.000Z</published>
-    <updated>2018-02-04T16:19:11.165Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/TEnht2h.jpg" alt="Meltdown and Spectre Logos"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any <a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown and Spectre</a> fixes. A reboot is required after the updates for kernel changes to take effect. </p>
-<p>Without configuration management or any automation tools it’s pretty simple.</p>
-<a id="more"></a>
-<hr>
-<p>On Debian and Ubuntu:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get dist-upgrade</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
-<p>On RPM based distros like Redhat and CentOS this would be:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
-<p>On Fedora it’s <code>dnf</code> instead:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dnf update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
-<hr>
-<p>Further updates, more information, and perhaps even a targeted approach to circumventing these exploits could be available in the future. So keep up to date with both of the two issues as best as possible.</p>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://www.digitalocean.com/community/tutorials/how-to-protect-your-server-against-the-meltdown-and-spectre-vulnerabilities" target="_blank" rel="external">DigitalOcean - How To Protect Your Server Against the Meltdown and Spectre Vulnerabilities</a></li>
-<li><a href="https://www.cyberciti.biz/faq/patch-meltdown-cpu-vulnerability-cve-2017-5754-linux/" target="_blank" rel="external">Nixcraft: How to patch Meltdown CPU Vulnerability CVE-2017-5754 on Linux</a></li>
-<li><a href="https://www.cyberciti.biz/faq/patch-spectre-vulnerability-cve-2017-5753-cve-2017-5715-linux/" target="_blank" rel="external">Nixcraft: How to patch Spectre Vulnerability CVE-2017-5753/CVE-2017-5715 on Linux</a></li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/TEnht2h.jpg&quot; alt=&quot;Meltdown and Spectre Logos&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any &lt;a href=&quot;https://meltdownattack.com/&quot;&gt;Meltdown and Spectre&lt;/a&gt; fixes. A reboot is required after the updates for kernel changes to take effect. &lt;/p&gt;
-&lt;p&gt;Without configuration management or any automation tools it’s pretty simple.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
-    
-    
-      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
-    
-      <category term="Meltdown" scheme="http://www.tricksofthetrades.net/tags/Meltdown/"/>
-    
-      <category term="Spectre" scheme="http://www.tricksofthetrades.net/tags/Spectre/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Ansible - Inventory Concepts (2)</title>
     <link href="http://www.tricksofthetrades.net/2016/06/27/ansible-inventory-concepts/"/>
     <id>http://www.tricksofthetrades.net/2016/06/27/ansible-inventory-concepts/</id>
@@ -1284,9 +1284,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
     
       <category term="VPS" scheme="http://www.tricksofthetrades.net/tags/VPS/"/>
     

@@ -1,4 +1,92 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-05-17T23:00:00.000Z" class="post__time">May 18, 2015</time><h1 class="post__title"><a href="/2015/05/18/iptables-ipv4/">iptables (IPv4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/000yMhS.png" alt="Firewall Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="atom.xml" title="Tricks of the Trades" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - Tricks of the Trades</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">Tricks of the Trades</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/trades" class="head-nav__link">Trades</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/work" class="head-nav__link">Work</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-06-08T23:00:00.000Z" class="post__time">June 9, 2015</time><h1 class="post__title"><a href="/2015/06/09/notes-arch-gyazo/">Installing and Configuring Gyazo on Arch Linux with Sxhkd</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/UHrni76.png" alt="Gyazo Ninja"></p>
+<p>Gyazo is a free opensource screenshot program available on all desktop platforms including Linux. It allows full screenshot or custom screen area capturing by the user, with uploading of captured images to an online server so they can be accessed anywhere with the uniquely generated public URL.  </p>
+<p>A premium “ninja” service is also available that gives users more storage options and further benefits such as image enhancement, text captions, and pointer arrow insertion. </p>
+<p>Here are my notes on how to install the program/service onto Arch Linux and bind it to run with an Sxhkd shortcut binding. </p>
+<blockquote>
+<p><a href="https://gyazo.com" target="_blank" rel="external">Gyazo’s Homepage</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Download-Tarball"><a href="#1-–-Download-Tarball" class="headerlink" title="1 – Download Tarball"></a>1 – Download Tarball</h1><p>Acquire the source code from the Arch User Repository and find somewhere suitable to compile it. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -V https://aur.archlinux.org/packages/gy/gyazo/gyazo.tar.gz</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Unpack-Tarball"><a href="#2-–-Unpack-Tarball" class="headerlink" title="2 – Unpack Tarball"></a>2 – Unpack Tarball</h1><p>Unpack and extract the packages that are within the downloaded <code>.tar.gz</code> file. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ tar -zxvf gyazo.tar.gz</span><br></pre></td></tr></table></figure>
+<p>Change into the newly created folder:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> gyazo</span><br></pre></td></tr></table></figure>
+<h1 id="3-–-Build-amp-Compile-Package"><a href="#3-–-Build-amp-Compile-Package" class="headerlink" title="3 – Build &amp; Compile Package"></a>3 – Build &amp; Compile Package</h1><p>Use <code>makepkg</code> to link, build, and compile the software inside this directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ makepkg PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Download any missing dependencies you’re addressed with through <code>pacman</code> as normal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -Sy</span><br><span class="line">$ sudo pacman -S imagemagick ruby xclip</span><br></pre></td></tr></table></figure>
+<p>If you get the error output that looks like this: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">==&gt; Validating <span class="built_in">source</span> files with sha256sums...</span><br><span class="line">    master.zip ... FAILED</span><br><span class="line">==&gt; ERROR: One or more files did not pass the validity check!</span><br></pre></td></tr></table></figure>
+<p>Run <code>sha256sum</code> on the <code>master.zip</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sha256sum master.zip</span><br></pre></td></tr></table></figure>
+<p>You will see a hash value that you need to use, in my case and version it was:</p>
+<p><code>58567d7c2a77bae20551c66d203385b64037df7599f431c92f66e3aafe4a6b3f  master.zip</code></p>
+<p>Save the value to your clipboard however you see fit. </p>
+<p>If you don’t know how to do this then enter the following into your terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sha256sum master.zip | awk <span class="string">'&#123;print $1&#125;'</span> | xclip</span><br></pre></td></tr></table></figure>
+<p>Open the <code>PKGBUILD</code> file for writing with your preferred text editor, I’ll be using <code>vim</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Line 13 needs changing to whatever SHA value was gained from the previous <code>sha256sum</code> command. </p>
+<p>You can use your middle mouse button to paste it into the file pending the hash is still in your clipboard from before.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Maintainer: procrastinator</span></span><br><span class="line"></span><br><span class="line">pkgname=gyazo</span><br><span class="line">pkgver=1.0_1</span><br><span class="line">pkgrel=2</span><br><span class="line">pkgdesc=<span class="string">"Launch the Gyazo app and drag your mouse to grab the screen. "</span></span><br><span class="line">arch=(<span class="string">'any'</span>)</span><br><span class="line">url=<span class="string">"http://gyazo.com/"</span></span><br><span class="line">license=(<span class="string">'GPL'</span>)</span><br><span class="line">groups=(multimedia)</span><br><span class="line">depends=(<span class="string">'ruby'</span> <span class="string">'xclip'</span> <span class="string">'imagemagick'</span>)</span><br><span class="line"><span class="built_in">source</span>=(<span class="string">"https://github.com/gyazo/Gyazo-for-Linux/archive/master.zip"</span>)</span><br><span class="line">sha256sums=(<span class="string">'58567d7c2a77bae20551c66d203385b64037df7599f431c92f66e3aafe4a6b3f'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="title">package</span></span>() &#123;</span><br><span class="line">        <span class="built_in">cd</span> <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>"</span></span><br><span class="line"></span><br><span class="line">  install -D -m755 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/src/gyazo.rb"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/bin/gyazo"</span></span><br><span class="line"></span><br><span class="line">  install -D -m664 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/src/gyazo.desktop"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/share/applications/gyazo.desktop"</span></span><br><span class="line"></span><br><span class="line">  install -D -m664 <span class="string">"<span class="variable">$&#123;srcdir&#125;</span>/Gyazo-for-Linux-master/icons/gyazo.png"</span> \</span><br><span class="line">                                        <span class="string">"<span class="variable">$&#123;pkgdir&#125;</span>/usr/share/pixmaps/gyazo.png"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Run the command we ran earlier to build the package again, this time successfully:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ makepkg PKGBUILD</span><br></pre></td></tr></table></figure>
+<p>Seeing the same error message from before again means you didn’t enter the correct hash value, or placed it wrongly in the <code>PKGBUILD</code> file. Go back and amend any discrepancies as needed.  </p>
+<hr>
+<h1 id="4-–-Install-Compiled-Package"><a href="#4-–-Install-Compiled-Package" class="headerlink" title="4 – Install Compiled Package"></a>4 – Install Compiled Package</h1><p>To continue install the newly built <code>.pkg.tar.xz</code> package to the Arch system repo’s with <code>pacman</code>  and the <code>-U</code> parameter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -U gyazo-1.0_1-2-any.pkg.tar.xz</span><br></pre></td></tr></table></figure>
+<p>Gyazo is now installed and can be run from the command line simply with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ gyazo</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="Optional-–-Set-Gyazo’s-Web-Browser"><a href="#Optional-–-Set-Gyazo’s-Web-Browser" class="headerlink" title="Optional – Set Gyazo’s Web Browser"></a>Optional – Set Gyazo’s Web Browser</h1><p>Gyazo is at its base an executable ruby script. </p>
+<p>The script’s variable values can be altered with a text editor. </p>
+<p>Only alter what you know is a good idea and be careful as this could of course cause problems within the program as a whole:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /usr/bin/gyazo</span><br></pre></td></tr></table></figure>
+<p>Line 4 can be changed to whatever web browser you want gyazo to open pushed images in. In this instance I’ve set it to run <code>google-chrome-stable</code> . </p>
+<p>Others could be <code>firefox</code> , <code>chromium</code> , <code>opera</code> , etc. </p>
+<blockquote>
+<p><strong>Note:</strong> This is not needed if you have your <code>xdg-open</code> defaults set elsewhere in Linux. </p>
+</blockquote>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env ruby</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># setting</span></span><br><span class="line">browser_cmd = <span class="string">'google-chrome-stable'</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="5-–-Login-to-Gyazo"><a href="#5-–-Login-to-Gyazo" class="headerlink" title="5 – Login to Gyazo"></a>5 – Login to Gyazo</h1><p>Login to Gyazo’s website at: </p>
+<blockquote>
+<p><a href="https://gyazo.com" target="_blank" rel="external">https://gyazo.com</a></p>
+</blockquote>
+<p>Or sign up for a free account there. </p>
+<p>Then connect the client machine you’re setting up Gyazo on when prompted. </p>
+<p>Connected machines can be seen in the settings page at:</p>
+<blockquote>
+<p><a href="https://gyazo.com/settings" target="_blank" rel="external">https://gyazo.com/settings</a></p>
+</blockquote>
+<hr>
+<h1 id="6-–-Sxhkd-Shortcut-Daemon"><a href="#6-–-Sxhkd-Shortcut-Daemon" class="headerlink" title="6 – Sxhkd Shortcut Daemon"></a>6 – Sxhkd Shortcut Daemon</h1><p>Through using a daemon like <code>sxhkd</code> it is possible to bind <code>gyazo</code> to run whenever a certain key combination is pressed and triggered. An alternative would be <a href="https://wiki.archlinux.org/index.php/Xbindkeys" target="_blank" rel="external">Xbindkeys</a> or Xorg’s <a href="https://wiki.archlinux.org/index.php/Xmodmap" target="_blank" rel="external">xmodmap</a>.</p>
+<p>I won’t cover installing <code>sxhkd</code> here in these notes but here’s the link to the project and source code on Github if you decide you want to use it:</p>
+<blockquote>
+<p><a href="https://github.com/baskerville/sxhkd" target="_blank" rel="external">Sxhkd’s Github Page</a></p>
+</blockquote>
+<p>Go to your <code>sxhkd</code> config file and add the below line to the shown section:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment">#wm independant hotkeys</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"></span><br><span class="line">ctrl + <span class="built_in">shift</span> + c</span><br><span class="line">    gyazo</span><br></pre></td></tr></table></figure>
+<p>Then force sxhkdrc to reload its configuration file. </p>
+<p>The default keybinding for this is the combination:</p>
+<p><code>SUPER</code> + <code>ESC</code></p>
+<p>Now whenever you enter <code>CTRL</code> + <code>SHIFT</code> + <code>c</code> on your keyboard the screen capture grid appears.</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://aur.archlinux.org/packages/gyazo/" target="_blank" rel="external">Gyazo Package on the Aur</a> - Index of Gyazo Package on the Aur.</li>
+<li><a href="https://wiki.archlinux.org/index.php/Xdg-open" target="_blank" rel="external">Arch Linux Xdg-open Page</a> - From the Official Wiki. </li>
+<li><a href="https://wiki.archlinux.org/index.php/Sxhkd" target="_blank" rel="external">Arch Linux Sxhkd Page</a> - From the Official Wiki. </li>
+<li><a href="https://github.com/baskerville/sxhkd" target="_blank" rel="external">Sxhkd on Github</a> - The Sxhkd Github repository. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/Gyazo/" class="post__tag__link">Gyazo</a></li><li class="post__tag__item"><a href="/tags/Sxhkd/" class="post__tag__link">Sxhkd</a></li></ul><a href="/2015/06/09/notes-arch-gyazo/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-05-17T23:00:00.000Z" class="post__time">May 18, 2015</time><h1 class="post__title"><a href="/2015/05/18/iptables-ipv4/">iptables (IPv4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/000yMhS.png" alt="Firewall Logo"></p>
 <p>Notes on <code>iptables</code>  including the most used command types and an example of some basic filter table rules. </p>
 <blockquote>
 <p><strong>Note:</strong> Only IP version 4 examples are covered in this post. </p>
@@ -495,97 +583,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/16/arch-vm-base/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-02-05T00:00:00.000Z" class="post__time">February 5, 2015</time><h1 class="post__title"><a href="/2015/02/05/zsh-basic-configuration/">Ubuntu 14.04 Z Shell (zsh) Installation and Basic Configuration</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/OyNFwff.gif" alt="Z Shell Logo"></p>
-<p>Initial notes on installing plus base setup of Z Shell. </p>
-<p>Listed here are some of its often touted features. </p>
-<ul>
-<li>Auto-completion </li>
-<li>Auto-correction</li>
-<li>Scripting capabilities</li>
-<li>Extensibility with modules</li>
-<li>Improved globbing</li>
-<li>Improved array handling</li>
-</ul>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Installation"><a href="#1-–-Installation" class="headerlink" title="1 – Installation"></a>1 – Installation</h1><p>Update the <code>apt-get</code> package manager’s database.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br></pre></td></tr></table></figure>
-<p>Install <code>zsh</code> through the <code>apt-get</code> package manager.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install zsh</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="2-–-zsh-newuser-install"><a href="#2-–-zsh-newuser-install" class="headerlink" title="2 – zsh-newuser-install"></a>2 – zsh-newuser-install</h1><p>Run Z Shell for the first time to begin the new user config.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zsh</span><br></pre></td></tr></table></figure>
-<p>If it doesn’t run or drop into the config then you can use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ zsh /usr/share/zsh/<span class="built_in">functions</span>/Newuser/zsh-newuser-install <span class="_">-f</span></span><br></pre></td></tr></table></figure>
-<p>Which will invoke the new user config manually.</p>
-<p>Work through the new prompt screen as directed, typing <code>0</code> remembers an edit but does not save it until it is entered again on the root prompt screen.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(1)  Configure settings <span class="keyword">for</span> <span class="built_in">history</span>, i.e. <span class="built_in">command</span> lines remembered</span><br><span class="line">     and saved by the shell.  (Recommended)</span><br></pre></td></tr></table></figure>
-<p>On the first option <code>0</code> will suffice and keeps the default settings.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(2)  Configure the new completion system.  (Recommended.)</span><br></pre></td></tr></table></figure>
-<p>On the second option pressing <code>1</code> and turning on completion with default options is enough.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(3)  Configure how keys behave when editing <span class="built_in">command</span> lines.  (Recommended.)</span><br></pre></td></tr></table></figure>
-<p>With the third option you can set the key’s shell line editor to behave like Emacs or Vi. Set it with <code>1</code> and press <code>e</code> for emacs and <code>v</code> for vi.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(4)  Pick some of the more common shell options.  These are simple <span class="string">"on"</span></span><br><span class="line">     or <span class="string">"off"</span> switches controlling the shell<span class="string">'s features.</span></span><br></pre></td></tr></table></figure>
-<p>In the fourth option I set <strong>1, 2, and 3</strong> to on, enabling them. </p>
-<p>Finally entering <code>0</code> at the root menu exits and saves these new settings.</p>
-<hr>
-<h1 id="3-–-Configuration-Files-Layout"><a href="#3-–-Configuration-Files-Layout" class="headerlink" title="3 – Configuration Files Layout"></a>3 – Configuration Files Layout</h1><p>When Z Shell starts, it sources the following files in this order:</p>
-<p><code>/etc/zsh/zshenv</code><br>Commands to set the global command search path and other system-wide environment variables; it should not contain commands that produce output.</p>
-<p><code>~/.zshenv</code><br>For per-user configuration. Generally used for setting some useful environment variables.</p>
-<p><code>/etc/zsh/zprofile</code><br>This is a global configuration file, usually used for executing some general commands at login. On Arch Linux, by default it contains one line which sources the /etc/profile.</p>
-<p><code>/etc/profile</code><br>This file should be sourced by all Bourne-compatible shells upon login: it sets up an environment upon login and application-specific settings. Again on Arch Linux, Z Shell will also source this by default.</p>
-<p><code>~/.zprofile</code><br>This file is generally used for automatic execution of user scripts upon login.</p>
-<p><code>/etc/zsh/zshrc</code><br>Another global configuration file. </p>
-<p><code>~/.zshrc</code><br>The main user configuration file, and the one most often customised by users. This file is the one that will be used and changed in the next section. </p>
-<p><code>/etc/zsh/zlogin</code><br>Another global configuration file.</p>
-<p><code>~/.zlogin</code><br>Same as the previous file before it, except for individual-user configuration.</p>
-<p><code>/etc/zsh/zlogout</code><br>A global configuration file, will be sourced when a login shell exits.</p>
-<p><code>~/.zlogout</code><br>Same as the previous file before it, except for individual-user configuration.</p>
-<h1 id="4-–-zshrc-Configuration-File"><a href="#4-–-zshrc-Configuration-File" class="headerlink" title="4 – .zshrc Configuration File"></a>4 – .zshrc Configuration File</h1><p>The newly created <code>zsh</code> config file contents we just defined can be seen by opening it with a text editor. I’m using <code>vim</code> in this example. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.zshrc</span><br></pre></td></tr></table></figure>
-<p>At the end of the config file append the following:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">autoload</span> -U promptinit compinit</span><br><span class="line">promptinit</span><br><span class="line">compinit</span><br><span class="line">prompt bart</span><br></pre></td></tr></table></figure>
-<p>Where <code>bart</code> is the name of the prompt you wish to use in your Z shell. For my example here I chose the bart theme.</p>
-<p>To see possible prompts available and installed follow these commands from a Z shell terminal prompt. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">autoload</span> -U promptinit</span><br><span class="line">$ promptinit</span><br><span class="line">$ prompt p</span><br></pre></td></tr></table></figure>
-<p>To apply any changes immediately in the config file you can use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.zshrc</span><br></pre></td></tr></table></figure>
-<p>Or exit and invoke a new Z Shell session.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">$ zsh</span><br></pre></td></tr></table></figure>
-<p>Finally to make Z Shell your Linux user’s <strong>default</strong> shell on this account enter:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chsh <span class="_">-s</span> $(<span class="built_in">which</span> zsh)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> Do not include <code>sudo</code> with this previous command as it will alter the <em>root</em> user’s default shell instead. </p>
-</blockquote>
-<p>The <code>$SHELL</code> variable stores your user’s current default shell path. It can be used to confirm the set default shell.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$SHELL</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="Alternative-Method-via-oh-my-zsh"><a href="#Alternative-Method-via-oh-my-zsh" class="headerlink" title="Alternative Method via oh-my-zsh"></a>Alternative Method via oh-my-zsh</h1><blockquote>
-<p>Oh-My-Zsh is an open source, community-driven framework for managing your ZSH configuration. It comes bundled with a ton of helpful functions, helpers, plugins, themes, and a few things that make you shout…</p>
-</blockquote>
-<p>Instead of a manual setup many people choose to use <a href="http://ohmyz.sh/" target="_blank" rel="external">oh-my-zsh</a> to manage their zsh installations.</p>
-<p>It can be acquired most easily by using either <code>curl</code> <strong>or</strong> <code>wget</code></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl -L http://install.ohmyz.sh | sh</span><br></pre></td></tr></table></figure>
-<p>or</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget --no-check-certificate http://install.ohmyz.sh -O - | sh</span><br></pre></td></tr></table></figure>
-<p>Enable any of the plugins you want in your <code>~/.zshrc</code> config file by setting them active:</p>
-<figure class="highlight bash"><figcaption><span>~/.zshrc </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plugins=(git ruby)</span><br></pre></td></tr></table></figure>
-<p>Change the <code>ZSH_THEME</code> environment variable in your <code>~/.zshrc</code> to enable any of themes included in the package. </p>
-<figure class="highlight bash"><figcaption><span>~/.zshrc </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ZSH_THEME=<span class="string">"af-magic"</span></span><br></pre></td></tr></table></figure>
-<p>Furthermore you can <em>uncomment</em> any disabled options in this file if you want them active and enabled. </p>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="http://zsh.sourceforge.net/FAQ/zshfaq01.html#l8" target="_blank" rel="external">I don’t have root access: how do I make zsh my login shell?</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Zsh" target="_blank" rel="external">Z Shell Arch Linux Wiki Page</a></li>
-<li><a href="https://github.com/robbyrussell/oh-my-zsh/" target="_blank" rel="external">oh-my-zsh on Github</a></li>
-<li><a href="http://www.bash2zsh.com/zsh_refcard/refcard.pdf" target="_blank" rel="external">zsh Reference Card</a></li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Ubuntu/" class="post__tag__link">Ubuntu</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/zsh/" class="post__tag__link">zsh</a></li></ul><a href="/2015/02/05/zsh-basic-configuration/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/6/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/8/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/16/arch-vm-base/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/trades/Programming/page/6/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/trades/Programming/page/8/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-02-03T20:08:03.492Z</updated>
+  <updated>2018-02-04T16:19:11.165Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/02/03/spectre-meltdown-ansible/"/>
     <id>http://www.tricksofthetrades.net/2018/02/03/spectre-meltdown-ansible/</id>
     <published>2018-02-03T00:00:00.000Z</published>
-    <updated>2018-02-03T20:08:03.492Z</updated>
+    <updated>2018-02-04T16:19:11.165Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/TEnht2h.jpg" alt="Spectre &amp; Meltdown Logos"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>As it stands the current “fixes” for <a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown and Spectre</a> mainly involve updating and upgrading hosts to include their patched kernel upgrades. When it comes to applying the updates to multiple Linux servers, one approach is to use the playbook/plays in this “lockdown” repo from Ansible. </p>
@@ -65,6 +65,10 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook <span class="_">-l</span> webservers meltdown-spectre-linux.yml -K</span><br></pre></td></tr></table></figure>
 <p>Then watch Ansible check and update the kernel packages on each host. Oh and <code>uname -r</code> reveals the kernel package in use by your current node. </p>
 <p>Thanks to <a href="https://www.ansible.com/blog/author/sam-doran" target="_blank" rel="external">Sam Doran</a> for the plays and the Ansible repository this is taken from. </p>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
 ]]></content>
     
     <summary type="html">
@@ -85,9 +89,9 @@
     
       <category term="CM" scheme="http://www.tricksofthetrades.net/tags/CM/"/>
     
-      <category term="Spectre" scheme="http://www.tricksofthetrades.net/tags/Spectre/"/>
-    
       <category term="Meltdown" scheme="http://www.tricksofthetrades.net/tags/Meltdown/"/>
+    
+      <category term="Spectre" scheme="http://www.tricksofthetrades.net/tags/Spectre/"/>
     
   </entry>
   
@@ -984,6 +988,58 @@
   </entry>
   
   <entry>
+    <title>Kernal Updates for Meltdown and Spectre CPU Exploits</title>
+    <link href="http://www.tricksofthetrades.net/2017/01/05/kernel-update-for-meltdown-spectre/"/>
+    <id>http://www.tricksofthetrades.net/2017/01/05/kernel-update-for-meltdown-spectre/</id>
+    <published>2017-01-05T00:00:00.000Z</published>
+    <updated>2018-02-04T16:19:11.165Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/TEnht2h.jpg" alt="Meltdown and Spectre Logos"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any <a href="https://meltdownattack.com/" target="_blank" rel="external">Meltdown and Spectre</a> fixes. A reboot is required after the updates for kernel changes to take effect. </p>
+<p>Without configuration management or any automation tools it’s pretty simple.</p>
+<a id="more"></a>
+<hr>
+<p>On Debian and Ubuntu:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get dist-upgrade</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<p>On RPM based distros like Redhat and CentOS this would be:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<p>On Fedora it’s <code>dnf</code> instead:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dnf update</span><br><span class="line">$ sudo reboot</span><br></pre></td></tr></table></figure>
+<hr>
+<p>Further updates, more information, and perhaps even a targeted approach to circumventing these exploits could be available in the future. So keep up to date with both of the two issues as best as possible.</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-protect-your-server-against-the-meltdown-and-spectre-vulnerabilities" target="_blank" rel="external">DigitalOcean - How To Protect Your Server Against the Meltdown and Spectre Vulnerabilities</a></li>
+<li><a href="https://www.cyberciti.biz/faq/patch-meltdown-cpu-vulnerability-cve-2017-5754-linux/" target="_blank" rel="external">Nixcraft: How to patch Meltdown CPU Vulnerability CVE-2017-5754 on Linux</a></li>
+<li><a href="https://www.cyberciti.biz/faq/patch-spectre-vulnerability-cve-2017-5753-cve-2017-5715-linux/" target="_blank" rel="external">Nixcraft: How to patch Spectre Vulnerability CVE-2017-5753/CVE-2017-5715 on Linux</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/TEnht2h.jpg&quot; alt=&quot;Meltdown and Spectre Logos&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;As updating the target hosts system packages to their latest versions includes the kernel updates, this is in general the easiest way to bring in any &lt;a href=&quot;https://meltdownattack.com/&quot;&gt;Meltdown and Spectre&lt;/a&gt; fixes. A reboot is required after the updates for kernel changes to take effect. &lt;/p&gt;
+&lt;p&gt;Without configuration management or any automation tools it’s pretty simple.&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
+    
+    
+      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Meltdown" scheme="http://www.tricksofthetrades.net/tags/Meltdown/"/>
+    
+      <category term="Spectre" scheme="http://www.tricksofthetrades.net/tags/Spectre/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Ansible - Inventory Concepts (2)</title>
     <link href="http://www.tricksofthetrades.net/2016/06/27/ansible-inventory-concepts/"/>
     <id>http://www.tricksofthetrades.net/2016/06/27/ansible-inventory-concepts/</id>
@@ -1228,9 +1284,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
     
     
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
       <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
+    
+      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
       <category term="VPS" scheme="http://www.tricksofthetrades.net/tags/VPS/"/>
     
@@ -2938,149 +2994,6 @@
       <category term="Spaceships" scheme="http://www.tricksofthetrades.net/tags/Spaceships/"/>
     
       <category term="Fiction" scheme="http://www.tricksofthetrades.net/tags/Fiction/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hexo Tag Plugins and Packages</title>
-    <link href="http://www.tricksofthetrades.net/2015/11/16/hexo-tag-plugins/"/>
-    <id>http://www.tricksofthetrades.net/2015/11/16/hexo-tag-plugins/</id>
-    <published>2015-11-16T00:00:00.000Z</published>
-    <updated>2017-05-26T17:54:37.555Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="http://i.imgur.com/1EHS2qR.png" alt="Hexo Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Tag plugins are ported from Octopress and provide a useful way for you to quickly add specific content to your Hexo posts. I don’t use all of these in my own posts but they do come in useful on the odd occasion. </p>
-<blockquote>
-<p><a href="https://hexo.io/docs/tag-plugins.html" target="_blank" rel="external">Official Hexo Documentation - Tag Plugins</a></p>
-</blockquote>
-<a id="more"></a>
-<hr>
-<h1 id="Quotes"><a href="#Quotes" class="headerlink" title="Quotes"></a>Quotes</h1><h2 id="1-–-Plain-Quote"><a href="#1-–-Plain-Quote" class="headerlink" title="1 – Plain Quote"></a>1 – Plain Quote</h2><p>Useful for adding quotations to your post that need an author, source, or title. The two spaces between the comma were needed in my case to get these quotes to display correctly. </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> author , source link source_link_title %&#125;</span><span class="xml"></span><br><span class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque hendrerit lacus ut purus iaculis feugiat. Sed nec tempor elit, quis aliquam neque. Curabitur sed diam eget dolor fermentum semper at eu lorem.</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<blockquote><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque hendrerit lacus ut purus iaculis feugiat. Sed nec tempor elit, quis aliquam neque. Curabitur sed diam eget dolor fermentum semper at eu lorem.</p>
-<footer><strong>author </strong><cite>source link source_link_title</cite></footer></blockquote>
-<hr>
-<h2 id="2-–-Book-Quote"><a href="#2-–-Book-Quote" class="headerlink" title="2 –  Book Quote"></a>2 –  Book Quote</h2><p>Same as the previous step but in the context of a book quote. Another space on both sides of the comma was required for me when trying to get the book name plus author to display properly. </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> S.W. Erdnase , The Expert at the Card Table %&#125;</span><span class="xml"></span><br><span class="line">"The slightest action that appears irregular, the least effort to distract attention, or the first unnatural movement, will create suspicion; and mere suspicion will deplete the company..." </span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<blockquote><p>“The slightest action that appears irregular, the least effort to distract attention, or the first unnatural movement, will create suspicion; and mere suspicion will deplete the company…” </p>
-<footer><strong>S.W. Erdnase </strong><cite>The Expert at the Card Table</cite></footer></blockquote>
-<hr>
-<h2 id="3-–-Twitter-Quote"><a href="#3-–-Twitter-Quote" class="headerlink" title="3 – Twitter Quote"></a>3 – Twitter Quote</h2><p>Tweets can be used to create a quote using the same format, in my case <strong>two</strong> spaces were needed to separate the twitter handle and URL. </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> @climagic  https://twitter.com/climagic/status/633643481081249792 %&#125;</span><span class="xml"></span><br><span class="line">The reason English is used so much in computers is because this rich language allows for the creation of so many damn acronyms.</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<blockquote><p>The reason English is used so much in computers is because this rich language allows for the creation of so many damn acronyms.</p>
-<footer><strong>@climagic</strong><cite><a href="https://twitter.com/climagic/status/633643481081249792" target="_blank" rel="external">twitter.com/climagic/status/633643481081249792</a></cite></footer></blockquote>
-<hr>
-<h2 id="4-–-Web-Article-Quote"><a href="#4-–-Web-Article-Quote" class="headerlink" title="4 – Web Article Quote"></a>4 – Web Article Quote</h2><p>This quote is sourced from a web page still using the same formatting as before.  Once again two spaces had to be inserted between the author name and web address to make the formatting work (for myself at least). </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">blockquote</span> Azual Skoll  https://www.themittani.com/features/history-npsi %&#125;</span><span class="xml"> "We do not take PVP personally, and have no problem whatsoever with being shot at […] by you or your corporation. This has no effect on our attitude towards you or your access to our classes and services. We enjoy fights, and we'll actually be much more offended if you don't shoot us! Similarly, if we engage you without provocation (which we will) this doesn't mean we don't like you, it just means we like to PvP. This is true regardless of how friendly we are with you and whether or not you've taken classes with us in the past. We observe the Class Peace but after that you're fair game."</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<blockquote><p>“We do not take PVP personally, and have no problem whatsoever with being shot at […] by you or your corporation. This has no effect on our attitude towards you or your access to our classes and services. We enjoy fights, and we’ll actually be much more offended if you don’t shoot us! Similarly, if we engage you without provocation (which we will) this doesn’t mean we don’t like you, it just means we like to PvP. This is true regardless of how friendly we are with you and whether or not you’ve taken classes with us in the past. We observe the Class Peace but after that you’re fair game.”</p>
-<footer><strong>Azual Skoll</strong><cite><a href="https://www.themittani.com/features/history-npsi" target="_blank" rel="external">www.themittani.com/features/history-npsi</a></cite></footer></blockquote>
-<hr>
-<h1 id="Code-Snippets"><a href="#Code-Snippets" class="headerlink" title="Code Snippets"></a>Code Snippets</h1><h2 id="1-–-Plain-Code-Snippet"><a href="#1-–-Plain-Code-Snippet" class="headerlink" title="1 – Plain Code Snippet"></a>1 – Plain Code Snippet</h2><p>Here’s another way of inserting a code block into a post:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> title lang:language url link text %&#125;</span><span class="xml"></span><br><span class="line">System.out.print("Hello World!");</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<figure class="highlight plain"><figcaption><span>title url link text</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.print(&quot;Hello World!&quot;);</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="2-–-Language-Code-Snippet"><a href="#2-–-Language-Code-Snippet" class="headerlink" title="2 – Language Code Snippet"></a>2 – Language Code Snippet</h2><p>This is the same method as in the last step but with a language (Java) included:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> title lang:java url link text %&#125;</span><span class="xml"></span><br><span class="line">System.out.print("Hello World!");</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<figure class="highlight java"><figcaption><span>title url link text</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">System.out.print(<span class="string">"Hello World!"</span>);</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="3-–-Caption-Code-Snippet"><a href="#3-–-Caption-Code-Snippet" class="headerlink" title="3 – Caption Code Snippet"></a>3 – Caption Code Snippet</h2><p>Same again but with an added caption.</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> lang:java import calendar class %&#125;</span><span class="xml"></span><br><span class="line">import java.util.Calendar;</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<figure class="highlight java"><figcaption><span>import calendar class</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="4-–-Caption-URL-Code-Snippet"><a href="#4-–-Caption-URL-Code-Snippet" class="headerlink" title="4 – Caption URL Code Snippet"></a>4 – Caption URL Code Snippet</h2><p>A URL can be added to the caption to provide an external link to the code source. </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">codeblock</span> lang:java _.compact http://underscorejs.org/#compact Underscore.js %&#125;</span><span class="xml"></span><br><span class="line">_.compact([0, 1, false, 2, '', 3]);</span><br><span class="line">=&gt; [1, 2, 3]</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<figure class="highlight java"><figcaption><span>_.compact</span><a href="http://underscorejs.org/#compact" target="_blank" rel="external">Underscore.js</a></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">_.compact([<span class="number">0</span>, <span class="number">1</span>, <span class="keyword">false</span>, <span class="number">2</span>, <span class="string">''</span>, <span class="number">3</span>]);</span><br><span class="line">=&gt; [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="External"><a href="#External" class="headerlink" title="External"></a>External</h1><h2 id="1-–-jsFiddle"><a href="#1-–-jsFiddle" class="headerlink" title="1 – jsFiddle"></a>1 – jsFiddle</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">jsfiddle</span> shorttag [tabs] [skin] [width] [height] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>With actual values substituted in e.g.</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">jsfiddle</span> ccWP7 js,html,result %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<iframe scrolling="no" width="100%" height="300" src="http://jsfiddle.net/ccWP7/embedded/js,html,result/light" frameborder="0" allowfullscreen></iframe>
-<hr>
-<h2 id="2-–-Gist"><a href="#2-–-Gist" class="headerlink" title="2 – Gist"></a>2 – Gist</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">gist</span> gist_id [filename] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>When actual values are substituted in it becomes:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">gist</span> 1027674 gist_tag.rb %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<script src="//gist.github.com/1027674.js?file=gist_tag.rb"></script>
-<hr>
-<h2 id="3-–-YouTube-Video-Embeds"><a href="#3-–-YouTube-Video-Embeds" class="headerlink" title="3 – YouTube Video Embeds"></a>3 – YouTube Video Embeds</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">youtube</span> 640 360 video_id %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>Once the <code>video_id</code> is added (this should be the embed code not the usual sharing code) the video is embedded into the page:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">youtube</span> AdfFnTt2UT0 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<div class="video-container"><iframe src="//www.youtube.com/embed/AdfFnTt2UT0" frameborder="0" allowfullscreen></iframe></div>
-<p>I would suggest using a “raw” tag or an iframe instead so you can specify the dimensions for the video. Unless your Hexo theme sizes the embedded video properly. No extra parameters for the YouTube tag seem to work that I have tried - in my case. </p>
-<hr>
-<h2 id="4-–-Vimeo-Video-Embed"><a href="#4-–-Vimeo-Video-Embed" class="headerlink" title="4 – Vimeo Video Embed"></a>4 – Vimeo Video Embed</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">vimeo</span> video_id %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>This uses the “video ID” that comes from the base URL of a vimeo video page e.g.</p>
-<p><a href="https://vimeo.com/96896680" target="_blank" rel="external">https://vimeo.com/96896680</a></p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">vimeo</span> 96896680 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<div class="video-container"><iframe src="//player.vimeo.com/video/96896680" frameborder="0" allowfullscreen></iframe></div>
-<p>Same as before if you have the same sizing problem as me use a “raw” tag or an iframe instead so you can specify the dimensions for the video.</p>
-<hr>
-<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><h2 id="1-–-iFrame"><a href="#1-–-iFrame" class="headerlink" title="1 – iFrame"></a>1 – iFrame</h2><figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">iframe</span> url [width] [height] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>With a YouTube video as an example (Notice it’s the embed URL used) and there’s dimensions that can be set this time:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">iframe</span> https://www.youtube.com/embed/AdfFnTt2UT0" 1080 500 %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<iframe src="https://www.youtube.com/embed/AdfFnTt2UT0" "="" width="1080" height="500" frameborder="0" allowfullscreen></iframe>
-<hr>
-<h2 id="2-–-Custom-Image"><a href="#2-–-Custom-Image" class="headerlink" title="2 – Custom Image"></a>2 – Custom Image</h2><p>I assume this is if you store any images in the <code>assets</code> folder of Hexo, and have it enabled in the <code>_config.yml</code> file. </p>
-<p>I never use this so I’m not going to provide an example, but what you need to substitute in is shown in the next code block: </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">img</span> [class names] /path/to/image [width] [height] [title text [alt text]] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="3-–-Custom-Link"><a href="#3-–-Custom-Link" class="headerlink" title="3 – Custom Link"></a>3 – Custom Link</h2><p>This one’s lets you modify a hyper-link, although I’ve never used it instead of normal markdown for links. </p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">link</span> text url [external] [title] %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p>Here’s an example with actual contents; not sure whether this is how it’s properly used though:</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">link</span> Grunt's Official Website http://gruntjs.com/ %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-<a href="http://gruntjs.com/" target="_blank" rel="external">Grunt's Official Website</a>
-<hr>
-<h2 id="4-–-Raw-HTML"><a href="#4-–-Raw-HTML" class="headerlink" title="4 – Raw HTML"></a>4 – Raw HTML</h2><p>If certain content is causing processing issues in your posts, you can wrap it with the raw tag to avoid rendering errors.</p>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">raw</span> %&#125;</span><span class="xml"></span><br><span class="line">HTML tags and content</span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endraw</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<figure class="highlight django"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="xml"></span><span class="template-tag">&#123;% <span class="name">raw</span> %&#125;</span><span class="xml"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'//redditjs.com/subreddit.js'</span> <span class="attr">data-subreddit</span>=<span class="string">'eve'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"></span><span class="template-tag">&#123;% <span class="name">endraw</span> %&#125;</span><span class="xml"></span></span><br></pre></td></tr></table></figure>
-<p><strong>Hexo Output</strong></p>
-
-<script src="//redditjs.com/subreddit.js" data-subreddit="eve"></script>
-
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://hexo.io/plugins/" target="_blank" rel="external">Official Hexo Documentation: Tag Plugins</a> – The base tag example are from here, there are few actual examples though. </li>
-<li><a href="https://hexo.io/plugins/" target="_blank" rel="external">Octopress Documentation: Plugins</a> –  Some of the Hexo plugins are ported from Octopress. </li>
-<li><a href="https://github.com/imathis/octopress/tree/master/plugins" target="_blank" rel="external">Octopress Github Plugins Page</a> –  Has some examples on several of the ported Octopress plugins. </li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/1EHS2qR.png&quot; alt=&quot;Hexo Logo&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;Tag plugins are ported from Octopress and provide a useful way for you to quickly add specific content to your Hexo posts. I don’t use all of these in my own posts but they do come in useful on the odd occasion. &lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;&lt;a href=&quot;https://hexo.io/docs/tag-plugins.html&quot;&gt;Official Hexo Documentation - Tag Plugins&lt;/a&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/trades/Programming/"/>
-    
-    
-      <category term="Hexo" scheme="http://www.tricksofthetrades.net/tags/Hexo/"/>
-    
-      <category term="Plugins" scheme="http://www.tricksofthetrades.net/tags/Plugins/"/>
-    
-      <category term="Octopress" scheme="http://www.tricksofthetrades.net/tags/Octopress/"/>
     
   </entry>
   

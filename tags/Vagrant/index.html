@@ -20,10 +20,10 @@
 <p>VirtualBox is now installed and ready to use. </p>
 <hr>
 <h1 id="2-–-Install-Vagrant"><a href="#2-–-Install-Vagrant" class="headerlink" title="2 – Install Vagrant"></a>2 – Install Vagrant</h1><p><a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">Find the correct binary for your version of Linux, then download it with the URL and Wget.</a></p>
-<p>Here’s the <code>wget</code> command and correct URL for downloading the latest version of Vagrant on Debian (at the time of writing this) - yours may differ. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://releases.hashicorp.com/vagrant/1.9.4/vagrant_1.9.4_x86_64.deb ~</span><br></pre></td></tr></table></figure>
+<p>Here’s the <code>wget</code> command and correct URL for downloading the latest version of Vagrant on Debian (at the time of writing this) - yours may differ.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_x86_64.deb ~</span><br></pre></td></tr></table></figure>
 <p>To then install the binary as a package on the system, use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i vagrant_1.9.4_x86_64.deb</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i vagrant_2.1.1_x86_64.deb</span><br></pre></td></tr></table></figure>
 <p>You can remove the Vagrant <code>.deb</code> build file from your user’s home directory now, after it’s been installed. </p>
 <hr>
 <h2 id="3-–-Download-and-Use-a-Vagrant-Box"><a href="#3-–-Download-and-Use-a-Vagrant-Box" class="headerlink" title="3 – Download and Use a Vagrant Box"></a>3 – Download and Use a Vagrant Box</h2><p>Make a temporary test directory, and change into it, before continuing. </p>

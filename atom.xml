@@ -447,7 +447,7 @@
     <link href="http://www.tricksofthetrades.net/2017/05/17/vagrant-started/"/>
     <id>http://www.tricksofthetrades.net/2017/05/17/vagrant-started/</id>
     <published>2017-05-16T23:00:00.000Z</published>
-    <updated>2017-08-27T15:54:23.744Z</updated>
+    <updated>2018-05-14T16:11:15.408Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/mw4s7ic.png" alt="Vagrant Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Despite its age and familiarity to most nowadays I couldn’t find a straight forward post on how to install and get started using Vagrant. So here’s my notes on doing so in blog post format. Be aware that this is well trodden ground and the Vagrant documentation on their website has a similar set of steps and content. The official site, if not this will get you where you need to be when it comes to getting started with Vagrant. </p>
@@ -471,10 +471,10 @@
 <p>VirtualBox is now installed and ready to use. </p>
 <hr>
 <h1 id="2-–-Install-Vagrant"><a href="#2-–-Install-Vagrant" class="headerlink" title="2 – Install Vagrant"></a>2 – Install Vagrant</h1><p><a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">Find the correct binary for your version of Linux, then download it with the URL and Wget.</a></p>
-<p>Here’s the <code>wget</code> command and correct URL for downloading the latest version of Vagrant on Debian (at the time of writing this) - yours may differ. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://releases.hashicorp.com/vagrant/1.9.4/vagrant_1.9.4_x86_64.deb ~</span><br></pre></td></tr></table></figure>
+<p>Here’s the <code>wget</code> command and correct URL for downloading the latest version of Vagrant on Debian (at the time of writing this) - yours may differ.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://releases.hashicorp.com/vagrant/2.1.1/vagrant_2.1.1_x86_64.deb ~</span><br></pre></td></tr></table></figure>
 <p>To then install the binary as a package on the system, use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i vagrant_1.9.4_x86_64.deb</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo dpkg -i vagrant_2.1.1_x86_64.deb</span><br></pre></td></tr></table></figure>
 <p>You can remove the Vagrant <code>.deb</code> build file from your user’s home directory now, after it’s been installed. </p>
 <hr>
 <h2 id="3-–-Download-and-Use-a-Vagrant-Box"><a href="#3-–-Download-and-Use-a-Vagrant-Box" class="headerlink" title="3 – Download and Use a Vagrant Box"></a>3 – Download and Use a Vagrant Box</h2><p>Make a temporary test directory, and change into it, before continuing. </p>
@@ -1284,9 +1284,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
       <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
+    
+      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
       <category term="VPS" scheme="http://www.tricksofthetrades.net/tags/VPS/"/>
     

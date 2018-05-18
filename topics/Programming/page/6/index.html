@@ -1,4 +1,217 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-07-26T23:00:00.000Z" class="post__time">July 27, 2015</time><h1 class="post__title"><a href="/2015/07/27/notes-vim-pathogen-plugins/">Vim Plugins and Pathogen</a></h1></header><div class="post__main echo"><p><img src="http://www.catonmat.net/blog/wp-content/uploads/2008/12/vim-plugins-surround-vim.gif" alt="Vim Plugins Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-08-17T23:00:00.000Z" class="post__time">August 18, 2015</time><h1 class="post__title"><a href="/2015/08/18/notes-git-version-control/">Git Version Control - Installing, Using, and Customising (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/lTThGcv.png" alt="Git Plus Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Git is an open-source version control system first released in 2005 to serve as an answer to the other proprietary based VCS solutions in existence. Since then it has enjoyed much popularity and widespread use among programmers, developers, system admins, and the like.</p>
+<p>This post contains many of the common basic commands and content you’ll encounter when first learning Git, but by no means all of them.</p>
+<blockquote>
+<p><a href="https://git-scm.com/" target="_blank" rel="external">Git’s Official Website</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Installing-Git"><a href="#1-–-Installing-Git" class="headerlink" title="1 – Installing Git"></a>1 – Installing Git</h1><h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S git</span><br></pre></td></tr></table></figure>
+<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><p>The simplest most accessible way is by using the system’s package manager:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install git</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="2-–-Git-Configuration"><a href="#2-–-Git-Configuration" class="headerlink" title="2 – Git Configuration"></a>2 – Git Configuration</h1><p>Before beginning to use Git it’s wise to setup some standard configuration settings.</p>
+<p>The first is your system’s global username:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.name <span class="string">"Scarlz"</span></span><br></pre></td></tr></table></figure>
+<p>The second is your global email address:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global user.email <span class="string">"count.elmsley@protonmail.ch"</span></span><br></pre></td></tr></table></figure>
+<p>For those who have a Github account your username for their service can be added here too with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global github.user <span class="string">"5car1z"</span></span><br></pre></td></tr></table></figure>
+<p>To set a default text editor, enter the next command where <code>vim</code> is kept or replaced with your editor of choice.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global core.editor vim</span><br></pre></td></tr></table></figure>
+<p>Most repositories you’ll end up cloning will transmit via HTTPS and require you to authenticate every time you interact with them. To make this easier you can set Git to remember your authentication credentials for 15 minutes after every successful authentication.</p>
+<p>Here’s the config command to enable it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global credential.helper cache</span><br></pre></td></tr></table></figure>
+<p>Then finally setting your push default is set by choosing either the <code>simple</code> or <code>matching</code> options.</p>
+<p>Go with the “simple” option if you are unsure which you want to use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  git config --global push.default simple</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>The <code>simple</code> option means <code>git push</code> will push only the <strong>current</strong> branch to the one that git pull would normally pull from, and also ensures that their names match.  The <code>matching</code> option pushes all branches to their respective remote counter-parts.</p>
+</blockquote>
+<p>These settings can be listed at any time by running:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --list</span><br></pre></td></tr></table></figure>
+<p>These configuration settings when marked with <code>--global</code> are stored in your Linux user’s home directory inside:  <code>~/.gitconfig</code></p>
+<hr>
+<h1 id="3-–-Creating-Repositories"><a href="#3-–-Creating-Repositories" class="headerlink" title="3 – Creating Repositories"></a>3 – Creating Repositories</h1><p>A repository contains the files and code base of the project you’re maintaining.</p>
+<p>Initialising a repository with Git for the current working directory is done via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<p>To specify a new directory you can pass a name and init will use it to create one:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init project_directory</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Cloning-Repositories"><a href="#4-–-Cloning-Repositories" class="headerlink" title="4 – Cloning Repositories"></a>4 – Cloning Repositories</h1><p>Cloning a pre-existing repository can be done whether it exists on the local file-system, or on a remote one.</p>
+<p>Locally the command for this is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> /path/to/repository</span><br></pre></td></tr></table></figure>
+<p>For a remote repository an address is used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> username@host:/path/to/repository.git</span><br></pre></td></tr></table></figure>
+<p>With a <strong>public</strong> web repository such as in the context of Github, it is possible to use the command with a URL instead.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/5car1z/dotfiles.git</span><br></pre></td></tr></table></figure>
+<p><strong>Work-flow Theory</strong></p>
+<p><img src="http://i.imgur.com/RXaFboU.png" alt="Work-flow Theory"></p>
+<hr>
+<h1 id="5-–-Committing-Changes"><a href="#5-–-Committing-Changes" class="headerlink" title="5 – Committing Changes"></a>5 – Committing Changes</h1><p>When changes are made by yourself to the local copy of a repository, you can propose these changes be applied to the <em>index</em> by using the <code>add</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be added in this manner:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>Or for every file the <code>*</code> symbol can be used:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add *</span><br></pre></td></tr></table></figure>
+<p>To remove any files you added to the index with the previous commands, thereby discarding them from any further actions in this step. Use <code>rm</code> and then the file names in question:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name</span><br></pre></td></tr></table></figure>
+<p>Or with multiple files.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm file_name_1 file_name_2 file_name_3</span><br></pre></td></tr></table></figure>
+<p>This can work recursively with directories/folders also by adding the <code>-r</code> option into the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rm -r directory_1 directory_2</span><br></pre></td></tr></table></figure>
+<p>Once the changes in files added via <code>git add</code> have been proposed, you can confirm them and <em>commit</em> them to the <em>HEAD</em> using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git commit -m <span class="string">"A commit messages goes here."</span></span><br></pre></td></tr></table></figure>
+<p>The changes are not however active and made to the remote repository yet until they are pushed to it (see the next section). This is as they are now only in the HEAD of your local working copy.</p>
+<hr>
+<h1 id="6-–-Pushing-Changes"><a href="#6-–-Pushing-Changes" class="headerlink" title="6 – Pushing Changes"></a>6 – Pushing Changes</h1><p>If you did not clone an <strong>existing</strong> repository and created a new one, then you’’ll need to connect your local repository to a remote server.</p>
+<p>To do this enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add remote origin &lt;server&gt;</span><br></pre></td></tr></table></figure>
+<p>Remember that any active commits made in the previous section do not get applied to the remote repository code-base until you <em>push</em> them to it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> The parameter <code>master</code> can be changed to any remote <em>branch</em> you want the alterations pushed to.</p>
+</blockquote>
+<hr>
+<h1 id="7-–-Using-Branches"><a href="#7-–-Using-Branches" class="headerlink" title="7 – Using Branches"></a>7 – Using Branches</h1><p>Branches are used to segregate and split up different versions of the code-base. For example one branch could contain the main content of project, and another the same content, except with an extra set of features currently being tested and developed. Either way code and changes can be separated into two different paths or strands (branches in this case).</p>
+<p>To create a new branch in a project use the next command, where <code>-b</code> creates a new branch, and <code>new_feature</code> is the name of the branch to be created:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout -b new_feature</span><br></pre></td></tr></table></figure>
+<p>The <code>new_feature</code> branch is now our active branch.</p>
+<p>Be aware though that a newly created branch is not available to others, nor does it exist on the remote repository until you push the branch to it i.e.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git push origin new_feature</span><br></pre></td></tr></table></figure>
+<p>To change back to the default <code>master</code> branch use the <code>checkout</code> command again like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout master</span><br></pre></td></tr></table></figure>
+<p>To delete a branch use the <code>-d</code> option like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git branch <span class="_">-d</span> new_feature</span><br></pre></td></tr></table></figure>
+<p><strong>Branching Theory</strong></p>
+<p><img src="http://i.imgur.com/i7n14d2.png" alt="Branches Theory"></p>
+<hr>
+<h1 id="8-–-Updating-Repositories"><a href="#8-–-Updating-Repositories" class="headerlink" title="8 – Updating Repositories"></a>8 – Updating Repositories</h1><p>In order to keep your repositories up to date with others changes (their commits) it’s necessary to <em>pull</em> said changes with the simple command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git pull</span><br></pre></td></tr></table></figure>
+<p>It’s common place to run this command as frequently as possible in order to stay up to date with other people’s additions or changes. The same goes for pushing your own commits to the remote server.</p>
+<p>To check whether you’re up to date with the remote server or not query Git via:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git status</span><br></pre></td></tr></table></figure>
+<p>Also when editing files if you are unhappy with the local changes you made, you can replace the local changes using the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git checkout file_name</span><br></pre></td></tr></table></figure>
+<p>Multiple files can be specified in this last command. The way this works is by replacing the changes in your working tree with the state of the most up to date content in HEAD.</p>
+<p>Changes already added to the rest of the index, as well as any new files, is left untouched and is retained.</p>
+<p>If instead you know you want to discard all your local changes and un-pushed commits.</p>
+<p>Fetch the latest history from the remote server through:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git fetch origin</span><br></pre></td></tr></table></figure>
+<p>Then point your local master branch to it like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git reset --hard origin/master</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Be careful with using these two commands and only use them if you know what you are doing is what you want to achieve.</p>
+</blockquote>
+<p>See section “<strong>9 – Conflicts</strong>“ for difficulties that can arise during a <code>pull</code> request.</p>
+<hr>
+<h1 id="9-–-Merging-Branches"><a href="#9-–-Merging-Branches" class="headerlink" title="9 – Merging Branches"></a>9 – Merging Branches</h1><p>In most instances at some point it will be desirable to merge another branch into your active branch e.g. <code>new_feature</code> into <code>master</code> and so on.</p>
+<p>To achieve this we make use of the <code>merge</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git merge branch_name</span><br></pre></td></tr></table></figure>
+<p>See the next section for difficulties that can arise during this process.</p>
+<h1 id="10-–-Merge-Conflicts"><a href="#10-–-Merge-Conflicts" class="headerlink" title="10 – Merge Conflicts"></a>10 – Merge Conflicts</h1><p>In both cases of <code>pull</code> and <code>merge</code> Git will try to auto-merge the necessary changes. Unfortunately though this is not always possible and can result in conflicts. You are then the one responsible to solve these conflicts by manually editing the files as shown and indicated by Git.</p>
+<p>After changing them as requested, you then need to mark them as successfully merged with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git add merge_conflicted_file</span><br></pre></td></tr></table></figure>
+<p>Before merging changes, you can preview them by using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff &lt;source_branch&gt; &lt;target_branch&gt;</span><br></pre></td></tr></table></figure>
+<p>In our example from before we’d substitute in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff new_feature master</span><br></pre></td></tr></table></figure>
+<p>It’s also worth noting that the <code>diff</code>command has many other applications. For example, to see the current differences you’ve made between the local directory and the last commit use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git diff</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="11-–-Log-History"><a href="#11-–-Log-History" class="headerlink" title="11 – Log History"></a>11 – Log History</h1><p>Most transactions that are carried in a repository are logged (mainly commits). To see the complete log unfiltered use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span></span><br></pre></td></tr></table></figure>
+<p>There are thankfully a lot of parameters you can make use of to display the log in a variety of different ways.</p>
+<p>To see only the commits of a certain author enter the next command, substituting <code>scarlz</code> for the username of the author in question.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --author=scarlz</span><br></pre></td></tr></table></figure>
+<p>To see a truncated and compressed log where each commit is only one line enter:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --pretty=oneline</span><br></pre></td></tr></table></figure>
+<p>Or to see an ASCII art tree of all branches, decorated with the names of tags and branches in a very readable style, type in:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --graph --oneline --decorate --all</span><br></pre></td></tr></table></figure>
+<p>Picking out only which files have changed per commit is useful too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">log</span> --name-status</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="12-–-Tagging"><a href="#12-–-Tagging" class="headerlink" title="12 – Tagging"></a>12 – Tagging</h1><p>As certain milestones are reached during software development, or programs are defined as stable, it is useful to create a <em>tag</em> for the project’s current state. This is referred to more commonly as a software release or version number.</p>
+<p>An example of this would be take the first 10 characters of a commit ID you want the release to correspond to, and give it a version number.</p>
+<p>For example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git tag 1.0.0 1b2e1d63ff</span><br></pre></td></tr></table></figure>
+<p>The <code>1b2e1d63ff</code> being the 10 commit ID characters and <code>1.0.0</code> being the assigned version number.</p>
+<hr>
+<h1 id="13-–-Git-Aliases"><a href="#13-–-Git-Aliases" class="headerlink" title="13 – Git Aliases"></a>13 – Git Aliases</h1><p><img src="https://i.imgur.com/9Tpg6sP.jpg" alt="Git Aliases Example"></p>
+<p>Much like any other shell aliasing (Bash, Zsh, etc) Git has its own built in functionality for creating these incredibly useful shortcuts.</p>
+<h2 id="Built-in-Git-Alias-Support"><a href="#Built-in-Git-Alias-Support" class="headerlink" title="Built-in Git Alias Support"></a>Built-in Git Alias Support</h2><p>Adding them on the command line is the automated method of doing this. In the next code snippet <code>git co</code> is aliased and made synonymous to the <code>checkout</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global alias.co checkout</span><br></pre></td></tr></table></figure>
+<p>These aliases are stored in the main “Global” Git configuration file in: <code>~/.gitconfig</code></p>
+<p>To make things easier you can manually add in and edit these aliases with a text editor:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.gitconfig</span><br></pre></td></tr></table></figure>
+<p>In this format:</p>
+<figure class="highlight bash"><figcaption><span>~/.gitconfig</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[<span class="built_in">alias</span>]</span><br><span class="line">	co = checkout</span><br></pre></td></tr></table></figure>
+<p>This process gives you however many aliases you define, so that you can type: <code>git co</code> or whatever the alias is to run a certain command sequence.</p>
+<h2 id="Bash-Shell-Git-Aliasing"><a href="#Bash-Shell-Git-Aliasing" class="headerlink" title="Bash Shell Git Aliasing"></a>Bash Shell Git Aliasing</h2><p>To use Bash or shell aliasing and get rid of the <code>git</code> prefix altogether, add aliases into your <code>~/.bashrc</code> file, or sub-sequential <code>~/.alias</code> file. </p>
+<p>As an example here is my list of Bash Git aliases. These are up to date as of October 2015, taken from my own <code>~/.alias</code> file: </p>
+<script src="//gist.github.com/c9af258fd1f9f328c83c.js?file=bash-git-aliases"></script>
+<p>Unfortunately the usual Git Bash auto-completion won’t function with these aliases, like it does with the <code>~/.gitconfig</code> file method.</p>
+<p>Here is my workaround for this. </p>
+<p>Download this file to your Linux user’s home directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Change the file name to include a <code>.</code> so it’s classified as a hidden config file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv git-completion.bash .git-completion.bash</span><br></pre></td></tr></table></figure>
+<p>Then source it into shell session on start up by placing the following line into your <code>~/.bashrc</code> file:</p>
+<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">. ~/.git-completion.bash</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> if you separate your aliases into a separate file like I do, and don’t store them directly into your <code>~/.bashrc</code> file. Make sure you source the <code>~/.git-completion.bash</code> file first before your alias file.</p>
+</blockquote>
+<p>Lastly you need to add the relevant Git auto-completion functions for each Git related alias into your <code>bashrc</code> or <code>alias</code> file, like so:</p>
+<figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">__git_complete g __git_main</span><br><span class="line">__git_complete ga _git_add</span><br><span class="line">__git_complete gb _git_branch</span><br><span class="line">__git_complete gc _git_commit</span><br><span class="line">__git_complete gcl _git_clone</span><br><span class="line">__git_complete gco _git_checkout</span><br><span class="line">__git_complete gd _git_diff</span><br><span class="line">__git_complete gl _git_pull</span><br><span class="line">__git_complete glg _git_log</span><br><span class="line">__git_complete gm _git_merge</span><br><span class="line">__git_complete gp _git_push</span><br><span class="line">__git_complete gsps _git_show</span><br></pre></td></tr></table></figure>
+<p>If you use oh-my-Zsh this support and aliasing comes by default, same with Prezto.</p>
+<hr>
+<h1 id="14-–-Misc"><a href="#14-–-Misc" class="headerlink" title="14 – Misc"></a>14 – Misc</h1><h2 id="HTTPS-amp-SSH-Clone-URL’s"><a href="#HTTPS-amp-SSH-Clone-URL’s" class="headerlink" title="HTTPS &amp; SSH Clone URL’s"></a>HTTPS &amp; SSH Clone URL’s</h2><p><img src="https://help.github.com/assets/images/help/repository/remotes-url.png" alt="Clone Image"></p>
+<p>There are several options on offer when cloning a repository that dictate what method in which it will get created, updated, and merged. The main two choices are HTTPS or SSH.</p>
+<p>Github recommends using the HTTPS method which looks like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>The advantages of this first method are the security and compatibility of its network transactions, and its awareness of the access rights on offer.</p>
+<p>The second method is more suited to nodes and production servers that have automation in place. This SSH method also allows the use of SSH keys to authenticate instead of user &amp; pass credentials.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br></pre></td></tr></table></figure>
+<p>To change and re-set the method in use for an existing repository enter this command to go from HTTPS to SSH:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin git@github.com:&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<p>Or this command to go from SSH to HTTPS:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git remote <span class="built_in">set</span>-url origin https://github.com/&lt;Username&gt;/&lt;Project&gt;.git</span><br><span class="line">$ git remote -v</span><br></pre></td></tr></table></figure>
+<h2 id="The-Git-Repository-Browser"><a href="#The-Git-Repository-Browser" class="headerlink" title="The Git Repository Browser"></a>The Git Repository Browser</h2><p>A built-in Git GUI dubbed “The Git Repository Browser” is available on most systems, here’s how to acquire and run it:</p>
+<figure class="highlight bash"><figcaption><span>Arch Linux</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><figcaption><span>Debian / Ubuntu</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install gitk</span><br><span class="line">$ gitk</span><br></pre></td></tr></table></figure>
+<h2 id="Coloured-Git-Output"><a href="#Coloured-Git-Output" class="headerlink" title="Coloured Git Output"></a>Coloured Git Output</h2><p>To use coloured Git output enter the following into a command prompt, or add the equivalent to your <code>~/.git</code> file:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config color.ui <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h2 id="Git-Flow-Cheat-Sheet"><a href="#Git-Flow-Cheat-Sheet" class="headerlink" title="Git Flow Cheat Sheet"></a>Git Flow Cheat Sheet</h2><object data="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf#" type="application/pdf" width="100%" height="1200"><br><br><p>It appears your Web browser is not configured to display PDF files.<br>No worries, just <a href="http://rogerdudler.github.io/git-guide/files/git_cheat_sheet.pdf" target="_blank" rel="external">click here to download the PDF file.</a></p><br><br></object>
+
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Git posts can be found on the Trades page.</a></p>
+<hr>
+<p><strong>Alias Sources</strong></p>
+<ul>
+<li><a href="https://www.reddit.com/r/git/comments/3dbd6y/lazy_or_productive/" target="_blank" rel="external">Lazy or Productive?</a> – /r/git Reddit thread.</li>
+<li><a href="http://durdn.com/blog/2012/11/22/must-have-git-aliases-advanced-examples/" target="_blank" rel="external">Must Have Git Aliases: Advanced Examples</a> – Blog post mostly for inbuilt Git support aliases.</li>
+<li><a href="https://git.wiki.kernel.org/index.php/Aliases" target="_blank" rel="external">git-kernel-org Aliases Page</a> - Based around in-built Git support aliases.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Lab Aliases Page</a> - Interactive step by step tutorial for learning Git.</li>
+<li><a href="http://haacked.com/archive/2014/07/28/github-flow-aliases/" target="_blank" rel="external">Github Flow Like a Pro with these 13 Git Aliases</a> - Theory and complex aliasing blog post.</li>
+<li><a href="https://gist.github.com/mwhite/6887990" target="_blank" rel="external">The Ultimate Git Alias Setup</a> - Github markdown on shell Git aliasing.</li>
+</ul>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="http://rogerdudler.github.io/git-guide/" target="_blank" rel="external">Git - The Simple Guide</a> – “Just a simple guide for getting started with Git.”</li>
+<li><a href="http://marklodato.github.io/visual-git-guide/index-en.html" target="_blank" rel="external">Visual Git Guide</a> – This page gives brief, visual reference for the most common commands in Git.</li>
+<li><a href="http://git-scm.com/book/en/v2" target="_blank" rel="external">Pro Git Book</a> – Available as an E-book too.</li>
+<li><a href="http://www-cs-students.stanford.edu/~blynn/gitmagic/index.html" target="_blank" rel="external">Git Magic Guide</a> – Personal favourite.</li>
+<li><a href="http://gitimmersion.com/lab_11.html" target="_blank" rel="external">Git Immersion Aliases</a> – Good starting point for Aliases.</li>
+<li><a href="http://stackoverflow.com/questions/14762034/push-to-github-without-password-using-ssh-key" target="_blank" rel="external">Stack Overflow Question</a> – Push to Github Without a Password Using an SSH key.</li>
+<li><a href="https://help.github.com/articles/which-remote-url-should-i-use/" target="_blank" rel="external">Github Page on Remote URL Types</a> – Official page on which remote URL you should use.</li>
+<li><a href="https://help.github.com/articles/caching-your-github-password-in-git/" target="_blank" rel="external">Github Page on Caching Credentials</a> – Caching your GitHub password in Git.</li>
+<li><a href="https://help.github.com/articles/changing-a-remote-s-url/" target="_blank" rel="external">Github Page on Changing Remote URL’s</a> – Changing a remote’s URL.</li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/VCS/" class="post__tag__link">VCS</a></li><li class="post__tag__item"><a href="/tags/Alias/" class="post__tag__link">Alias</a></li></ul><a href="/2015/08/18/notes-git-version-control/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-07-26T23:00:00.000Z" class="post__time">July 27, 2015</time><h1 class="post__title"><a href="/2015/07/27/notes-vim-pathogen-plugins/">Vim Plugins and Pathogen</a></h1></header><div class="post__main echo"><p><img src="http://www.catonmat.net/blog/wp-content/uploads/2008/12/vim-plugins-surround-vim.gif" alt="Vim Plugins Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Vim does a lot with its base install and provides everything you’d expect from a CLI text editor, but to unlock even further awesomeness one needs to delve into the vast libraries of plugins on offer.</p>
 <p>One such site that aims to index these plugins is:</p>
 <blockquote>
@@ -819,196 +1032,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/Pass/" class="post__tag__link">Pass</a></li><li class="post__tag__item"><a href="/tags/GPG/" class="post__tag__link">GPG</a></li></ul><a href="/2015/07/04/notes-pass-unix-password-manager/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-06-13T23:00:00.000Z" class="post__time">June 14, 2015</time><h1 class="post__title"><a href="/2015/06/14/notes-bash-env-variables/">BASH Environment and Shell Variables</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qthCSsn.png" alt="Shell Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Variables provide a simple way to share configuration settings between multiple applications and processes in Linux, and are mainly set in either a terminal or shell configuration file upon start up. </p>
-<p>They are either environmental or shell variables by convention. Both of which are usually defined using all capital letters. This helps users distinguish environmental variables from within other contexts.</p>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Terminology"><a href="#1-–-Terminology" class="headerlink" title="1 – Terminology"></a>1 – Terminology</h1><p>As said there are technically one of two categories a variable can fall into:</p>
-<p><strong>“Environment variables”</strong> have been defined for use in the current shell and will be inherited by any child shells or processes spawned as a result of the parent. Environmental variables can also be used to pass information into processes that are spawned by the shell.</p>
-<p><strong>“Shell variables”</strong> are contained exclusively within the shell in which they were set or defined. They are mostly used to keep track of ephemeral temporal data, like the current working directory in a session. </p>
-<h1 id="2-–-Displaying-Variables"><a href="#2-–-Displaying-Variables" class="headerlink" title="2 – Displaying Variables"></a>2 – Displaying Variables</h1><p>To see all currently set <strong>environment variables</strong> in a terminal type:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv</span><br></pre></td></tr></table></figure>
-<p>Alternatively the shorter command <code>env</code> works too:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ env</span><br></pre></td></tr></table></figure>
-<p>To see individual or specific environment variables and print with standard output use either of the following:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv TERM</span><br></pre></td></tr></table></figure>
-<p>Prints multiple variables.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv SHELL USER</span><br></pre></td></tr></table></figure>
-<p><code>echo</code> prints contents.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$TERM</span></span><br></pre></td></tr></table></figure>
-<p>Which can print multiple variables too.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$LANG</span> <span class="variable">$HOME</span></span><br></pre></td></tr></table></figure>
-<p>To output <strong>shell variables</strong> as well as environment variables using <code>set</code> do the following: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">set</span> | less -N</span><br></pre></td></tr></table></figure>
-<p><code>set</code> is usually used to change or unset shell options and parameters but here we have <em>piped</em> the command through less to see what it outputs instead of allowing it to make changes. </p>
-<p>The command can be modified to not show the residual bash functions included in the last output (using posix mode). The brackets also indicate that the process will be run in a <em>sub shell</em> so that <code>set</code> does not actually change anything in the current shell’s environment. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ (<span class="built_in">set</span> -o posix; <span class="built_in">set</span>) | less -N</span><br></pre></td></tr></table></figure>
-<p>Note that there is no one command for retrieving <strong>only</strong> what we class as shell variables. One way of getting these as output is with a sorted comparison from both of the two previous <code>set</code> and <code>env</code> commands. This is not one hundred percent accurate however. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ comm -23 &lt;(<span class="built_in">set</span> -o posix; <span class="built_in">set</span> | sort) &lt;(env | sort) | less -N</span><br></pre></td></tr></table></figure>
-<p>In the last command <code>comm</code> is used to compare the output of <code>set</code> in a sub shell with the output of <code>env</code> in a sub shell, before finally being fed through <code>less</code> .  The two compared outputs are also sorted with <code>sort</code> .</p>
-<hr>
-<h1 id="3-–-Variable-Definitions"><a href="#3-–-Variable-Definitions" class="headerlink" title="3 – Variable Definitions"></a>3 – Variable Definitions</h1><h2 id="Environment-Variables"><a href="#Environment-Variables" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p><code>SHELL</code>  – <code>/bin/bash</code></p>
-<p>This is how the system knows what shell to be used when interpreting commands. In most Linux systems Bash is the default primary shell, but many others can be installed on the system and assigned to this variable. </p>
-<hr>
-<p><code>TERM</code> – <code>xterm</code></p>
-<p>This specifies the type of terminal to emulate when running the shell. The default in GUI based desktop environments is often <code>linux</code> or <code>xterm</code> .</p>
-<hr>
-<p><code>USER</code>  – <code>scarlz</code></p>
-<p>Is set to the username of the currently logged in Linux user.</p>
-<hr>
-<p><code>PWD</code> – <code>/etc/apache2</code></p>
-<p>Like the <code>pwd</code> command it contains the currently active working directory.</p>
-<hr>
-<p><code>OLDPWD</code> – <code>/home/scarlz/dotfiles</code></p>
-<p>The last working directory the user moved from. The shell uses this when the <code>cd -</code> command is invoked. </p>
-<hr>
-<p><code>LS_COLORS</code> – <code>*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:</code></p>
-<p>The <code>ls</code> command has built-in colour support used to differentiate between file types and folders. Colour codes are stored in this variable that determine the colours used.  </p>
-<hr>
-<p><code>PATH</code> – <code>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin</code></p>
-<p>The shell’s main “Path” variable holds a list of directories that the system will query when looking for commands/programs the user types in. They are checked in the order listed. </p>
-<hr>
-<p><code>LANG</code> – <code>en_GB.UTF-8</code></p>
-<p>The currently set language and localization in use (locales), including character encoding.</p>
-<hr>
-<p><code>HOME</code> – <code>/home/scarlz</code></p>
-<p>The current user’s home directory.</p>
-<hr>
-<p><code>_</code>  – <code>/usr/bin/printenv</code></p>
-<p>The previously executed command and its path. </p>
-<hr>
-<p><code>EDITOR</code> – <code>vim</code></p>
-<p>The shell’s preferred text editor. </p>
-<hr>
-<p><code>PAGER</code> – <code>more</code></p>
-<p>The shell’s preferred pager program. </p>
-<hr>
-<p><code>MAIL</code> – <code>/var/spool/mail/$LOGNAME</code></p>
-<p>Contains the location of incoming email. The traditional path is used as an example here. </p>
-<hr>
-<h2 id="Shell-Variables"><a href="#Shell-Variables" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p><code>BASHOPTS</code> </p>
-<p>The list of options that the shell included when bash was run. Useful for finding out if the shell environment currently can do what you expect it to. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASHOPTS</span></span><br><span class="line">BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>BASH_VERSION</code></p>
-<p>The version of bash being executed, in human-readable form.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSION</span></span><br><span class="line">4.3.11(1)-release</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>BASH_VERSINFO</code> </p>
-<p>Similar to the last variable except in “<em>machine</em>“ readable format. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSINFO</span></span><br><span class="line">4</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>COLUMNS</code> </p>
-<p>The number of columns that are being used to draw output to the screen.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$COLUMNS</span></span><br><span class="line">239</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>DIRSTACK</code> </p>
-<p>The stack of directories that are available with the <code>pushd</code> and <code>popd</code> commands.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$DIRSTACK</span></span><br><span class="line">~</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>HISTFILESIZE</code> </p>
-<p>Number of lines of command history that gets stored to the file per bash session.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTFILESIZE</span></span><br><span class="line">2000</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>HISTSIZE</code> </p>
-<p>The number of lines of command history maximum to be stored in memory.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTSIZE</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>HOSTNAME</code> </p>
-<p>The hostname of the computer at this time.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HOSTNAME</span></span><br><span class="line">scarlz-corsair</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>IFS</code> </p>
-<p>The internal field separator character that separates input on the command line. By default, this is a space so there is no real output to show as an example command. </p>
-<hr>
-<p><code>PS1</code> </p>
-<p>The primary command prompt’s definition. Defines quint-essentially what your prompt looks like when you start a shell session. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$PS1</span></span><br><span class="line">\[\e]0;\u@\h: \w\a\]<span class="variable">$&#123;debian_chroot:+($debian_chroot)&#125;</span>\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>SHELLOPTS</code> </p>
-<p>Any shell options that can be or have been set with the set option.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$SHELLOPTS</span></span><br><span class="line">braceexpand:emacs:hashall:histexpand:<span class="built_in">history</span>:interactive-comments:monitor</span><br></pre></td></tr></table></figure>
-<hr>
-<p><code>UID</code> </p>
-<p>The assigned UID of the current user.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$UID</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="4-–-Setting-Variables"><a href="#4-–-Setting-Variables" class="headerlink" title="4 – Setting Variables"></a>4 – Setting Variables</h1><h2 id="Shell-Variables-1"><a href="#Shell-Variables-1" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p>To create a shell variable in the current shell session, specify a name and a value in the same manner as usual in Bash. Adhering to the naming convention of using full capitals for the variable name. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
-<p>Note the single quotation marks used since the string content of our variable contains a space. </p>
-<p>Also when special characters like <code>!</code> are used in the string, apostrophes must be inserted instead of double quotes to enclose the the string. </p>
-<p><code>!</code> is special character in Bash as it is usually used to expand the shell history.</p>
-<p>We can see the newly defined variable by using <code>echo</code> :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-<p>As said this is only a shell variable within the current Bash session and not an environmental variable. </p>
-<p>This can be checked by using <code>printenv</code> :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-<p><strong>No</strong> output is returned as the definition is not recognised as part of the environment. </p>
-<p>Let’s take this as an opportunity to demonstrate a way of accessing the value of any shell or environmental variable.</p>
-<p>Remember like in these example that to reference the value of a variable, precede it with a <code>$</code> sign. This is so the shell knows to substitute the name of the variable for it’s content. </p>
-<h2 id="Environment-Variables-1"><a href="#Environment-Variables-1" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p>To create one, export an existing shell variable into the shell’s persistent environment using the  <code>export</code> command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
-<p>This time when we check the variable with <code>printenv</code> it will output.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-<p>The variable now descends into a sub shell child process and is retained from the parent, test this by starting anew shell session with <code>bash</code> :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ bash</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
-<p>To bypass having to set a variable and then export it to the environment, the process can be combined like this:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> INSTANT_ENV_VAR=<span class="string">"instant definition plus export!"</span></span><br></pre></td></tr></table></figure>
-<p>Return to the parent shell we came from with <code>exit</code> , and try to <code>echo</code> the previously exported variable:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$INSTANT_ENV_VAR</span></span><br></pre></td></tr></table></figure>
-<p>Notice <strong>no</strong> output is returned as environment variables can only be passed to child processes, and not the other way around. This is sensible for the most part as it “prevents programs from affecting the operating environment from which they were called”.</p>
-<p>Also when you exit back into your main parent shell, the child shell environment is destroyed.</p>
-<hr>
-<h1 id="5-–-Demoting-and-Unsetting-Variables"><a href="#5-–-Demoting-and-Unsetting-Variables" class="headerlink" title="5 – Demoting and Unsetting Variables"></a>5 – Demoting and Unsetting Variables</h1><p>To change an already set environment variable back into a lesser shell variable use the <code>-n</code> parameter with <code>export</code> :</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> -n EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
-<p>Now nothing is returned when using <code>printenv</code> on the variable:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
-<p>It’s still set as a shell variable so to undefine it completely from this local shell session you can use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">unset</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="6-–-Persistent-Variables"><a href="#6-–-Persistent-Variables" class="headerlink" title="6 – Persistent Variables"></a>6 – Persistent Variables</h1><p>To create predefined variables at login depends upon how bash is started and which configuration file it uses to do so. The deciding factors on which file is used relies on the types of “login shell” that have being initiated by the user.</p>
-<p>The types being either:</p>
-<ul>
-<li>Login <strong>or</strong> Non-Login </li>
-<li>Interactive <strong>or </strong> Non-Interactive </li>
-</ul>
-<p>So the two distinctions that are taken into account are whether the shell is being spawned as a “login” or “non-login” session. As well as whether the session is either an “interactive session” or “non-interactive” session.</p>
-<h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><p>A login shell is a shell session that always begins by authenticating the user. If you are signing into a terminal session or through SSH and authenticate, your shell session will be classed and set as a “login” shell.</p>
-<p>A session started as a login session will read configuration details from the <code>/etc/profile</code> file first, and then look for the first login shell configuration file it can find in the user’s home directory. In order to get user-specific configuration details.</p>
-<p>These files are the first it can find out of <code>~/.bash_profile</code> , <code>~/.bash_login</code> , and <code>~/.profile</code> .</p>
-<hr>
-<h2 id="Non-Login"><a href="#Non-Login" class="headerlink" title="Non-Login"></a>Non-Login</h2><p>If you start a new shell session from within your authenticated session, like earlier when we called the <code>bash</code> command from the terminal, a non-login shell session is started. This is as you were were not asked for any authentication details when you started the child shell.</p>
-<p>A session defined as a non-login shell will always read  <code>/etc/bash.bashrc</code> and then the user-specific <code>~/.bashrc</code> file to help build its environment.</p>
-<hr>
-<h1 id="Interactive"><a href="#Interactive" class="headerlink" title="Interactive"></a>Interactive</h1><p>An interactive shell session is a shell session that is attached to a terminal and in use. So a normal session that begins with SSH is usually defined as an interactive login shell. See “Non Interactive” in the next section to see the difference between the two. </p>
-<hr>
-<h2 id="Non-Interactive"><a href="#Non-Interactive" class="headerlink" title="Non-Interactive"></a>Non-Interactive</h2><p>A non-interactive shell session is one that is not attached to a terminal session, and not currently in use. For example a script run from the command line is usually run in a non-interactive, non-login shell.</p>
-<p>Most notable non-interactive shells read the environment variable named  <code>BASH_ENV</code> and read the file specified in this variable to construct the new shell environment.</p>
-<hr>
-<h2 id="Setting-Environment-Variables-at-Login"><a href="#Setting-Environment-Variables-at-Login" class="headerlink" title="Setting Environment Variables at Login"></a>Setting Environment Variables at Login</h2><p>So there are a variety of circumstances that dictate which of the different files are needed to set predefined variables. </p>
-<p>This has it’s advantages and gives a lot of flexibility for specific situations where you might want only certain settings for a login shell, and other different settings in a non-login shell. </p>
-<p>Despite this to make things easier and more general, most people most of the time will want the same settings for both scenarios. </p>
-<p>Depending upon your Linux distribution and personal setup, usually the login configuration files source the non-login configuration files. Meaning that you don’t have to define the variables in both files and can get away with defining environment variables that you want in both <strong>only</strong> inside the non-login configuration files. They will then be read in both scenarios as they’re sourced in the latter. </p>
-<p>It’s also best to set them for your individual user and not system wide. so to make them available to both login and non-login shell sessions define these variables in the <code>~/.bashrc</code> .</p>
-<p>An example of the line to set a persistent environment variable in the <code>.bashrc</code> file would look like this:</p>
-<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
-<p>Which is the same as before whilst on the command line.</p>
-<p>The next time you start a shell session, your environment variable declaration(s) are always read and passed on to the shell’s environment (including subsequent child shells too). </p>
-<p>You can force your current session to read the config file at any time by typing in a terminal:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
-<p>To set them in the system wide files if you prefer, do the same except add the variable definition(s) to: <code>/etc/profile</code> ,  <code>/etc/bash.bashrc</code> , or <code>/etc/environment</code> instead. </p>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps" target="_blank" rel="external">Digital Ocean - How to Read and Set Environmental and Shell Variables on a Linux VPS</a></li>
-<li><a href="https://wiki.archlinux.org/index.php/Environment_variables" target="_blank" rel="external">Arch-wiki - Environment Variables Page</a></li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/Bash/" class="post__tag__link">Bash</a></li><li class="post__tag__item"><a href="/tags/Variables/" class="post__tag__link">Variables</a></li></ul><a href="/2015/06/14/notes-bash-env-variables/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/5/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/7/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Git/" class="post__tag__link">Git</a></li><li class="post__tag__item"><a href="/tags/Pass/" class="post__tag__link">Pass</a></li><li class="post__tag__item"><a href="/tags/GPG/" class="post__tag__link">GPG</a></li></ul><a href="/2015/07/04/notes-pass-unix-password-manager/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/5/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/7/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

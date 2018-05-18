@@ -1,4 +1,193 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-06-08T23:00:00.000Z" class="post__time">June 9, 2015</time><h1 class="post__title"><a href="/2015/06/09/notes-arch-gyazo/">Installing and Configuring Gyazo on Arch Linux with Sxhkd</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/UHrni76.png" alt="Gyazo Ninja"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-06-13T23:00:00.000Z" class="post__time">June 14, 2015</time><h1 class="post__title"><a href="/2015/06/14/notes-bash-env-variables/">BASH Environment and Shell Variables</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qthCSsn.png" alt="Shell Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Variables provide a simple way to share configuration settings between multiple applications and processes in Linux, and are mainly set in either a terminal or shell configuration file upon start up. </p>
+<p>They are either environmental or shell variables by convention. Both of which are usually defined using all capital letters. This helps users distinguish environmental variables from within other contexts.</p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Terminology"><a href="#1-–-Terminology" class="headerlink" title="1 – Terminology"></a>1 – Terminology</h1><p>As said there are technically one of two categories a variable can fall into:</p>
+<p><strong>“Environment variables”</strong> have been defined for use in the current shell and will be inherited by any child shells or processes spawned as a result of the parent. Environmental variables can also be used to pass information into processes that are spawned by the shell.</p>
+<p><strong>“Shell variables”</strong> are contained exclusively within the shell in which they were set or defined. They are mostly used to keep track of ephemeral temporal data, like the current working directory in a session. </p>
+<h1 id="2-–-Displaying-Variables"><a href="#2-–-Displaying-Variables" class="headerlink" title="2 – Displaying Variables"></a>2 – Displaying Variables</h1><p>To see all currently set <strong>environment variables</strong> in a terminal type:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv</span><br></pre></td></tr></table></figure>
+<p>Alternatively the shorter command <code>env</code> works too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ env</span><br></pre></td></tr></table></figure>
+<p>To see individual or specific environment variables and print with standard output use either of the following:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv TERM</span><br></pre></td></tr></table></figure>
+<p>Prints multiple variables.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv SHELL USER</span><br></pre></td></tr></table></figure>
+<p><code>echo</code> prints contents.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$TERM</span></span><br></pre></td></tr></table></figure>
+<p>Which can print multiple variables too.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$LANG</span> <span class="variable">$HOME</span></span><br></pre></td></tr></table></figure>
+<p>To output <strong>shell variables</strong> as well as environment variables using <code>set</code> do the following: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">set</span> | less -N</span><br></pre></td></tr></table></figure>
+<p><code>set</code> is usually used to change or unset shell options and parameters but here we have <em>piped</em> the command through less to see what it outputs instead of allowing it to make changes. </p>
+<p>The command can be modified to not show the residual bash functions included in the last output (using posix mode). The brackets also indicate that the process will be run in a <em>sub shell</em> so that <code>set</code> does not actually change anything in the current shell’s environment. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ (<span class="built_in">set</span> -o posix; <span class="built_in">set</span>) | less -N</span><br></pre></td></tr></table></figure>
+<p>Note that there is no one command for retrieving <strong>only</strong> what we class as shell variables. One way of getting these as output is with a sorted comparison from both of the two previous <code>set</code> and <code>env</code> commands. This is not one hundred percent accurate however. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ comm -23 &lt;(<span class="built_in">set</span> -o posix; <span class="built_in">set</span> | sort) &lt;(env | sort) | less -N</span><br></pre></td></tr></table></figure>
+<p>In the last command <code>comm</code> is used to compare the output of <code>set</code> in a sub shell with the output of <code>env</code> in a sub shell, before finally being fed through <code>less</code> .  The two compared outputs are also sorted with <code>sort</code> .</p>
+<hr>
+<h1 id="3-–-Variable-Definitions"><a href="#3-–-Variable-Definitions" class="headerlink" title="3 – Variable Definitions"></a>3 – Variable Definitions</h1><h2 id="Environment-Variables"><a href="#Environment-Variables" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p><code>SHELL</code>  – <code>/bin/bash</code></p>
+<p>This is how the system knows what shell to be used when interpreting commands. In most Linux systems Bash is the default primary shell, but many others can be installed on the system and assigned to this variable. </p>
+<hr>
+<p><code>TERM</code> – <code>xterm</code></p>
+<p>This specifies the type of terminal to emulate when running the shell. The default in GUI based desktop environments is often <code>linux</code> or <code>xterm</code> .</p>
+<hr>
+<p><code>USER</code>  – <code>scarlz</code></p>
+<p>Is set to the username of the currently logged in Linux user.</p>
+<hr>
+<p><code>PWD</code> – <code>/etc/apache2</code></p>
+<p>Like the <code>pwd</code> command it contains the currently active working directory.</p>
+<hr>
+<p><code>OLDPWD</code> – <code>/home/scarlz/dotfiles</code></p>
+<p>The last working directory the user moved from. The shell uses this when the <code>cd -</code> command is invoked. </p>
+<hr>
+<p><code>LS_COLORS</code> – <code>*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:</code></p>
+<p>The <code>ls</code> command has built-in colour support used to differentiate between file types and folders. Colour codes are stored in this variable that determine the colours used.  </p>
+<hr>
+<p><code>PATH</code> – <code>/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin</code></p>
+<p>The shell’s main “Path” variable holds a list of directories that the system will query when looking for commands/programs the user types in. They are checked in the order listed. </p>
+<hr>
+<p><code>LANG</code> – <code>en_GB.UTF-8</code></p>
+<p>The currently set language and localization in use (locales), including character encoding.</p>
+<hr>
+<p><code>HOME</code> – <code>/home/scarlz</code></p>
+<p>The current user’s home directory.</p>
+<hr>
+<p><code>_</code>  – <code>/usr/bin/printenv</code></p>
+<p>The previously executed command and its path. </p>
+<hr>
+<p><code>EDITOR</code> – <code>vim</code></p>
+<p>The shell’s preferred text editor. </p>
+<hr>
+<p><code>PAGER</code> – <code>more</code></p>
+<p>The shell’s preferred pager program. </p>
+<hr>
+<p><code>MAIL</code> – <code>/var/spool/mail/$LOGNAME</code></p>
+<p>Contains the location of incoming email. The traditional path is used as an example here. </p>
+<hr>
+<h2 id="Shell-Variables"><a href="#Shell-Variables" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p><code>BASHOPTS</code> </p>
+<p>The list of options that the shell included when bash was run. Useful for finding out if the shell environment currently can do what you expect it to. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASHOPTS</span></span><br><span class="line">BASHOPTS=checkwinsize:cmdhist:complete_fullquote:expand_aliases:extglob</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>BASH_VERSION</code></p>
+<p>The version of bash being executed, in human-readable form.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSION</span></span><br><span class="line">4.3.11(1)-release</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>BASH_VERSINFO</code> </p>
+<p>Similar to the last variable except in “<em>machine</em>“ readable format. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$BASH_VERSINFO</span></span><br><span class="line">4</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>COLUMNS</code> </p>
+<p>The number of columns that are being used to draw output to the screen.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$COLUMNS</span></span><br><span class="line">239</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>DIRSTACK</code> </p>
+<p>The stack of directories that are available with the <code>pushd</code> and <code>popd</code> commands.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$DIRSTACK</span></span><br><span class="line">~</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HISTFILESIZE</code> </p>
+<p>Number of lines of command history that gets stored to the file per bash session.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTFILESIZE</span></span><br><span class="line">2000</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HISTSIZE</code> </p>
+<p>The number of lines of command history maximum to be stored in memory.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HISTSIZE</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>HOSTNAME</code> </p>
+<p>The hostname of the computer at this time.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$HOSTNAME</span></span><br><span class="line">scarlz-corsair</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>IFS</code> </p>
+<p>The internal field separator character that separates input on the command line. By default, this is a space so there is no real output to show as an example command. </p>
+<hr>
+<p><code>PS1</code> </p>
+<p>The primary command prompt’s definition. Defines quint-essentially what your prompt looks like when you start a shell session. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$PS1</span></span><br><span class="line">\[\e]0;\u@\h: \w\a\]<span class="variable">$&#123;debian_chroot:+($debian_chroot)&#125;</span>\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>SHELLOPTS</code> </p>
+<p>Any shell options that can be or have been set with the set option.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$SHELLOPTS</span></span><br><span class="line">braceexpand:emacs:hashall:histexpand:<span class="built_in">history</span>:interactive-comments:monitor</span><br></pre></td></tr></table></figure>
+<hr>
+<p><code>UID</code> </p>
+<p>The assigned UID of the current user.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$UID</span></span><br><span class="line">1000</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="4-–-Setting-Variables"><a href="#4-–-Setting-Variables" class="headerlink" title="4 – Setting Variables"></a>4 – Setting Variables</h1><h2 id="Shell-Variables-1"><a href="#Shell-Variables-1" class="headerlink" title="Shell Variables"></a>Shell Variables</h2><p>To create a shell variable in the current shell session, specify a name and a value in the same manner as usual in Bash. Adhering to the naming convention of using full capitals for the variable name. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
+<p>Note the single quotation marks used since the string content of our variable contains a space. </p>
+<p>Also when special characters like <code>!</code> are used in the string, apostrophes must be inserted instead of double quotes to enclose the the string. </p>
+<p><code>!</code> is special character in Bash as it is usually used to expand the shell history.</p>
+<p>We can see the newly defined variable by using <code>echo</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>As said this is only a shell variable within the current Bash session and not an environmental variable. </p>
+<p>This can be checked by using <code>printenv</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p><strong>No</strong> output is returned as the definition is not recognised as part of the environment. </p>
+<p>Let’s take this as an opportunity to demonstrate a way of accessing the value of any shell or environmental variable.</p>
+<p>Remember like in these example that to reference the value of a variable, precede it with a <code>$</code> sign. This is so the shell knows to substitute the name of the variable for it’s content. </p>
+<h2 id="Environment-Variables-1"><a href="#Environment-Variables-1" class="headerlink" title="Environment Variables"></a>Environment Variables</h2><p>To create one, export an existing shell variable into the shell’s persistent environment using the  <code>export</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>This time when we check the variable with <code>printenv</code> it will output.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>The variable now descends into a sub shell child process and is retained from the parent, test this by starting anew shell session with <code>bash</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ bash</span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$EXAMPLE_VAR</span></span><br><span class="line">hello world!</span><br></pre></td></tr></table></figure>
+<p>To bypass having to set a variable and then export it to the environment, the process can be combined like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> INSTANT_ENV_VAR=<span class="string">"instant definition plus export!"</span></span><br></pre></td></tr></table></figure>
+<p>Return to the parent shell we came from with <code>exit</code> , and try to <code>echo</code> the previously exported variable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br><span class="line">$ <span class="built_in">echo</span> <span class="variable">$INSTANT_ENV_VAR</span></span><br></pre></td></tr></table></figure>
+<p>Notice <strong>no</strong> output is returned as environment variables can only be passed to child processes, and not the other way around. This is sensible for the most part as it “prevents programs from affecting the operating environment from which they were called”.</p>
+<p>Also when you exit back into your main parent shell, the child shell environment is destroyed.</p>
+<hr>
+<h1 id="5-–-Demoting-and-Unsetting-Variables"><a href="#5-–-Demoting-and-Unsetting-Variables" class="headerlink" title="5 – Demoting and Unsetting Variables"></a>5 – Demoting and Unsetting Variables</h1><p>To change an already set environment variable back into a lesser shell variable use the <code>-n</code> parameter with <code>export</code> :</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> -n EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>Now nothing is returned when using <code>printenv</code> on the variable:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ printenv EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<p>It’s still set as a shell variable so to undefine it completely from this local shell session you can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">unset</span> EXAMPLE_VAR</span><br></pre></td></tr></table></figure>
+<hr>
+<h1 id="6-–-Persistent-Variables"><a href="#6-–-Persistent-Variables" class="headerlink" title="6 – Persistent Variables"></a>6 – Persistent Variables</h1><p>To create predefined variables at login depends upon how bash is started and which configuration file it uses to do so. The deciding factors on which file is used relies on the types of “login shell” that have being initiated by the user.</p>
+<p>The types being either:</p>
+<ul>
+<li>Login <strong>or</strong> Non-Login </li>
+<li>Interactive <strong>or </strong> Non-Interactive </li>
+</ul>
+<p>So the two distinctions that are taken into account are whether the shell is being spawned as a “login” or “non-login” session. As well as whether the session is either an “interactive session” or “non-interactive” session.</p>
+<h2 id="Login"><a href="#Login" class="headerlink" title="Login"></a>Login</h2><p>A login shell is a shell session that always begins by authenticating the user. If you are signing into a terminal session or through SSH and authenticate, your shell session will be classed and set as a “login” shell.</p>
+<p>A session started as a login session will read configuration details from the <code>/etc/profile</code> file first, and then look for the first login shell configuration file it can find in the user’s home directory. In order to get user-specific configuration details.</p>
+<p>These files are the first it can find out of <code>~/.bash_profile</code> , <code>~/.bash_login</code> , and <code>~/.profile</code> .</p>
+<hr>
+<h2 id="Non-Login"><a href="#Non-Login" class="headerlink" title="Non-Login"></a>Non-Login</h2><p>If you start a new shell session from within your authenticated session, like earlier when we called the <code>bash</code> command from the terminal, a non-login shell session is started. This is as you were were not asked for any authentication details when you started the child shell.</p>
+<p>A session defined as a non-login shell will always read  <code>/etc/bash.bashrc</code> and then the user-specific <code>~/.bashrc</code> file to help build its environment.</p>
+<hr>
+<h1 id="Interactive"><a href="#Interactive" class="headerlink" title="Interactive"></a>Interactive</h1><p>An interactive shell session is a shell session that is attached to a terminal and in use. So a normal session that begins with SSH is usually defined as an interactive login shell. See “Non Interactive” in the next section to see the difference between the two. </p>
+<hr>
+<h2 id="Non-Interactive"><a href="#Non-Interactive" class="headerlink" title="Non-Interactive"></a>Non-Interactive</h2><p>A non-interactive shell session is one that is not attached to a terminal session, and not currently in use. For example a script run from the command line is usually run in a non-interactive, non-login shell.</p>
+<p>Most notable non-interactive shells read the environment variable named  <code>BASH_ENV</code> and read the file specified in this variable to construct the new shell environment.</p>
+<hr>
+<h2 id="Setting-Environment-Variables-at-Login"><a href="#Setting-Environment-Variables-at-Login" class="headerlink" title="Setting Environment Variables at Login"></a>Setting Environment Variables at Login</h2><p>So there are a variety of circumstances that dictate which of the different files are needed to set predefined variables. </p>
+<p>This has it’s advantages and gives a lot of flexibility for specific situations where you might want only certain settings for a login shell, and other different settings in a non-login shell. </p>
+<p>Despite this to make things easier and more general, most people most of the time will want the same settings for both scenarios. </p>
+<p>Depending upon your Linux distribution and personal setup, usually the login configuration files source the non-login configuration files. Meaning that you don’t have to define the variables in both files and can get away with defining environment variables that you want in both <strong>only</strong> inside the non-login configuration files. They will then be read in both scenarios as they’re sourced in the latter. </p>
+<p>It’s also best to set them for your individual user and not system wide. so to make them available to both login and non-login shell sessions define these variables in the <code>~/.bashrc</code> .</p>
+<p>An example of the line to set a persistent environment variable in the <code>.bashrc</code> file would look like this:</p>
+<figure class="highlight bash"><figcaption><span>~/.bashrc</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> EXAMPLE_VAR=<span class="string">'hello world!'</span></span><br></pre></td></tr></table></figure>
+<p>Which is the same as before whilst on the command line.</p>
+<p>The next time you start a shell session, your environment variable declaration(s) are always read and passed on to the shell’s environment (including subsequent child shells too). </p>
+<p>You can force your current session to read the config file at any time by typing in a terminal:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> ~/.bashrc</span><br></pre></td></tr></table></figure>
+<p>To set them in the system wide files if you prefer, do the same except add the variable definition(s) to: <code>/etc/profile</code> ,  <code>/etc/bash.bashrc</code> , or <code>/etc/environment</code> instead. </p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-read-and-set-environmental-and-shell-variables-on-a-linux-vps" target="_blank" rel="external">Digital Ocean - How to Read and Set Environmental and Shell Variables on a Linux VPS</a></li>
+<li><a href="https://wiki.archlinux.org/index.php/Environment_variables" target="_blank" rel="external">Arch-wiki - Environment Variables Page</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/Bash/" class="post__tag__link">Bash</a></li><li class="post__tag__item"><a href="/tags/Variables/" class="post__tag__link">Variables</a></li></ul><a href="/2015/06/14/notes-bash-env-variables/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-06-08T23:00:00.000Z" class="post__time">June 9, 2015</time><h1 class="post__title"><a href="/2015/06/09/notes-arch-gyazo/">Installing and Configuring Gyazo on Arch Linux with Sxhkd</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/UHrni76.png" alt="Gyazo Ninja"></p>
 <p>Gyazo is a free opensource screenshot program available on all desktop platforms including Linux. It allows full screenshot or custom screen area capturing by the user, with uploading of captured images to an online server so they can be accessed anywhere with the uniquely generated public URL.  </p>
 <p>A premium “ninja” service is also available that gives users more storage options and further benefits such as image enhancement, text captions, and pointer arrow insertion. </p>
 <p>Here are my notes on how to install the program/service onto Arch Linux and bind it to run with an Sxhkd shortcut binding. </p>
@@ -464,126 +653,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/18/arch-vm-main/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-02-16T00:00:00.000Z" class="post__time">February 16, 2015</time><h1 class="post__title"><a href="/2015/02/16/arch-vm-base/">Arch Linux VM Base Installation</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/v5cFEBC.png" alt="Arch Linux Logo"></p>
-<p>I setup the base system components of Arch on a VM recently, here are the notes on one of the many ways of doing this.</p>
-<p>So bear in mind that these notes in places are relative to me.    </p>
-<blockquote>
-<p><a href="https://www.archlinux.org/download/" target="_blank" rel="external">Arch Linux Source Download Page</a></p>
-</blockquote>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Initial-Shell-Prompt"><a href="#1-–-Initial-Shell-Prompt" class="headerlink" title="1 – Initial Shell Prompt"></a>1 – Initial Shell Prompt</h1><p>After being presented with a shell prompt where you are automatically logged in as <em>root</em>. Begin by setting the keyboard language to your relevant country. </p>
-<p><strong>The shell in use is Zsh.</strong></p>
-<p>Show the possible keyboard layouts available with this command. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ localectl list-keymaps</span><br></pre></td></tr></table></figure>
-<p>To set it use <code>loadkeys</code> plus your keyboard layout choice:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ loadkeys uk</span><br></pre></td></tr></table></figure>
-<p>The <em>dhcpcd</em> network daemon starts automatically during boot, and it will attempt to start a wired connection by default. </p>
-<p>Use <code>ping</code> to check connectivity. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ping -c 5 www.google.co.uk</span><br></pre></td></tr></table></figure>
-<p>In a Virtual Machine that shares the host’s network connection, the <code>ping</code> should be successful as long as the host itself is connected and working, when using a <em>bridged</em> hardware network setting. If not this then… improvise.</p>
-<hr>
-<h1 id="2-–-Partitioning"><a href="#2-–-Partitioning" class="headerlink" title="2 – Partitioning"></a>2 – Partitioning</h1><p>This will list all devices connected to your system along with their partition schemes, including those used to host and boot live Arch installation media (e.g. a USB drive). Not all devices listed will therefore be viable or appropriate mediums for installation. To filter out inappropriate results, use this <code>grep</code>. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsblk | grep -v <span class="string">"rom\|loop\|airoot"</span></span><br></pre></td></tr></table></figure>
-<p>Devices (e.g. hard drives) will be listed as <em>sdx</em>, where <em>x</em> is a lower-case letter starting from <em>a</em> for the first device (<em>sda</em>), <em>b</em> for the second device (<em>sdb</em>), and so on. For the VM only one device is available (<em>sda</em>) which is the allocated host hard drive space.</p>
-<p>Open the device (host HDD) that the partition table is to be created with and create a new <em>MBR</em>/<em>msdos</em> partition table for BIOS systems. All done using the following command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ parted <span class="_">-s</span> /dev/sda mktable msdos</span><br></pre></td></tr></table></figure>
-<p>Here I’m making two partitions in total for the VM. The first with line <code>1</code> and second with line <code>2</code>. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ parted <span class="_">-s</span> /dev/sda mkpart primary 0% 100m</span><br><span class="line">$ parted <span class="_">-s</span> /dev/sda mkpart primary 100m 100%</span><br></pre></td></tr></table></figure>
-<p>You can run the earlier <code>grep</code> pattern again to see the newly created partitions. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ lsblk | grep -v <span class="string">"rom\|loop\|airoot"</span></span><br></pre></td></tr></table></figure>
-<p>Or use <code>parted</code> instead to see the partition table.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ parted /dev/sda <span class="built_in">print</span></span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="3-–-Filesystems"><a href="#3-–-Filesystems" class="headerlink" title="3 – Filesystems"></a>3 – Filesystems</h1><p><code>/boot</code></p>
-<p>The boot filesystem is formatted and placed on the first partition created (smaller of the two) with:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.ext2 /dev/sda1</span><br></pre></td></tr></table></figure>
-<p><code>/</code></p>
-<p>The root filesystem is formatted on the other main partition now via:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkfs.btrfs /dev/sda2</span><br></pre></td></tr></table></figure>
-<h1 id="4-–-Mounting"><a href="#4-–-Mounting" class="headerlink" title="4 – Mounting"></a>4 – Mounting</h1><p><code>/mnt/</code></p>
-<p>This will <em>mount</em> the main partition:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda2 /mnt/</span><br></pre></td></tr></table></figure>
-<p>Make a boot directory in <code>/mnt/</code> which is now mapped/mounted to <code>/dev/sda2</code> .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir /mnt/boot</span><br></pre></td></tr></table></figure>
-<p>Mount the boot partition to the newly created boot sub-directory in the main root partition.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mount /dev/sda1 /mnt/boot</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="5-–-Mirrors-amp-System-Packages"><a href="#5-–-Mirrors-amp-System-Packages" class="headerlink" title="5 – Mirrors &amp; System Packages"></a>5 – Mirrors &amp; System Packages</h1><p>Begin by appending the system’s <em>mirrorlist</em> file name with <strong>.orig</strong> and the <code>mv</code> command.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig</span><br></pre></td></tr></table></figure>
-<p>Then run <code>rankmirrors</code> on the aforementioned file with the <code>-n</code> parameter to find and redirect the fastest <strong>6</strong> mirrors into a new <em>mirrorlist</em> file.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig &gt;/etc/pacman.d/mirrorlist</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> This takes several minutes to process and complete, have faith and wait…  </p>
-</blockquote>
-<p>After this use <code>pacman</code> to update and sync the systems package listings. </p>
-<p><strong>“Whenever you change your mirrorlist, refresh all package lists with pacman, to ensure that the package lists are updated consistently.”</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -Syy</span><br></pre></td></tr></table></figure>
-<p>Next install all the system’s base packages. Time to download packages will vary on your internet connection and the respective mirrors. </p>
-<p>Adding a <code>-i</code> parameter to this command enables a prompt for every package to be installed during the process, if preferred.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pacstrap /mnt/ base base-devel</span><br></pre></td></tr></table></figure>
-<p>Copy the mirrorlist(s) from earlier over also.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="6-–-fstab"><a href="#6-–-fstab" class="headerlink" title="6 – fstab"></a>6 – fstab</h1><p>Here generate fstab like so in this directory:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ genfstab -p /mnt/ &gt;&gt;/mnt/etc/fstab</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="7-–-chroot"><a href="#7-–-chroot" class="headerlink" title="7 – chroot"></a>7 – chroot</h1><p><code>chroot</code> into a bash shell in <code>/mnt/</code> .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ arch-chroot /mnt/ /bin/bash</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="8-–-hostname"><a href="#8-–-hostname" class="headerlink" title="8 – hostname"></a>8 – hostname</h1><p>Set the <code>hostname</code> to today’s date, or whatever you prefer. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="string">"archlinux-vm-<span class="variable">$(date +"%d-%m-%y")</span>"</span> &gt;/etc/hostname</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="9-–-localtime"><a href="#9-–-localtime" class="headerlink" title="9 – localtime"></a>9 – localtime</h1><p>Set the <code>localtime</code> to London’s current time (obviously change this in relation to your own timezone.) </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ln <span class="_">-s</span> /usr/share/zoneinfo/Europe/London /etc/localtime</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="10-–-locale"><a href="#10-–-locale" class="headerlink" title="10 – locale"></a>10 – locale</h1><p><em>Locales</em> define which language the system uses and other regional considerations like currency denomination, numerology and character sets. </p>
-<p>Using <code>vi</code> do this:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vi /etc/locale.gen</span><br></pre></td></tr></table></figure>
-<p>Uncomment the relevant language you wish to use (UTF-8 support recommended).</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">en_GB.UTF-8 UTF-8</span><br></pre></td></tr></table></figure>
-<p>Then generate the <em>locales</em> .</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ locale-gen</span><br></pre></td></tr></table></figure>
-<p>The <code>/etc/locale.conf</code> file does not exist by default. Create it, where <code>LANG</code> refers to the first uncommented entry in <code>/etc/locale.gen</code> from earlier. </p>
-<p>See the next command for an example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> LANG=en_GB.UTF-8 &gt; /etc/locale.conf</span><br></pre></td></tr></table></figure>
-<p>Lastly export the chosen <em>locale</em>.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">export</span> LANG=en_GB.UTF-8</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="11-–-passwd"><a href="#11-–-passwd" class="headerlink" title="11 – passwd"></a>11 – passwd</h1><p>Change the root user’s password for the VM.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ passwd</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="12-–-GRUB-Bootloader"><a href="#12-–-GRUB-Bootloader" class="headerlink" title="12 – GRUB Bootloader"></a>12 – GRUB Bootloader</h1><p>Here installation with GRUB and <em>MBR/msdos</em> is demonstrated. </p>
-<p>Install the <code>grub</code> package and then run <code>grub-install</code> to install the bootloader:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ pacman -S grub</span><br><span class="line">$ grub-install --target=i386-pc --recheck /dev/sda</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Warning:</strong> Change <code>/dev/sda</code> to reflect the drive you installed Arch on if needed. Do not append a partition number, and do not replace it with “sdax” either.</p>
-</blockquote>
-<p>Next automatically generate the main grub config file.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ grub-mkconfig -o /boot/grub/grub.cfg</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="13-–-unmount-amp-reboot"><a href="#13-–-unmount-amp-reboot" class="headerlink" title="13 – unmount &amp; reboot"></a>13 – unmount &amp; reboot</h1><p>Exit from the <em>chrooted</em> shell environment:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">exit</span></span><br></pre></td></tr></table></figure>
-<p>While partitions are unmounted automatically by <em>systemd</em> on shutdown, you may do so manually with the next command as a safety measure. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ umount -R /mnt/</span><br></pre></td></tr></table></figure>
-<p>Finally if using a CD image you may have to remove it from your VM manager software, before rebooting.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ reboot</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>“Your new Arch Linux base system is now a functional GNU/Linux environment ready to be built into whatever you wish or require.”</strong></p>
-</blockquote>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://wiki.archlinux.org/index.php/Beginners%27_guide" target="_blank" rel="external">Arch Linux Beginner’s Guide</a> - From the official Wiki. </li>
-<li><a href="http://www.wuputah.com/2013/02/18/quickly-install-an-archlinux-vm-in-15-minutes/" target="_blank" rel="external">wuputah.musings</a> - Quickly Install an Arch Linux VM in 15 minutes.</li>
-<li><a href="https://www.archlinux.org/mirrors/status/" target="_blank" rel="external">Arch Linux Mirror Status</a> - Reports various aspects about the mirrors such as network problems with mirrors, data collection problems, the last time mirrors have been synced, etc.</li>
-<li><a href="https://wiki.archlinux.org/index.php/GRUB" target="_blank" rel="external">Arch Linux GRUB Article</a> - For more information on configuring and using GRUB, see GRUB.</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/16/arch-vm-base/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/6/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/8/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Arch/" class="post__tag__link">Arch</a></li><li class="post__tag__item"><a href="/tags/VM/" class="post__tag__link">VM</a></li><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li></ul><a href="/2015/02/18/arch-vm-main/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/6/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/8/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

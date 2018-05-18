@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-02-04T16:19:11.165Z</updated>
+  <updated>2018-05-18T14:07:00.375Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -14,6 +14,99 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Installing Fail2ban on Ubuntu 18.04 (Bionic Beaver)</title>
+    <link href="http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/"/>
+    <id>http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/</id>
+    <published>2018-05-17T23:00:00.000Z</published>
+    <updated>2018-05-18T14:07:00.375Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/RdP4s4d.jpg" alt="Fail2ban Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>A highly condensed set of basic commands to install Fail2ban the traditional way. These can be executed on any remote server/VPS running recent versions of Ubuntu; although the process was carried out by myself on 18.04. If you’re not familiar with Fail2ban, the start of this brief guide refers to two good resources you can read up on. One more up to date than the other.  </p>
+<p>The purpose of this post is to serve as background for a follow up post which uses Ansible to install the Fail2ban package and configuration more efficiently (linked at the end). </p>
+<a id="more"></a>
+<hr>
+<h2 id="Installing-Fail2ban"><a href="#Installing-Fail2ban" class="headerlink" title="Installing Fail2ban"></a>Installing Fail2ban</h2><p>Several of the instructions for this process are taken and adapted from an older article on DigitalOcean. They’re intended for Ubuntu 14.04 but are still overall suitable on Bionic: </p>
+<blockquote>
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-protect-ssh-with-fail2ban-on-ubuntu-14-04" target="_blank" rel="external">DigitalOcean – “How To Protect SSH with Fail2Ban on Ubuntu 14.04”</a></p>
+</blockquote>
+<p>It might be better to read through this more up to date Linode article instead however to understand what Fail2ban is, how it works, and most importantly what different values to place into the configuration files. Otherwise this may not make complete sense before doing so. </p>
+<p>It may even be more preferable to follow the Linode guide in its entirety, but that’s up to you! </p>
+<p>See below: </p>
+<blockquote>
+<p><a href="https://www.linode.com/docs/security/using-fail2ban-for-security/" target="_blank" rel="external">Linode – “Use Fail2ban to Secure Your Server”</a></p>
+</blockquote>
+<p>On the remote Ubuntu server in question, update the system package index. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update -y</span><br></pre></td></tr></table></figure>
+<p>Download and acquire the <code>fail2ban</code> plus <code>sendmail</code> packages. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install fail2ban sendmail</span><br></pre></td></tr></table></figure>
+<p>Sendmail (if not present by default) is required for Fail2ban to generate notification emails. </p>
+<p>Copy the base Fail2ban config into a new <code>jail.local</code> file, in order to begin adding in the config options we want overridden and applied:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>“Fail2ban reads <code>.conf</code> configuration files first, then <code>.local</code> files overriding any settings. Because of this, all changes to the configuration are generally done in <code>.local</code> files, leaving the <code>.conf</code> files untouched.”</p>
+</blockquote>
+<p>Here’s where an understanding of the configuration is very much necessary. </p>
+<p>Having <a href="https://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">a working firewall such as UFW on Ubuntu</a> is also a background assumption I’m working with here, as the two can work together, and a firewall’s kinda mandatory anyway of course.</p>
+<p>Open the newly copied <code>jail.local</code> file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
+<p>Add in your sensible Fail2ban configuration blocks and values now; this is my example file contents, should you want to make use of them:</p>
+<figure class="highlight bash"><figcaption><span>/etc/fail2ban/jail.local</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[DEFAULT]</span><br><span class="line"></span><br><span class="line"><span class="comment"># email address to receive notifications.</span></span><br><span class="line">destemail = root@localhost    </span><br><span class="line"><span class="comment"># the email address from which to send emails.</span></span><br><span class="line">sender = root@&lt;fq-hostname&gt;    </span><br><span class="line"><span class="comment"># name on the notification emails.</span></span><br><span class="line">sendername = Fail2Ban    </span><br><span class="line"><span class="comment"># email transfer agent to use. </span></span><br><span class="line">mta = sendmail   </span><br><span class="line"></span><br><span class="line"><span class="comment"># see action.d/ufw.conf</span></span><br><span class="line">actionban = ufw.conf</span><br><span class="line"><span class="comment"># see action.d/ufw.conf </span></span><br><span class="line">actionunban = ufw.conf   </span><br><span class="line"></span><br><span class="line">[sshd]</span><br><span class="line">enabled = <span class="literal">true</span></span><br><span class="line">port = ssh</span><br><span class="line">filter = sshd</span><br><span class="line"><span class="comment"># the length of time between login attempts for maxretry. </span></span><br><span class="line">findtime = 600</span><br><span class="line"><span class="comment"># attempts from a single ip before a ban is imposed.</span></span><br><span class="line">maxretry = 5</span><br><span class="line"><span class="comment"># the number of seconds that a host is banned for.</span></span><br><span class="line">bantime = 3600</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> “A host is banned if it has generated “maxretry” during the last “findtime”.”</p>
+</blockquote>
+<p>Lastly here <code>enable</code> the Fail2ban service on system startup.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl service <span class="built_in">enable</span> fail2ban</span><br></pre></td></tr></table></figure>
+<p>Then <code>start</code> the service so it’s currently active.   </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl service start fail2ban</span><br></pre></td></tr></table></figure>
+<p>Fail2ban is now up and running - assuming you entered proper configuration options and have no syntax errors.  </p>
+<p>As an alternate to using Systemd, restarting the entire Fail2ban server reports any runtime errors, should there be any issue, so…</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fail2ban-client restart</span><br></pre></td></tr></table></figure>
+<p>Fix any reported problems in the output, and then restart again. </p>
+<p>There’s also a command to confirm the status of the server/jails… </p>
+<p>Try it out: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fail2ban-client status</span><br></pre></td></tr></table></figure>
+<p>More specific information about the <code>sshd</code> jail we created in the config file is retrievable with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fail2ban-client status sshd</span><br></pre></td></tr></table></figure>
+<p>Many more useful commands for you to explore are available, indexed at the following wiki:</p>
+<blockquote>
+<p><a href="https://www.fail2ban.org/wiki/index.php/Commands" target="_blank" rel="external">Fail2ban Client CLI Commands</a></p>
+</blockquote>
+<p>Fail2ban is now installed, running, and working! </p>
+<p>Add more jails and actions for other services to expand upon it.  </p>
+<p>The post leading on from this one achieves the same end result but using Ansible configuration management to do the job:</p>
+<blockquote>
+</blockquote>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://www.fail2ban.org/wiki/index.php/Main_Page" target="_blank" rel="external">Fail2ban Wiki</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/RdP4s4d.jpg&quot; alt=&quot;Fail2ban Logo&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;A highly condensed set of basic commands to install Fail2ban the traditional way. These can be executed on any remote server/VPS running recent versions of Ubuntu; although the process was carried out by myself on 18.04. If you’re not familiar with Fail2ban, the start of this brief guide refers to two good resources you can read up on. One more up to date than the other.  &lt;/p&gt;
+&lt;p&gt;The purpose of this post is to serve as background for a follow up post which uses Ansible to install the Fail2ban package and configuration more efficiently (linked at the end). &lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
+    
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
+    
+      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Bionic" scheme="http://www.tricksofthetrades.net/tags/Bionic/"/>
+    
+  </entry>
   
   <entry>
     <title>Deploying Meltdown and Spectre Fixes with Ansible on Linux Hosts</title>
@@ -1284,9 +1377,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
-      <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
-    
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
+    
+      <category term="Jessie" scheme="http://www.tricksofthetrades.net/tags/Jessie/"/>
     
       <category term="VPS" scheme="http://www.tricksofthetrades.net/tags/VPS/"/>
     
@@ -2921,79 +3014,6 @@
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
       <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Pod and Planet Fiction Contest YC117 Entry</title>
-    <link href="http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/"/>
-    <id>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</id>
-    <published>2015-11-18T00:00:00.000Z</published>
-    <updated>2017-05-26T17:54:37.559Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="http://i.imgur.com/tBugDle.png" alt="Pod &amp; Planet Fiction Third Prize Image"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post serves as my entry to the Pod and Planet Fiction Contest YC117 this year. The main character featured in this news report style article is taken from a real <a href="https://zkillboard.com/character/92526572/" target="_blank" rel="external">EVE capsuleer</a> who’s proficient in the art of internet spaceship insurance fraud.</p>
-<p>The content to be considered for judging starts from the next section onwards.</p>
-<a id="more"></a>
-<hr>
-<h1 id="From-Riches-to-Riches"><a href="#From-Riches-to-Riches" class="headerlink" title="From Riches to Riches"></a>From Riches to Riches</h1><p>Our current main offices reside inside the bustling trade hub station of Amarr. Wrecks can be seen littered all over the undock. Nothing new all in all for this station. Further out though lies a capital ship freighter wreck currently being salvaged by several enterprising frigates. CONCORD are examining the remains of this wreck as we write this, as it has obvious signs of modern day ship insurance fraud.</p>
-<p>This is however by no means the first time we’ve chosen to report on the steadily growing influx of ship insurance fraud, and if trends continue it will probably not be the last. The sight we’ve seen ourselves in previous articles that new players emerge daily in this game of fraud. Most of them firmly with their eye on the potential ISK up for grabs.</p>
-<p>As one of our past fraudulent sources once disclosed:</p>
-<blockquote>
-<p><strong>“It’s a dangerous game to play. One that most would never even contemplate playing. You have to be smart, crafty, ready to sacrifice, and always one step ahead of the rarely competent space police.”</strong></p>
-</blockquote>
-<p>The man known only as <em>Market Tycoon</em> is one of the more recent players of this “dangerous game”. One who has captured the imaginations and hearts of many inside of the public “NPSI” circles. He in the realms of the latter seems to have created something of a minor celebrity for himself.</p>
-<p>We managed to get an interview with this mysterious figure to try and catch a glimpse of the underground fraud scene as a whole, and perhaps unravel some of the mystery surrounding his own mysterious character.</p>
-<p>For his own security he asked us not to reveal certain details divulged in the interview and that we refrain from quoting him verbatim on several sensitive areas.</p>
-<p>Market began by telling us that his background in business made him perfect for the growing crime of ship insurance fraud (on some level). The ISK he earned back then was considerable, even incredible at times when he tried hard enough. Playing the markets he recalled came with its own highs (and lows) but just never quite lived up to his new “profession”. He also joyfully stated that:</p>
-<blockquote>
-<p><strong>“Long gone are the days of space spreadsheets and market order one-upmanship.”</strong></p>
-</blockquote>
-<p>With which he continued to say; pulling the wool over CONCORD’s eyes and seeing the insurance ISK roll into his wallet provided a feeling like no other. Something he believed was part of the motivation behind the continuation of the ship insurance fraud crime wave. His new calling he explained was one that is infinitely more fulfilling than the last, and he knew others who felt the same.</p>
-<p>We speculated with Market for a while that the reasoning behind continual increases of ship insurance fraud is in part also down to the relative ease at which it can be carried out. In most cases Market told us that:</p>
-<blockquote>
-<p><strong>“To get started, the prospective fraud artist needs only a willing accomplice and some start-up capital to purchase the ships that are to be sacrificed. A familiarity with the legal system behind kill-rights is also very beneficial.”</strong></p>
-</blockquote>
-<p>Taking this a bit further we asked how many others he knew were involved in crimes of this sort. Market was reluctant to answer at first, but did say there are a group of several others he is familiar with who meet often to discuss the “trade”. Furthermore there have been some he said who came to him for “advice”. Seeking to emulate the actions of those like himself. He was of course not giving out any names.</p>
-<p>It is at this point in the interview we attempted to shed light on the esoteric nature of Market’s reputation. We asked the origins of his ambiguous name and why he thought certain capsuleers spoke of him in such romanticised terms. Market immediately displayed to us his pilot’s license. The name on his P.L.E.X really was to our surprise genuinely printed as “Market Tycoon”. Which he believes is what sparked his fanciful almost outlaw like image. That of:</p>
-<blockquote>
-<p><strong>“A trader turned rogue against the system, seeking revenge upon the bureaucratic corporate whores who penalised him at every chance they got, in a time gone past.”</strong></p>
-</blockquote>
-<p>His words not ours.</p>
-<p>Most of the image though he admitted to being confined to the public fleet communities familiar with his exploits, and not much further than that.</p>
-<p>The interview we had with our source culminated in him affirming his desire to continue playing the system, and emphasised that in reality he was doing nothing wrong. He referred to his actions as being “technically inside the law.” CONCORD naturally of course disagree with this sentiment. As they have stated on many occasions when being forced to respond to unending criticism for their lack of foresight in regulating and maintaining the capsuleer insurance laws. Some of which have only been changed in recent times to cater for issues outside of the scope of this article.</p>
-<p>One thing we definitely learned from our brief discussion with Market is that he certainly enjoys this and it is something he does not do out of necessity or dire need. Perhaps most memorably he made clear that even the insurance payout itself was:</p>
-<blockquote>
-<p><strong>“Just the icing on the starcake.”</strong></p>
-</blockquote>
-<p>This interview we conducted with Market leaves us with conflicted views on the subject. On one hand this is clearly some sort of manipulation of the system. Whilst on the other CONCORD seems seriously lacking their responsibility and sheer ability to handle the situation at large.</p>
-<p>Regardless we expect this ever growing phenomena to continue to affect New Eden’s space lanes for a long time to come.</p>
-<p>Thanks for reading.</p>
-<p><em>Has you or someone you know been personally affected by insurance fraud? If so please don’t get in touch. Instead send all fraud enquiries directly to CONCORD. Thanks! </em>  </p>
-<hr>
-<p><img src="http://i.imgur.com/r68FPw9.png" alt="Third Prize Image"></p>
-<p>“From Riches to Riches” came third in this years contest within its category! </p>
-<p>See the <a href="http://podandplanet.wix.com/podandplanet#!winning-stories/aj0u3" target="_blank" rel="external">“Winning Stories”</a> page for a list of the victors and categories. Prizes are described on the <a href="http://podandplanet.wix.com/podandplanet#!prizes/c1xt1" target="_blank" rel="external">“Prizes”</a> page.</p>
-<p>More details as well as comments can be found <a href="http://podandplanet.wix.com/podandplanet#!blank/p6th4" target="_blank" rel="external">here</a> and <a href="https://forums.eveonline.com/default.aspx?g=posts&amp;t=451411" target="_blank" rel="external">here</a>.</p>
-<p>Thanks goes out to Sam who always puts a lot of work into bringing these contests to fruition, and for the judges who sacrificed some of their spare time to read through the many contest entries.</p>
-<p>See you next year!</p>
-<p>– Sleightz: <a href="https://twitter.com/S1eightz" target="_blank" rel="external">@S1eightz</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/tBugDle.png&quot; alt=&quot;Pod &amp;amp; Planet Fiction Third Prize Image&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;This post serves as my entry to the Pod and Planet Fiction Contest YC117 this year. The main character featured in this news report style article is taken from a real &lt;a href=&quot;https://zkillboard.com/character/92526572/&quot;&gt;EVE capsuleer&lt;/a&gt; who’s proficient in the art of internet spaceship insurance fraud.&lt;/p&gt;
-&lt;p&gt;The content to be considered for judging starts from the next section onwards.&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="EVE-Online" scheme="http://www.tricksofthetrades.net/topics/EVE-Online/"/>
-    
-    
-      <category term="Spaceships" scheme="http://www.tricksofthetrades.net/tags/Spaceships/"/>
-    
-      <category term="Fiction" scheme="http://www.tricksofthetrades.net/tags/Fiction/"/>
     
   </entry>
   

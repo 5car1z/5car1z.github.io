@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-05-18T14:24:27.970Z</updated>
+  <updated>2018-05-18T15:57:57.652Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -14,6 +14,91 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Installing Fail2ban with Ansible on Ubuntu 18.04 (Bionic Beaver)</title>
+    <link href="http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/"/>
+    <id>http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/</id>
+    <published>2018-05-18T23:00:00.000Z</published>
+    <updated>2018-05-18T15:57:57.652Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/klPwJ5E.png" alt="Fail2ban Logo with Ansible Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a very short post covering a rudimentary Ansible playbook (if you can even call it one) that contains tasks for installing Fail2ban in a straightforward manner. It’s intended as a follow on from the manual set of instructions/commands most people are familiar with, which I covered in this other post: </p>
+<blockquote>
+<p><a href="https://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/">Installing Fail2ban on Ubuntu 18.04 (Bionic Beaver)</a></p>
+</blockquote>
+<p>At the end I’m linking to a third and final post which goes into detail on a more extensive solution to installing Fail2ban, as part of an Ansible <em>provisioning</em> project. It uses an Ansible role rather than a standalone playbook. </p>
+<a id="more"></a>
+<hr>
+<h1 id="Installing-Fail2ban-with-Ansible"><a href="#Installing-Fail2ban-with-Ansible" class="headerlink" title="Installing Fail2ban with Ansible"></a>Installing Fail2ban with Ansible</h1><p>This is probably the most simple and obvious solution outside of manually installing. It exists in the form of a single playbook and template file. </p>
+<p>Somewhere suitable (e.g. in version control) create the main playbook file.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim fail2ban-playbook.yml</span><br></pre></td></tr></table></figure>
+<p>Enter in the following playbook contents:</p>
+<figure class="highlight yml"><figcaption><span>fail2ban-playbook.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="bullet">-</span><span class="bullet">--</span> </span><br><span class="line"><span class="attr">- name:</span> <span class="string">installs</span> <span class="string">fail2ban</span> <span class="string">on</span> <span class="string">ansible</span> <span class="string">hosts</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">fail2ban-hosts</span></span><br><span class="line"><span class="attr">  become:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  tasks:</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">  - name:</span> <span class="string">install</span> <span class="string">apt</span> <span class="string">fail2ban</span> <span class="string">packages</span></span><br><span class="line"><span class="attr">    apt:</span> </span><br><span class="line"><span class="attr">      name:</span> <span class="string">"<span class="template-variable">&#123;&#123; item &#125;&#125;</span>"</span>   </span><br><span class="line"><span class="attr">      state:</span> <span class="string">latest</span></span><br><span class="line"><span class="attr">      update_cache:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">      cache_valid_time:</span> <span class="number">3600</span></span><br><span class="line"><span class="attr">    with_items:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">sendmail</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">  - name:</span> <span class="string">override</span> <span class="string">the</span> <span class="string">basic</span> <span class="string">fail2ban</span> <span class="string">configuration</span> <span class="string">with</span> <span class="string">.local</span> <span class="string">file</span></span><br><span class="line"><span class="attr">    copy:</span></span><br><span class="line"><span class="attr">      src:</span> <span class="string">jail.local.j2</span></span><br><span class="line"><span class="attr">      dest:</span> <span class="string">/etc/fail2ban/jail.local</span></span><br><span class="line"><span class="attr">      owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">      mode:</span> <span class="number">0644</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>**Note: <a href="https://gist.github.com/5car1z/76dd1e48f9b16dbd2fb370bba1e2d393" target="_blank" rel="external">Here’s the same contents as a Gist.</a></p>
+</blockquote>
+<p>The first task updates the package manager cache (if it has not been updated within a set time period) and then installs the <code>fail2ban</code> plus <code>sendmail</code> packages. </p>
+<p>The second copies across a local configuration file for Fail2ban, whilst giving it the necessary permissions and ownership’s. </p>
+<p>Next create the previously mentioned template file (locally still of course).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim jail.local</span><br></pre></td></tr></table></figure>
+<p>Add in your own Fail2ban configuration settings; these are mine for example purposes, but can be used:</p>
+<figure class="highlight bash"><figcaption><span>jail.local</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[DEFAULT]</span><br><span class="line"></span><br><span class="line"><span class="comment"># email address to receive notifications.</span></span><br><span class="line">destemail = root@localhost    </span><br><span class="line"><span class="comment"># the email address from which to send emails.</span></span><br><span class="line">sender = root@&lt;fq-hostname&gt;    </span><br><span class="line"><span class="comment"># name on the notification emails.</span></span><br><span class="line">sendername = Fail2Ban    </span><br><span class="line"><span class="comment"># email transfer agent to use. </span></span><br><span class="line">mta = sendmail   </span><br><span class="line"></span><br><span class="line"><span class="comment"># see action.d/ufw.conf</span></span><br><span class="line">actionban = ufw.conf</span><br><span class="line"><span class="comment"># see action.d/ufw.conf </span></span><br><span class="line">actionunban = ufw.conf   </span><br><span class="line"></span><br><span class="line">[sshd]</span><br><span class="line">enabled = <span class="literal">true</span></span><br><span class="line">port = ssh</span><br><span class="line">filter = sshd</span><br><span class="line"><span class="comment"># the length of time between login attempts for maxretry. </span></span><br><span class="line">findtime = 600</span><br><span class="line"><span class="comment"># attempts from a single ip before a ban is imposed.</span></span><br><span class="line">maxretry = 5</span><br><span class="line"><span class="comment"># the number of seconds that a host is banned for.</span></span><br><span class="line">bantime = 3600</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> These settings assume accompanied <a href="https://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">use of UFW as a firewall on the host</a> - hence the <code>actionban</code> lines. </p>
+</blockquote>
+<p>It would make sense to create a local Ansible config and local hosts file to keep everything contained to the current repo/directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ansible.cfg</span><br></pre></td></tr></table></figure>
+<p>Point Ansible commands to use a local <code>hostfile</code> named <code>hosts</code>. </p>
+<figure class="highlight yml"><figcaption><span>ansible.cfg </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[defaults]</span></span><br><span class="line"><span class="string">hostfile</span> <span class="string">=</span> <span class="string">hosts</span></span><br></pre></td></tr></table></figure>
+<p>Create the local “hosts” file in turn. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim hosts</span><br></pre></td></tr></table></figure>
+<p>The <code>hosts</code> file needs to then contain your target host’d details, using Ansible YAML syntax such as:</p>
+<figure class="highlight yml"><figcaption><span>hosts </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[fail2ban-hosts]</span></span><br><span class="line"><span class="string">host-one</span> <span class="string">ansible_host=your.vps.ip.address</span> <span class="string">ansible_python_interpreter=/usr/bin/python3</span></span><br><span class="line"><span class="string">host-two</span> <span class="string">ansible_host=your.vps.ip.address</span> <span class="string">ansible_python_interpreter=/usr/bin/python3</span></span><br><span class="line"><span class="string">host-three</span> <span class="string">ansible_host=your.vps.ip.address</span> <span class="string">ansible_python_interpreter=/usr/bin/python3</span></span><br><span class="line"><span class="comment"># Add more hosts here as needed.</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Currently Ansible uses Python 2.7 system libraries, and most Ubuntu images have Python 3.0+ installed. So this “interpreter” variable is usually necessary to access the correct libraries with Ansible.  </p>
+</blockquote>
+<p>Running the playbook on the remote host (or set of remote hosts) is then rather easy. </p>
+<p>Make sure to include <code>-K</code> for the playbook’s <code>become:</code> password. Substitution for your own username (<code>scarlz</code> fin my case) is also necessary; the user must have <em>sudo</em> privileges. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -u scarlz -K fail2ban-playbook.yml</span><br></pre></td></tr></table></figure>
+<p>These few steps are for all intents and purposes everything that’s needed in a basic working install. For a less simplistic approach to installing Fail2ban, take a look at it again through the perspective of a more complex Ansible role instead:</p>
+<blockquote>
+</blockquote>
+<p>This was very short and terse due to its simplicity, but thanks for reading. </p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/26469896/how-to-install-fail2ban-using-ansible" target="_blank" rel="external">Stack Overflow – How to Install Fail2ban using Ansible</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/klPwJ5E.png&quot; alt=&quot;Fail2ban Logo with Ansible Logo&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;This is a very short post covering a rudimentary Ansible playbook (if you can even call it one) that contains tasks for installing Fail2ban in a straightforward manner. It’s intended as a follow on from the manual set of instructions/commands most people are familiar with, which I covered in this other post: &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/&quot;&gt;Installing Fail2ban on Ubuntu 18.04 (Bionic Beaver)&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;At the end I’m linking to a third and final post which goes into detail on a more extensive solution to installing Fail2ban, as part of an Ansible &lt;em&gt;provisioning&lt;/em&gt; project. It uses an Ansible role rather than a standalone playbook. &lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
+    
+    
+      <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
+    
+      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
+    
+      <category term="Bionic" scheme="http://www.tricksofthetrades.net/tags/Bionic/"/>
+    
+  </entry>
   
   <entry>
     <title>Installing Fail2ban on Ubuntu 18.04 (Bionic Beaver)</title>
@@ -100,9 +185,9 @@
       <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
     
     
-      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
-    
       <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
     
       <category term="Bionic" scheme="http://www.tricksofthetrades.net/tags/Bionic/"/>
     
@@ -311,13 +396,13 @@
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
     
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
+    
       <category term="CM" scheme="http://www.tricksofthetrades.net/tags/CM/"/>
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
     
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
-      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
     
   </entry>
   
@@ -1239,7 +1324,7 @@
     <link href="http://www.tricksofthetrades.net/2016/06/13/debian8-vps-checklist/"/>
     <id>http://www.tricksofthetrades.net/2016/06/13/debian8-vps-checklist/</id>
     <published>2016-06-12T23:00:00.000Z</published>
-    <updated>2017-06-02T18:28:42.139Z</updated>
+    <updated>2018-05-18T15:17:54.179Z</updated>
     
     <content type="html"><![CDATA[<p><img src="http://i.imgur.com/JXNdLSN.png" alt="VPS Image"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Here are some base guidelines I follow when setting up a new VPS manually without configuration management. These steps if anything make the system more secure overall and provide a good starting point from which you can setup the services/software’s required for the purpose of the VPS. </p>
@@ -1344,12 +1429,13 @@
 <p>Install it as done before with the system package manager. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install fail2ban sendmail</span><br></pre></td></tr></table></figure>
 <p>Sendmail can also be used by Fail2ban when sending out notification messages for bans that have occurred, so this is useful to install alongside it. Unless you want to configure it to use a different mail service. </p>
+<p>Create a <code>.local</code> version of the configuration file:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo sed <span class="string">'s/^banaction = .*/banaction = ufw/'</span> /etc/fail2ban/jail.conf &gt; /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
-<p>Start the service and ensure it’s running by ussing the command:</p>
+<p>Start the service and ensure it’s running by using the command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service fail2ban start</span><br></pre></td></tr></table></figure>
 <p>A more detailed rundown of the configuration involved with Fail2ban is covered in a separate post to this one. </p>
 <blockquote>
-<p><a href="">Full Fail2ban Guide - To Be Added</a></p>
+<p><a href="https://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/">Full Fail2ban Guide</a></p>
 </blockquote>
 <hr>
 <p>This is a pretty straightforward post, all things considered. Remember that a persons needs for configuring a VPS will be tailored to their own requirements, criteria, and preferences. So these steps are good general outline but mainly the ones I personally follow - other people’s will be different, according to their needs. </p>
@@ -2803,217 +2889,6 @@
       <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
     
       <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hosting Django Web Applications with Apache (mod_wsgi) on Debian 8</title>
-    <link href="http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/"/>
-    <id>http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/</id>
-    <published>2015-11-30T00:00:00.000Z</published>
-    <updated>2017-05-26T17:54:37.555Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="http://i.imgur.com/qzPEFWB.png" alt="Django Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. </p>
-<p>More popular methods of running and hosting Django are mentioned at the end of the post. </p>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Update-amp-Install-Packages"><a href="#1-–-Update-amp-Install-Packages" class="headerlink" title="1 – Update &amp; Install Packages"></a>1 – Update &amp; Install Packages</h1><p>Update and upgrade the server’s system packages:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
-<p>Install Apache, mod-wsgi, and Python’s pip package manager.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2 libapache2-mod-wsgi python-pip</span><br></pre></td></tr></table></figure>
-<p>Also the <code>virtualenv</code> package is required for the next step. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install virtualenv</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="2-–-Setup-Virtual-Environment"><a href="#2-–-Setup-Virtual-Environment" class="headerlink" title="2 – Setup Virtual Environment"></a>2 – Setup Virtual Environment</h1><p>Decide where you want to keep your Django project. </p>
-<p>There are several places form which you could run the project. One that is very common is the user’s <code>home</code> directory. Another suitable place is the <code>/srv/</code> system directory. A final place could be directly inside the system’s web server directories i.e. <code>/var/www</code> and down. </p>
-<p>In my example I’ll be using a Linux user’s home directory. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/django-project &amp;&amp; <span class="built_in">cd</span> ~/django-project</span><br></pre></td></tr></table></figure>
-<p>Inside the new project folder create a dedicated Python virtual environment:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ virtualenv django-virt-env</span><br></pre></td></tr></table></figure>
-<p>Activate the environment and enter into it:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
-<p>Now you’re within the environment (prompt will change) install Django with pip into it:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip install django</span><br></pre></td></tr></table></figure>
-<p>Once Django is installed, use the <code>deactivate</code> command to exit the environment prompt.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="3-–-Create-or-Import-Django-Project"><a href="#3-–-Create-or-Import-Django-Project" class="headerlink" title="3 – Create or Import Django Project"></a>3 – Create or Import Django Project</h1><p>To start from scratch you can use the Django installation in the virtual environment and make a brand new Django project. Or instead import your Django project files from something like version control. </p>
-<p>For this tutorial we’ll go down the path of importing a a pre-existing Django project from Git. </p>
-<p>Before this though, here are the initial steps for starting a brand new Django project. </p>
-<h2 id="Create-Project"><a href="#Create-Project" class="headerlink" title="Create Project"></a>Create Project</h2><p>Skip past this section to instead import an existing Django project.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">source</span> django-virt-env/bin/activate</span><br></pre></td></tr></table></figure>
-<p>Create the new project and give it a name, where <code>project_name</code> is replaced with your name you want to give it.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ django-admin.py startproject project-name .</span><br></pre></td></tr></table></figure>
-<p>Run initial migration: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py migrate</span><br></pre></td></tr></table></figure>
-<p>Create a superuser for the project:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./manage.py createsuperuser</span><br></pre></td></tr></table></figure>
-<p>Open up the <code>settings.py</code> file for editing:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim project-name/settings.py</span><br></pre></td></tr></table></figure>
-<p>Add this new line to the bottom section of the file:</p>
-<figure class="highlight python"><figcaption><span>~/django-project/project_name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">STATIC_ROOT = os.path.join(BASE_DIR, <span class="string">"static/"</span>)</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
-</blockquote>
-<p>Copy static content into the directory set in the previous <code>STATIC_ROOT</code> directive:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./manage.py collectstatic</span><br></pre></td></tr></table></figure>
-<p>Test the server runs correctly:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python manage.py runserver 0.0.0.0:8000</span><br></pre></td></tr></table></figure>
-<p>You can test the project works in a web browser at: <code>your.vps.ip.address:8000</code></p>
-<p><img src="https://i.gyazo.com/a0ca362f8a25159e68f4df71b43b6a0b.png" alt="It Worked Django Image"></p>
-<p><code>CTRL</code> + <code>C</code> once checked to exit the server process. </p>
-<p>Then <code>deactivate</code> once again to leave the Python virtual env prompt. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ deactivate</span><br></pre></td></tr></table></figure>
-<h2 id="Import"><a href="#Import" class="headerlink" title="Import"></a>Import</h2><p>This is the assumption I’m following for the rest of the post, that you already have a Django project created and want to host it. You could still however carry on with the new blank project from before. </p>
-<p>Import the Django project into our local project’s root folder:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/username/repository-name.git ~/django-project</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> The <code>settings.py</code> file is often replaced with a template file in version control, as it contains user specific data, environment specific data, and sensitive credentials. More on this later. </p>
-</blockquote>
-<p>Then move on to setting up the virtual host.</p>
-<hr>
-<h1 id="4-–-Setup-Apache-Virtual-Host"><a href="#4-–-Setup-Apache-Virtual-Host" class="headerlink" title="4 – Setup Apache Virtual Host"></a>4 – Setup Apache Virtual Host</h1><p>Using your preferred text editor open the default Apache <em>vhost</em> for writing, or a <em>dedicated vhost</em> instead. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vim /etc/apache2/sites-available/000-default.conf</span><br></pre></td></tr></table></figure>
-<p>The complete main block of the virtual host should contain the following:</p>
-<figure class="highlight apache"><figcaption><span>/etc/apache2/sites-available/000-default.conf</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute"><span class="nomarkup">ServerName</span></span> exampledomain.com</span><br><span class="line"><span class="attribute">ServerAlias</span> www.exampledomain.com</span><br><span class="line"><span class="attribute">ServerAdmin</span> server-administrator@emaildomain.com</span><br><span class="line">    </span><br><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br><span class="line"></span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="section">&lt;Directory /home/username/django-project&gt;</span></span><br><span class="line">    <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">        <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">    <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> project-name</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
-<p>What follows are the broken down areas of the above virtual host, and how to set them.</p>
-<p><strong>Static Alias</strong></p>
-<p>The first option to set is an alias, and needs to point to the <code>static</code> directory we generated when either creating or importing the Django project files. </p>
-<p>So username needs to be your Linux username, and <code>django-project</code> needs to be substituted for whatever you named the very first folder we created. Back at the start of <strong>Step 3</strong>. </p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">Alias</span> /static /home/username/django-project/static</span><br></pre></td></tr></table></figure>
-<p><strong>Static Directory Access</strong></p>
-<p>The web server must also allow access to the directory we aliased for <code>static</code>. Do this with a directory block that looks like this. Except again with the same values as before substituted in.</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/static&gt;</span></span><br><span class="line">  <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>wsgi.py Access</strong></p>
-<p>The <code>wsgi.py</code> file inside your <code>project-name</code> directory should also be open for access. Add this second directory block to ensure it’s accessible.</p>
-<p>Again <code>project_name</code> and the previous values need altering to your own.</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">&lt;Directory /home/username/django-project/project-name&gt;</span></span><br><span class="line">  <span class="section">&lt;Files wsgi.py&gt;</span></span><br><span class="line">    <span class="attribute">Require</span> <span class="literal">all</span> granted </span><br><span class="line">  <span class="section">&lt;/Files&gt;</span></span><br><span class="line"><span class="section">&lt;/Directory&gt;</span></span><br></pre></td></tr></table></figure>
-<p><strong>WSGI Settings</strong><br>The gateway interface mod for Apache uses <code>wsgi.py</code> to handle passing clients to the Django web app. Set it up with a daemon process path, process group name, and alias to the <code>wsgi.py</code> file location. </p>
-<p>Some things to note are that the latter half of the <code>python-path</code> setting should point to your virtual environment’s Python site packages, and not your system wide ones. The <code>:</code> character delimits separate paths. </p>
-<p>For the <code>WSGIDaemonProcess</code> and <code>WSGIProcessGroup</code> name (<code>project-name</code> in my example) you can set it to any suitable name. </p>
-<p>All relevant values here once again should be replaced with your own. </p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">WSGIDaemonProcess</span> project-name python-path=/home/username/django-project:home/username/django-project/django-virt-env/lib/python2.7/site-packages</span><br><span class="line"><span class="attribute">WSGIProcessGroup</span> django-project</span><br><span class="line"><span class="attribute">WSGIScriptAlias</span> / /home/username/django-project/project-name/wsgi.py</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="5-–-Apache-Permissions"><a href="#5-–-Apache-Permissions" class="headerlink" title="5 – Apache Permissions"></a>5 – Apache Permissions</h1><p>Change the system permissions so that the Linux group owner of the database file can read and write. </p>
-<p>The database file is named  <code>db.sqlite3</code> by default and is in the root project directory if not moved previously. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod 664 ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
-<p>Apache runs under the <code>www-data</code> system group, give said group ownership of the database file:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/django-project/db.sqlite3</span><br></pre></td></tr></table></figure>
-<p>In order for the <code>www-data</code> Apache group to properly write to the database file, we also need to give it ownership of the database file’s parent directory:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chown :www-data ~/myproject</span><br></pre></td></tr></table></figure>
-<p>Restart Apache to implement the changes we just made:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service apache2 restart</span><br></pre></td></tr></table></figure>
-<p>Assuming your firewall is setup correctly you should now be able to access your Django site by going to your server’s domain name or IP address in a browser. </p>
-<hr>
-<h1 id="Live-Deployment-Considerations"><a href="#Live-Deployment-Considerations" class="headerlink" title="Live Deployment Considerations"></a>Live Deployment Considerations</h1><h1 id="1-–-Django-Project-Settings"><a href="#1-–-Django-Project-Settings" class="headerlink" title="1 – Django Project Settings"></a>1 – Django Project Settings</h1><p>The <code>settings.py</code> file usually contains sensitive data values such as passwords, <em>secret keys</em>, and user credentials. Which are at risk of being exposed when stored in the Project’s version control (at least if public version control is used). </p>
-<p>The exact details set in <code>settings.py</code> are also likely to differ from user to user. As different directives and values may be required depending upon the installation context and user in question. For example <code>DEBUG</code> being set to <code>TRUE</code> on a local environment versus a live environment. </p>
-<p>It’s for these reasons it’s advisable to instead import these values into <code>settings.py</code> from another local <em>credentials</em> file. One that the user fills out manually upon setting up the project locally for the first time. </p>
-<p>The same “credentials” file must then be permanently ignored by the version control system, so the user specific details and passwords are kept private, but still imported into <code>settings.py</code> . </p>
-<p>Here is what an example template for this credentials file might look like:</p>
-<script src="https://gist.github.com/5car1z/6b014dd95f216780b1ce.js"></script>
-
-<p>Once created the <code>credentials.py</code> file and it’s stored directives can all then be imported inside the main Django settings file. </p>
-<p>Via this line of code: </p>
-<figure class="highlight python"><figcaption><span>~/django-project/project-name/settings.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Imports sensitive/user config variable values.</span></span><br><span class="line"><span class="keyword">from</span> credentials <span class="keyword">import</span> *</span><br></pre></td></tr></table></figure>
-<p>It’s a good idea to use a template file like the one above to replace the <code>credentials.py</code> in version control. So new users and installs can make a copy of it, and fill in the details required. </p>
-<hr>
-<h1 id="2-–-Live-Specific-Directives"><a href="#2-–-Live-Specific-Directives" class="headerlink" title="2 – Live Specific Directives"></a>2 – Live Specific Directives</h1><p>As mentioned in the previous section, some directives will need to be set differently for different situations. </p>
-<p>Here are some of the directives defined in <code>credentials.py</code> (or an equivalent user specific settings file) that are suitable for a live setup.</p>
-<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
-<p>Setting this next directive is optional more than anything but provides a means of helping with debugging errors and exceptions raised while rendering the apps templates.</p>
-<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TEMPLATE_DEBUG = <span class="keyword">False</span></span><br></pre></td></tr></table></figure>
-<p>This line and directive can be kept directly in <code>settings.py</code> unlike the other directives, although it doesn’t hurt to place in <code>credentials.py</code> anyway. Once <code>DEBUG</code> is set to <code>false</code> , this allows only the specified FQDN’s access to your Django site. </p>
-<p>It’s wise to ensure you <a href="https://github.com/DigitalOcean-User-Projects/Articles-and-Tutorials/blob/master/set_hostname_fqdn_on_ubuntu_centos.md" target="_blank" rel="external">have a valid FQDN hostname set on your server</a> if experiencing any problems with this directive.</p>
-<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALLOWED_HOSTS = [<span class="string">'127.0.0.1'</span>, <span class="string">'localhost'</span>, <span class="string">'.leagueofyorkshire.co.uk'</span>]</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> it is unwise to add a <code>*</code> symbol to the <code>ALLOWED_HOSTS</code> directive, as this would give access to any and all potential requests. </p>
-</blockquote>
-<p>Django uses the <code>STATIC_ROOT</code> directive to tell Apache where the generated <em>static</em> files are located. If the <code>./manage.py collectstatic</code> is run with live settings then the <code>STATIC_ROOT</code> directive must be set to something other than the previous <code>static</code> directory. In this case in the below code it’s set to generate it in a directory named <code>assets</code>. The other commented directives also need enabling in here for this to work:  </p>
-<figure class="highlight python"><figcaption><span>~/django-project/project-name/credentials.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))</span></span><br><span class="line"><span class="comment"># STATIC_URL = '/static/'</span></span><br><span class="line"><span class="comment"># STATIC_ROOT = os.path.join(BASE_DIR, "assets/")</span></span><br><span class="line"><span class="comment"># STATICFILES_DIRS = (os.path.join('static'),)</span></span><br></pre></td></tr></table></figure>
-<p>These previous directives are not <strong>all</strong> the ones you will find or define in the credentials file, but are mostly the ones to consider when working with a live deployment install of the project. </p>
-<p>See here for detailed information about more of these:</p>
-<blockquote>
-<p><a href="https://docs.djangoproject.com/en/1.8/ref/settings/#std:setting-ADMINS" target="_blank" rel="external">Django Official Documentation - Settings</a></p>
-</blockquote>
-<hr>
-<h1 id="3-–-Web-Server-Permissions"><a href="#3-–-Web-Server-Permissions" class="headerlink" title="3 – Web Server Permissions"></a>3 – Web Server Permissions</h1><p>We set some permissions on the database file and parent directory in an earlier step, however the other Django files hosted by your web server have their own permissions to consider. </p>
-<p>The main file to take into account when setting permission is the file that holds your live environment specific directives, and user sensitive data. In our example this was the <code>credentials.py</code> file, created from a template that takes it’s place in version control. </p>
-<p>Consider taking away read and write privileges to <em>everyone else</em> / <em>other</em> for this file:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod o-rw ~/django-project/project-name/credentials.py</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="4-–-Error-Reporting-amp-Logging"><a href="#4-–-Error-Reporting-amp-Logging" class="headerlink" title="4 – Error Reporting &amp; Logging"></a>4 – Error Reporting &amp; Logging</h1><blockquote>
-<p><strong>Section To Be Added</strong></p>
-</blockquote>
-<hr>
-<h1 id="5-–-gitignore"><a href="#5-–-gitignore" class="headerlink" title="5 – .gitignore"></a>5 – .gitignore</h1><p>Here is a .gitignore containing lots of potential file types and directories you likely don’t want to track for live or in general. Some are Django specific, others are Python project related. </p>
-<script src="https://gist.github.com/5car1z/2bd1ade7177fbccca339.js"></script>
-
-<hr>
-<h1 id="Further-Considerations"><a href="#Further-Considerations" class="headerlink" title="Further Considerations"></a>Further Considerations</h1><p>There are other alternatives to this entire procedure that have their own advantages and merits. These should be considered as an alternative or more specialised way of running Django. </p>
-<p><strong>Gunicorn</strong> </p>
-<p>“Gunicorn ‘Green Unicorn’ is a Python WSGI HTTP Server for UNIX. It’s a pre-fork worker model ported from Ruby’s Unicorn project. The Gunicorn server is broadly compatible with various web frameworks, simply implemented, light on server resources, and fairly speedy.”</p>
-<blockquote>
-<p><a href="http://gunicorn.org/" target="_blank" rel="external">http://gunicorn.org/</a></p>
-</blockquote>
-<p><strong>uWSGI</strong></p>
-<p>“The uWSGI project aims at developing a full stack for building hosting services. Versatility, performance, low-resource usage and reliability are the strengths of the project “</p>
-<blockquote>
-<p><a href="https://uwsgi-docs.readthedocs.org/en/latest/WSGIquickstart.html" target="_blank" rel="external">Quickstart for Python/WSGI applications</a></p>
-</blockquote>
-<p><strong>Tornado</strong></p>
-<p>“Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed. By using non-blocking network I/O, Tornado can scale to tens of thousands of open connections, making it ideal for long polling, WebSockets, and other applications that require a long-lived connection to each user.”</p>
-<blockquote>
-<p><a href="http://www.tornadoweb.org/en/stable/wsgi.html" target="_blank" rel="external">tornado.wsgi — Interoperability with other Python frameworks and servers</a></p>
-</blockquote>
-<p><strong>Other Python Web Frameworks/Servers</strong></p>
-<ul>
-<li><a href="http://www.cherrypy.org/" target="_blank" rel="external">CherryPy</a></li>
-<li><a href="http://twistedmatrix.com/trac/wiki/TwistedWeb" target="_blank" rel="external">Twisted Web</a></li>
-<li><a href="http://waitress.readthedocs.org/en/latest/" target="_blank" rel="external">Waitress WSGI Server</a></li>
-</ul>
-<hr>
-<p><strong>More Information</strong> </p>
-<ul>
-<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-serve-django-applications-with-apache-and-mod_wsgi-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Serve Django Applications with Apache and mod_wsgi on Ubuntu 14.04</a> – Main source of inspiration and workflow for this blog post. </p>
-</li>
-<li><p><a href="https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps" target="_blank" rel="external">Digital Ocean – How to Run Django with mod_wsgi and Apache with a virtualenv Python environment on a Debian VPS</a> – Similar to the first link here but with different approaches and older. </p>
-</li>
-<li><p><a href="https://docs.djangoproject.com/en/1.8/howto/deployment/wsgi/modwsgi/" target="_blank" rel="external">Official Django Documentation - How to use Django with Apache and mod_wsgi</a> – Good general purpose information. </p>
-</li>
-<li><p><a href="http://www.slideshare.net/GrahamDumpleton/getting-started-with-modwsgi" target="_blank" rel="external">Graham Dumpleton - PyCon AU 2010 - Getting Started With Apache/mod_wsgi</a> – Slides that are useful for troubleshooting Django errors, is a bit outdated now ion parts however. </p>
-</li>
-<li><p><a href="http://modwsgi.readthedocs.org/en/develop/index.html" target="_blank" rel="external">Official Documentation for mod_wsgi</a> – Anything and everything for mod_wsgi. </p>
-</li>
-<li><p><a href="http://www.djangobook.com/en/2.0/chapter12.html" target="_blank" rel="external">“Django Book” - Chapter 12: Deploying Django</a> – Overall good deployment practices. </p>
-</li>
-<li><p><a href="https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications" target="_blank" rel="external">https://www.digitalocean.com/community/tutorials/a-comparison-of-web-servers-for-python-based-web-applications</a> – The python web frameworks/servers from the last step. </p>
-</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/qzPEFWB.png&quot; alt=&quot;Django Logo&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;This post covers one of many ways to setup and run a Django project, website, or web application. It’s probably one of the most routine methods on offer and is certainly not the “best” choice out of them all, but still a good place to start in understanding the framework and how it operates. &lt;/p&gt;
-&lt;p&gt;More popular methods of running and hosting Django are mentioned at the end of the post. &lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
-    
-    
-      <category term="Apache" scheme="http://www.tricksofthetrades.net/tags/Apache/"/>
-    
-      <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
-    
-      <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
-    
-      <category term="Django" scheme="http://www.tricksofthetrades.net/tags/Django/"/>
     
   </entry>
   

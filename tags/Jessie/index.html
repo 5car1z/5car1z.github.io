@@ -285,12 +285,13 @@
 <p>Install it as done before with the system package manager. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install fail2ban sendmail</span><br></pre></td></tr></table></figure>
 <p>Sendmail can also be used by Fail2ban when sending out notification messages for bans that have occurred, so this is useful to install alongside it. Unless you want to configure it to use a different mail service. </p>
+<p>Create a <code>.local</code> version of the configuration file:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo sed <span class="string">'s/^banaction = .*/banaction = ufw/'</span> /etc/fail2ban/jail.conf &gt; /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
-<p>Start the service and ensure it’s running by ussing the command:</p>
+<p>Start the service and ensure it’s running by using the command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service fail2ban start</span><br></pre></td></tr></table></figure>
 <p>A more detailed rundown of the configuration involved with Fail2ban is covered in a separate post to this one. </p>
 <blockquote>
-<p><a href="">Full Fail2ban Guide - To Be Added</a></p>
+<p><a href="https://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/">Full Fail2ban Guide</a></p>
 </blockquote>
 <hr>
 <p>This is a pretty straightforward post, all things considered. Remember that a persons needs for configuring a VPS will be tailored to their own requirements, criteria, and preferences. So these steps are good general outline but mainly the ones I personally follow - other people’s will be different, according to their needs. </p>

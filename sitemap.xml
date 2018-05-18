@@ -2,9 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/</loc>
+    
+    <lastmod>2018-05-18T16:07:34.068Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/</loc>
     
-    <lastmod>2018-05-18T16:03:53.855Z</lastmod>
+    <lastmod>2018-05-18T16:06:45.338Z</lastmod>
     
   </url>
   
@@ -12,13 +19,6 @@
     <loc>http://www.tricksofthetrades.net/2016/06/13/debian8-vps-checklist/</loc>
     
     <lastmod>2018-05-18T15:17:54.179Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/</loc>
-    
-    <lastmod>2018-05-18T14:24:27.970Z</lastmod>
     
   </url>
   
@@ -254,7 +254,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -268,7 +268,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/12/03/pod-planet-fiction-contest/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/18/pod-planet-yc117/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     

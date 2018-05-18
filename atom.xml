@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-05-18T16:03:53.855Z</updated>
+  <updated>2018-05-18T16:06:45.338Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/"/>
     <id>http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/</id>
     <published>2018-05-18T23:00:00.000Z</published>
-    <updated>2018-05-18T16:03:53.855Z</updated>
+    <updated>2018-05-18T16:06:45.338Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/klPwJ5E.png" alt="Fail2ban Logo with Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a very short post covering a rudimentary Ansible playbook (if you can even call it one) that contains tasks for installing Fail2ban in a straightforward manner. It’s intended as a follow on from the manual set of instructions/commands most people are familiar with, which I covered in this other post: </p>
@@ -46,8 +46,8 @@
 <figure class="highlight bash"><figcaption><span>jail.local</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[DEFAULT]</span><br><span class="line"></span><br><span class="line"><span class="comment"># email address to receive notifications.</span></span><br><span class="line">destemail = root@localhost    </span><br><span class="line"><span class="comment"># the email address from which to send emails.</span></span><br><span class="line">sender = root@&lt;fq-hostname&gt;    </span><br><span class="line"><span class="comment"># name on the notification emails.</span></span><br><span class="line">sendername = Fail2Ban    </span><br><span class="line"><span class="comment"># email transfer agent to use. </span></span><br><span class="line">mta = sendmail   </span><br><span class="line"></span><br><span class="line"><span class="comment"># see action.d/ufw.conf</span></span><br><span class="line">actionban = ufw.conf</span><br><span class="line"><span class="comment"># see action.d/ufw.conf </span></span><br><span class="line">actionunban = ufw.conf   </span><br><span class="line"></span><br><span class="line">[sshd]</span><br><span class="line">enabled = <span class="literal">true</span></span><br><span class="line">port = ssh</span><br><span class="line">filter = sshd</span><br><span class="line"><span class="comment"># the length of time between login attempts for maxretry. </span></span><br><span class="line">findtime = 600</span><br><span class="line"><span class="comment"># attempts from a single ip before a ban is imposed.</span></span><br><span class="line">maxretry = 5</span><br><span class="line"><span class="comment"># the number of seconds that a host is banned for.</span></span><br><span class="line">bantime = 3600</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p><strong>Note:</strong> <a href="https://gist.github.com/5car1z/9c143fd17e61d074ec95207380ba9969" target="_blank" rel="external">Here’s the same contents as Gist.</a></p>
-<p><strong>Note:</strong> These settings assume accompanied <a href="https://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">use of UFW as a firewall on the host</a> - hence the <code>actionban</code> lines. </p>
 </blockquote>
+<p>These settings assume accompanied <a href="https://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">use of UFW as a firewall on the host</a> - hence the <code>actionban</code> lines. </p>
 <p>It would make sense to create a local Ansible config and local hosts file to keep everything contained to the current repo/directory. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ansible.cfg</span><br></pre></td></tr></table></figure>
 <p>Point Ansible commands to use a local <code>hostfile</code> named <code>hosts</code>. </p>
@@ -106,7 +106,7 @@
     <link href="http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/"/>
     <id>http://www.tricksofthetrades.net/2018/05/18/fail2ban-installing-bionic/</id>
     <published>2018-05-17T23:00:00.000Z</published>
-    <updated>2018-05-18T14:24:27.970Z</updated>
+    <updated>2018-05-18T16:07:34.068Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/RdP4s4d.jpg" alt="Fail2ban Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>A highly condensed set of basic commands to install Fail2ban the traditional way. These can be executed on any remote server/VPS running recent versions of Ubuntu; although the process was carried out by myself on 18.04. If you’re not familiar with Fail2ban, the start of this brief guide refers to two good resources you can read up on. One more up to date than the other.  </p>
@@ -163,6 +163,7 @@
 <p>Add more jails and actions for other services to expand upon it.  </p>
 <p>The post leading on from this one achieves the same end result but using Ansible configuration management to do the job:</p>
 <blockquote>
+<p><a href="https://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/">“Installing Fail2ban with Ansible on Ubuntu 18.04 (Bionic Beaver)”</a> </p>
 </blockquote>
 <hr>
 <p><strong>More Information</strong></p>

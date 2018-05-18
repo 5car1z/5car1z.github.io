@@ -21,7 +21,7 @@
 <p>Copy the base Fail2ban config into a new <code>jail.local</code> file, in order to begin adding in the config options we want overridden and applied:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local</span><br></pre></td></tr></table></figure>
 <blockquote>
-<p>“Fail2ban reads <code>.conf</code> configuration files first, then <code>.local</code> files overriding any settings. Because of this, all changes to the configuration are generally done in <code>.local</code> files, leaving the <code>.conf</code> files untouched.”</p>
+<p><strong>Note:</strong> “Fail2ban reads <code>.conf</code> configuration files first, then <code>.local</code> files overriding any settings. Because of this, all changes to the configuration are generally done in <code>.local</code> files, leaving the <code>.conf</code> files untouched.”</p>
 </blockquote>
 <p>Here’s where an understanding of the configuration is very much necessary. </p>
 <p>Having <a href="https://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/">a working firewall such as UFW on Ubuntu</a> is also a background assumption I’m working with here, as the two can work together, and a firewall’s kinda mandatory anyway of course.</p>
@@ -40,7 +40,7 @@
 <p>As an alternate to using Systemd, restarting the entire Fail2ban server reports any runtime errors, should there be any issue, so…</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fail2ban-client restart</span><br></pre></td></tr></table></figure>
 <p>Fix any reported problems in the output, and then restart again. </p>
-<p>There’s also a command to confirm the status of the server/jails… </p>
+<p>There’s also a command to confirm the status of the server/jails. </p>
 <p>Try it out: </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ fail2ban-client status</span><br></pre></td></tr></table></figure>
 <p>More specific information about the <code>sshd</code> jail we created in the config file is retrievable with:</p>

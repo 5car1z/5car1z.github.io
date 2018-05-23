@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-05-21T15:16:03.263Z</updated>
+  <updated>2018-05-23T18:26:02.510Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -14,6 +14,132 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Installing Fail2ban with an Ansible Role on Ubuntu 18.04 (Bionic Beaver)</title>
+    <link href="http://www.tricksofthetrades.net/2018/05/21/ansible-fail2ban-role/"/>
+    <id>http://www.tricksofthetrades.net/2018/05/21/ansible-fail2ban-role/</id>
+    <published>2018-05-20T23:00:00.000Z</published>
+    <updated>2018-05-23T18:26:02.510Z</updated>
+    
+    <content type="html"><![CDATA[<p><img src="https://i.imgur.com/klPwJ5E.png" alt="Fail2ban Logo with Ansible Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>The Ansible role in question comes from Ansible Galaxy. It’s linked here below, where you can read about it more if needs be:</p>
+<blockquote>
+<p><a href="https://galaxy.ansible.com/tersmitten/fail2ban/" target="_blank" rel="external">https://galaxy.ansible.com/tersmitten/fail2ban/</a></p>
+</blockquote>
+<p>Here’s my method for making use of the role, which is within the context of an Ansible project that already automates the other aspects of setting up a server. It’s necessary to have a provisioning playbook already in place, so you can incorporate the role shown in this post into the main project.  </p>
+<blockquote>
+<p><a href="https://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/">If this idea of “context” doesn’t make much sense then check out this other post I have on provisioning a server with Ansible for Debian 8 (Jessie).</a></p>
+</blockquote>
+<a id="more"></a>
+<hr>
+<h2 id="1-–-Acquiring-the-Files"><a href="#1-–-Acquiring-the-Files" class="headerlink" title="1 – Acquiring the Files"></a>1 – Acquiring the Files</h2><p>Starting from within the <em>root</em> directory of your own Ansible server <em>“provisioning”</em> project (most likely a version controlled project). </p>
+<p>Clone the <code>ansible-fail2ban</code> repo from GitHub into your project:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/Oefenweb/ansible-fail2ban.git roles/fail2ban</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Alternatively you can use <code>ansible-galaxy install --roles-path roles/ tersmitten.fail2ban</code> if you don’t mind the directory name for the role being <code>tersmitten.fail2ban</code> </p>
+</blockquote>
+<p>Include the new role in your <strong>main</strong> playbook file’s list of roles to be performed on the host(s).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim playbook.yml</span><br></pre></td></tr></table></figure>
+<p>Such as in this generic bare bones example here:</p>
+<figure class="highlight yml"><figcaption><span>playbook.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">provision</span> <span class="string">ubuntu</span> <span class="number">18.04</span> <span class="string">(bionic</span> <span class="string">beaver)</span> <span class="string">servers</span></span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  roles:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">base</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">users</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ufw</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ntp</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> It does need to match the actual role directory name, so change this entry here to <code>tersmitten.fail2ban</code> if you instead used the Ansible galaxy install command earlier.</p>
+</blockquote>
+<hr>
+<h2 id="2-–-Editing-the-Default-Ansible-Variables"><a href="#2-–-Editing-the-Default-Ansible-Variables" class="headerlink" title="2 – Editing the Default Ansible Variables"></a>2 – Editing the Default Ansible Variables</h2><p>Several default values for many Fail2ban configuration directives are already set in the role’s <code>defaults</code> directory. </p>
+<p>Edit them as normal with your preferred fail2ban configuration values.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim roles/fail2ban/defaults/main.yml</span><br></pre></td></tr></table></figure>
+<p>These are the general contents including one or two additions, removals, and changes of my own:</p>
+<figure class="highlight yml"><figcaption><span>defaults/main.yml </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># defaults file for fail2ban</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">fail2ban_loglevel:</span> <span class="string">'INFO'</span> </span><br><span class="line"><span class="attr">fail2ban_logtarget:</span> <span class="string">/var/log/fail2ban.log</span></span><br><span class="line"><span class="attr">fail2ban_syslog_target:</span> <span class="string">/var/log/fail2ban.log</span></span><br><span class="line"><span class="attr">fail2ban_syslog_facility:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">fail2ban_socket:</span> <span class="string">/var/run/fail2ban/fail2ban.sock</span></span><br><span class="line"><span class="attr">fail2ban_pidfile:</span> <span class="string">/var/run/fail2ban/fail2ban.pid</span></span><br><span class="line"></span><br><span class="line"><span class="attr">fail2ban_sendername:</span> <span class="string">'Fail2ban'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">fail2ban_ignoreips:</span></span><br><span class="line"><span class="bullet"> -</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="string">/8</span></span><br><span class="line"><span class="attr">fail2ban_bantime:</span> <span class="number">3600</span></span><br><span class="line"><span class="attr">fail2ban_maxretry:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">fail2ban_findtime:</span> <span class="number">600</span></span><br><span class="line"><span class="attr">fail2ban_backend:</span> <span class="string">auto</span></span><br><span class="line"><span class="attr">fail2ban_destemail:</span> <span class="string">root@localhost</span></span><br><span class="line"><span class="attr">fail2ban_banaction:</span> <span class="string">ufw.conf</span></span><br><span class="line"><span class="attr">fail2ban_mta:</span> <span class="string">sendmail</span></span><br><span class="line"><span class="attr">fail2ban_protocol:</span> <span class="string">tcp</span></span><br><span class="line"><span class="attr">fail2ban_chain:</span> <span class="string">INPUT</span></span><br><span class="line"><span class="attr">fail2ban_action:</span> <span class="string">'%(action_)s'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">fail2ban_services:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">sshd</span></span><br><span class="line"><span class="attr">    port:</span> <span class="string">ssh</span></span><br><span class="line"><span class="attr">    maxretry:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">    bantime:</span> <span class="bullet">-1</span></span><br></pre></td></tr></table></figure>
+<p>These Ansible variables are applied onto the target host through two Jinja templates. Variables here are split into one of these two files (see the template files themselves for specifics). New variables you wish to incorporate have to be added to <code>defaults/main.yml</code> <strong>and</strong> the relevant Jinja template file if not present.  </p>
+<blockquote>
+<p><a href="https://github.com/Oefenweb/ansible-fail2ban#variables" target="_blank" rel="external">Here’s the reference for the Ansible variables on offer, used by this role.</a> </p>
+</blockquote>
+<p>You could also override them in the <code>vars/main.yml</code> file too, if that seems more appealing, but do not define duplicate variables.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim roles/fail2ban/vars/main.yml</span><br></pre></td></tr></table></figure>
+<p>This is the same common SSH daemon jail I added earlier, but in the alternative file:</p>
+<figure class="highlight yml"><figcaption><span>roles/fail2ban/vars/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vars file for fail2ban</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">fail2ban_dependencies:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">fail2ban</span></span><br><span class="line"></span><br><span class="line"><span class="attr">fail2ban_services:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">sshd</span></span><br><span class="line"><span class="attr">    port:</span> <span class="string">ssh</span></span><br><span class="line"><span class="attr">    maxretry:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">    bantime:</span> <span class="bullet">-1</span></span><br></pre></td></tr></table></figure>
+<p>Remember not to duplicate variables between these two files!</p>
+<p>So regardless of the file you choose, new jails must be included as part of the one <code>fail2ban_services:</code> variable.</p>
+<p>For example, adding a second Nginx jail:</p>
+<figure class="highlight yml"><figcaption><span>example.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">fail2ban_services:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">sshd</span></span><br><span class="line"><span class="attr">    port:</span> <span class="string">ssh</span></span><br><span class="line"><span class="attr">    maxretry:</span> <span class="number">5</span></span><br><span class="line"><span class="attr">    bantime:</span> <span class="bullet">-1</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">nginx-http-auth</span></span><br><span class="line"><span class="attr">    filter:</span> <span class="string">nginx-http-auth</span></span><br><span class="line"><span class="attr">    port:</span> <span class="string">http,https</span></span><br><span class="line"><span class="attr">    logpath:</span> <span class="string">/var/log/nginx/access.log</span></span><br></pre></td></tr></table></figure>
+<p>The next section glosses over how the tasks of the role actually work. </p>
+<hr>
+<h2 id="3-–-Examining-the-Role’s-Tasks"><a href="#3-–-Examining-the-Role’s-Tasks" class="headerlink" title="3 – Examining the Role’s Tasks"></a>3 – Examining the Role’s Tasks</h2><p>Taking a glance at the <code>tasks/main.yml</code> is worthwhile. It explains how the variables from the previous section are implemented, alongside the Jinja file templates, that are to be processed and copied across. </p>
+<p>The first block of YAML is a task that creates/copies the local version of <strong>the main Fail2ban configuration file,</strong> onto the target. </p>
+<figure class="highlight yml"><figcaption><span>tasks/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">update</span> <span class="string">configuration</span> <span class="string">file</span> <span class="bullet">-</span> <span class="string">/etc/fail2ban/fail2ban.local</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    src:</span> <span class="string">etc/fail2ban/fail2ban.local.j2</span></span><br><span class="line"><span class="attr">    dest:</span> <span class="string">/etc/fail2ban/fail2ban.local</span></span><br><span class="line"><span class="attr">    owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    mode:</span> <span class="number">0644</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">configuration</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban-configuration</span></span><br></pre></td></tr></table></figure>
+<p>The second block of YAML is a task that creates/copies the local version of <strong>the Fail2ban jail configuration file,</strong> again onto the target. </p>
+<figure class="highlight yml"><figcaption><span>tasks/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">update</span> <span class="string">configuration</span> <span class="string">file</span> <span class="bullet">-</span> <span class="string">/etc/fail2ban/jail.local</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    src:</span> <span class="string">etc/fail2ban/jail.local.j2</span></span><br><span class="line"><span class="attr">    dest:</span> <span class="string">/etc/fail2ban/jail.local</span></span><br><span class="line"><span class="attr">    owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    mode:</span> <span class="number">0644</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">configuration</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban-configuration</span></span><br></pre></td></tr></table></figure>
+<p>The third task block only runs when the <code>fail2ban_filterd_path</code> variable is set. Which assigns the path to the directory containing custom “filter” files, that you need copying across. </p>
+<figure class="highlight yml"><figcaption><span>tasks/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">copy</span> <span class="string">filters</span></span><br><span class="line"><span class="attr">  copy:</span></span><br><span class="line"><span class="attr">    src:</span> <span class="string">"<span class="template-variable">&#123;&#123; fail2ban_filterd_path &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    dest:</span> <span class="string">/etc/fail2ban/filter.d/</span></span><br><span class="line"><span class="attr">    owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    mode:</span> <span class="number">0644</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">fail2ban_filterd_path</span> <span class="string">is</span> <span class="string">defined</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">configuration</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban-filters</span></span><br></pre></td></tr></table></figure>
+<p>The next task block only runs when the <code>fail2ban_actiond_path</code> variable is set. Which assigns the local path to the directory containing custom “actions” files, that you need copying across. </p>
+<figure class="highlight yml"><figcaption><span>tasks/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">copy</span> <span class="string">actions</span></span><br><span class="line"><span class="attr">  copy:</span></span><br><span class="line"><span class="attr">    src:</span> <span class="string">"<span class="template-variable">&#123;&#123; fail2ban_actiond_path &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    dest:</span> <span class="string">/etc/fail2ban/action.d/</span></span><br><span class="line"><span class="attr">    owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    mode:</span> <span class="number">0644</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">fail2ban_actiond_path</span> <span class="string">is</span> <span class="string">defined</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">configuration</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban-actions</span></span><br></pre></td></tr></table></figure>
+<p>And the final task displayed here runs when the <code>fail2ban_actiond_jail</code> variable is set. Similarily this defines the local path to the directory containing custom “jail” configs. </p>
+<figure class="highlight yml"><figcaption><span>tasks/main.yml</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">copy</span> <span class="string">jails</span></span><br><span class="line"><span class="attr">  copy:</span></span><br><span class="line"><span class="attr">    src:</span> <span class="string">"<span class="template-variable">&#123;&#123; fail2ban_jaild_path &#125;&#125;</span>"</span></span><br><span class="line"><span class="attr">    dest:</span> <span class="string">/etc/fail2ban/jail.d/</span></span><br><span class="line"><span class="attr">    owner:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    group:</span> <span class="string">root</span></span><br><span class="line"><span class="attr">    mode:</span> <span class="number">0644</span></span><br><span class="line"><span class="attr">  when:</span> <span class="string">fail2ban_jaild_path</span> <span class="string">is</span> <span class="string">defined</span></span><br><span class="line"><span class="attr">  notify:</span> <span class="string">restart</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="attr">  tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">configuration</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fail2ban-jails</span></span><br></pre></td></tr></table></figure>
+<p>Hopefully this all makes sense, explaining how the role is written and used.</p>
+<hr>
+<h2 id="4-–-Testing-and-Running-the-Playbook-Role"><a href="#4-–-Testing-and-Running-the-Playbook-Role" class="headerlink" title="4 – Testing and Running the Playbook Role"></a>4 – Testing and Running the Playbook Role</h2><p>After all of this is in place, test the new role by running your playbook. </p>
+<p>This could be either as part of a Vagrant VM, Docker container, or on a live host. </p>
+<p>From a live host’s perspective, on a blank Ubuntu 18.04 Bionic server, and using the global <code>hosts</code> file with all the hosts defined beforehand, un a syntax check on the playbook to ensure it’s all legit.  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook playbook.yml --syntax-check</span><br></pre></td></tr></table></figure>
+<p>No errors in terms of the written contents means you’re good to actually run the playbook. </p>
+<p>But wait, in order to examine how the role’s tasks play out (yay puns), without actually implementing anything remotely, there’s the <code>--check</code> option. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook <span class="_">-l</span> <span class="built_in">test</span>-host -u root playbook.yml --check</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> Some modules cannot properly complete their operations in “–check” mode so may  fail (e.g. the user module when attempting to create encrypted system passwords for users).</p>
+</blockquote>
+<p>This is optional but a convenient way of seeing the results before actually committing, so to speak.</p>
+<p>Now we’re certain everything’s as it should be, here’s the command to directly run the playbook, and in turn the Fail2ban installation role. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook <span class="_">-l</span> <span class="built_in">test</span>-host -u root playbook.yml</span><br></pre></td></tr></table></figure>
+<p>A bonus idea is to <em>“tag”</em> your roles in the main playbook using this form of syntax on line 10:</p>
+<figure class="highlight yml"><figcaption><span>playbook.yml </span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">provision</span> <span class="string">ubuntu</span> <span class="number">18.04</span> <span class="string">(bionic</span> <span class="string">beaver)</span> <span class="string">droplets</span> </span><br><span class="line"><span class="attr">  hosts:</span> <span class="string">all</span></span><br><span class="line"><span class="attr">  gather_facts:</span> <span class="literal">yes</span></span><br><span class="line"><span class="attr">  roles:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">fixes</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">base</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">users</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ufw</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">&#123;role:</span> <span class="string">'fail2ban'</span><span class="string">,</span> <span class="attr">tags:</span> <span class="string">'fail2ban'</span><span class="string">&#125;</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ntp</span></span><br></pre></td></tr></table></figure>
+<p>Which allows you to run <strong>only</strong> this role at playbook runtime, excluding the other listed roles. </p>
+<p>So once tagged (in regards to the above), execute the playbook and specify the “fail2ban” tagging:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook <span class="_">-l</span> <span class="built_in">test</span>-host -u root playbook.yml --tags <span class="string">"fail2ban"</span> --check</span><br></pre></td></tr></table></figure>
+<p>This is once again useful for selective testing purposes.  </p>
+<blockquote>
+<p><strong>Note:</strong> From what I can tell there’s no inbuilt function in Ansible to run select individual roles in a playbook, other than this <code>tags:</code> directive, unfortunately.</p>
+</blockquote>
+<p>Check the two files in the remote server’s <code>/etc/fail2ban</code> to see the applied directives from our <code>defaults/main.yml</code> file. This is the best way of confirming the changes we wanted are now in effect; Ansible does confirm and show changes during it’s task execution though!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo less /etc/fail2ban/jail.local</span><br><span class="line">$ sudo less /etc/fail2ban/fail2ban.local</span><br></pre></td></tr></table></figure>
+<p>Another brief post I may publish in the future, will go into detail on some further examples of jail configs, for various services. </p>
+<p>Thanks!</p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://blog.ssdnodes.com/blog/tutorial-a-more-secure-ansible-playbook-part-2/" target="_blank" rel="external">ServerWise – Tutorial: A More Secure Ansible Playbook, Part 2</a></li>
+<li><a href="https://docs.ansible.com/ansible/latest/user_guide/playbooks_checkmode.html" target="_blank" rel="external">Official Ansible Documentation – Check Mode (“Dry Run”)</a></li>
+<li><a href="https://stackoverflow.com/questions/38350674/ansible-can-i-execute-role-from-command-line#38384205" target="_blank" rel="external">Stack Overflow – Ansible: Can I execute a role from the command line?</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;img src=&quot;https://i.imgur.com/klPwJ5E.png&quot; alt=&quot;Fail2ban Logo with Ansible Logo&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;The Ansible role in question comes from Ansible Galaxy. It’s linked here below, where you can read about it more if needs be:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://galaxy.ansible.com/tersmitten/fail2ban/&quot;&gt;https://galaxy.ansible.com/tersmitten/fail2ban/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here’s my method for making use of the role, which is within the context of an Ansible project that already automates the other aspects of setting up a server. It’s necessary to have a provisioning playbook already in place, so you can incorporate the role shown in this post into the main project.  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.tricksofthetrades.net/2017/08/21/ansible-playbook-server-provisioning/&quot;&gt;If this idea of “context” doesn’t make much sense then check out this other post I have on provisioning a server with Ansible for Debian 8 (Jessie).&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
+    
+    
+      <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
+    
+      <category term="Security" scheme="http://www.tricksofthetrades.net/tags/Security/"/>
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
+    
+      <category term="Bionic" scheme="http://www.tricksofthetrades.net/tags/Bionic/"/>
+    
+  </entry>
   
   <entry>
     <title>Installing Fail2ban with Ansible on Ubuntu 18.04 (Bionic Beaver)</title>
@@ -2667,219 +2793,6 @@
       &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/poo8Rai.png&quot; alt=&quot;Docker Logo Image&quot;&gt;&lt;/p&gt;
 &lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;In this post we run a python program in a Docker container sourced from the user guide. Look at the various commands that come into play when administering containers, and then briefly setup some real world applications with Docker. &lt;/p&gt;
 &lt;p&gt;This will be the second post on Docker following on from &lt;a href=&quot;http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/&quot;&gt;Docker - Installing and Running (1)&lt;/a&gt;. If you’re brand new to Docker then the first post linked helps to introduce some of its concepts and theory to better understand the utilities it can provide. &lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Programming" scheme="http://www.tricksofthetrades.net/topics/Programming/"/>
-    
-    
-      <category term="Docker" scheme="http://www.tricksofthetrades.net/tags/Docker/"/>
-    
-      <category term="Virtualisation" scheme="http://www.tricksofthetrades.net/tags/Virtualisation/"/>
-    
-      <category term="Containers" scheme="http://www.tricksofthetrades.net/tags/Containers/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Docker - Installing and Running (1)</title>
-    <link href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/"/>
-    <id>http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/</id>
-    <published>2015-12-23T00:00:00.000Z</published>
-    <updated>2017-08-29T18:05:11.917Z</updated>
-    
-    <content type="html"><![CDATA[<p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a <em>container</em>. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.</p>
-<p>This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.</p>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Installing-Docker"><a href="#1-–-Installing-Docker" class="headerlink" title="1 – Installing Docker"></a>1 – Installing Docker</h1><p>The first “main method” in this step should always ensure you have an up to date version of Docker installed on your system, and is the recommended route to installing Docker. It uses an install script from one of their official domains, and is suggested by the developers.</p>
-<h2 id="Main-Method"><a href="#Main-Method" class="headerlink" title="Main Method"></a>Main Method</h2><blockquote>
-<p><strong>“Docker requires a 64-bit installation regardless of your Debian/Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version is also acceptable.”</strong></p>
-</blockquote>
-<p>Install using ether:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-<p>Or:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-<p>Then start the <code>docker</code> service:</p>
-<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
-<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="Package-Managers-Method"><a href="#Package-Managers-Method" class="headerlink" title="Package Managers Method"></a>Package Managers Method</h2><p>It’s advised to use the first “main method” of installing Docker in order to always install the latest version, and not to use the build packages included in your Linux system’s package manager.</p>
-<p>Here’s how to use up to date package versions manually if you do wish to do so however.</p>
-<h2 id="Arch-Linux-1"><a href="#Arch-Linux-1" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using <code>pacman</code> package manager:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S docker</span><br></pre></td></tr></table></figure>
-<p>Using an Aurum helper like Yaourt you can get access to another package that is built off of the Docker Git <em>master</em> branch:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yaourt -S docker-git</span><br></pre></td></tr></table></figure>
-<p>Remember to start the <code>docker</code> service:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
-<p>More information can be found at:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/archlinux/" target="_blank" rel="external">Docker Installation Documentation - Arch Linux</a></p>
-</blockquote>
-<h2 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h2><p>For Debian to get an up to date version of Docker you must add and update the <em>apt</em> repository by following the steps here:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/debian/" target="_blank" rel="external">Docker Installation Documentation - Debian</a></p>
-</blockquote>
-<p>Then run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><p>For Ubuntu to get an up to date version of Docker you must add and update the <em>apt</em> repository, and set up any of the relevant “prerequisites” by following the steps here:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/ubuntulinux/" target="_blank" rel="external">Docker Installation Documentation - Ubuntu</a></p>
-</blockquote>
-<p>Then run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="2-–-Docker-User-Group"><a href="#2-–-Docker-User-Group" class="headerlink" title="2 – Docker User Group"></a>2 – Docker User Group</h1><p>After installing Docker a message is returned that reads:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">If you would like to use Docker as a non-root user, you should now consider</span><br><span class="line">adding your user to the <span class="string">"docker"</span> group with something like:</span><br><span class="line"></span><br><span class="line">  sudo usermod <span class="_">-a</span>G docker &lt;username&gt;</span><br><span class="line"></span><br><span class="line">Remember that you will have to <span class="built_in">log</span> out and back <span class="keyword">in</span> <span class="keyword">for</span> this to take effect!</span><br></pre></td></tr></table></figure>
-<p>This if followed allows you to run Docker as a non-root user; with the user you add to the group. While this may seem like a great idea, be aware of the potential implications involved in adding users to this group.</p>
-<p>The Docker daemon requires root privileges to carry it out its work, so only trusted users and user accounts should be added to this group, and given control of the Docker daemon.</p>
-<p>Read this page on Docker security for reasoning and a better explanation of why this is potentially a security risk:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/articles/security/#docker-daemon-attack-surface" target="_blank" rel="external">Docker Daemon Attack Surface</a></p>
-</blockquote>
-<p>Once you understand this if you want to add your Linux user to the Docker group use the next command.</p>
-<p>Where <code>scarlz</code> is replaced by the username you wish to add.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermod <span class="_">-a</span>G docker scarlz</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Now log out and back into your Linux system.</li>
-</ul>
-<p>The rest of this tutorial assumes your are entering the commands in each step as a user that has been added to the <code>docker</code> group. IF you did not do this simply append <code>sudo</code> to each Docker command where necessary.</p>
-<hr>
-<h1 id="3-–-Containers-amp-Images"><a href="#3-–-Containers-amp-Images" class="headerlink" title="3 – Containers &amp; Images"></a>3 – Containers &amp; Images</h1><iframe width="1080" height="500" src="https://www.youtube.com/embed/klzLdzpPcQw" frameborder="1" allowfullscreen><br></iframe>
-
-<p>Docker uses the concept of <em>containers</em> to provide the benefits and functionality mentioned in the preamble. A container is a very lightweight bare-bones stripped version of an operating system (Linux OS). Only containing the necessary essential parts for whatever purpose it needs to server.</p>
-<p><em>Images</em> are loaded into a container and are the service or program you want to be run as a docker process. This could be anything from personally created custom images to official web servers, databases, etc. The official images of these are held by “Docker Hub” which is explained more in an upcoming section.</p>
-<p>Enter this command to run an example “hello world” image in a Docker container:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run hello-world</span><br></pre></td></tr></table></figure>
-<p>This is what the <code>hello-world</code> image should have output:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hello from Docker.</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker Hub account:</span><br><span class="line"> https://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<p>Here’s also what happened internally with the previous command:</p>
-<p><img src="http://i.imgur.com/mSdE5yh.png?1" alt="hello-world Docker Image"></p>
-<ul>
-<li>Docker checked to see if the <code>hello-world</code> software image was present on the host machine’s local file-system.</li>
-<li>The <code>hello-world</code> image was not found so Docker downloaded the image from Docker Hub.</li>
-<li>After it finished downloading it was then loaded as an image into a container and “run” successfully.</li>
-</ul>
-<p>Images can be very simple (like this one) or can be designed to carry out more complex high-level tasks.</p>
-<p>It can also be tempting to think of containers as “lightweight” virtual machines, and although this is generally a good analogy to some small degree, it does not account for and explain everything Docker containers are about.</p>
-<p><blockquote align="center" class="twitter-tweet" data-partner="tweetdeck"><p lang="en" dir="ltr">&quot;Containers are not lightweight VMs, there is much more to it&quot;, says Arnaud Porterie. <a href="https://twitter.com/hashtag/DockerCon?src=hash" target="_blank" rel="external">#DockerCon</a></p>&mdash; sushan ghimire (@sixev) <a href="https://twitter.com/sixev/status/666246458333622272" target="_blank" rel="external">November 16, 2015</a></blockquote></p>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-<h1 id="4-–-Docker-Hub"><a href="#4-–-Docker-Hub" class="headerlink" title="4 – Docker Hub"></a>4 – Docker Hub</h1><p>Who built the “hello-world” software image? Docker did, but anyone can and is welcome to contribute to the online catalogue of Docker images known colloquially as Docker Hub.</p>
-<blockquote>
-<p><a href="https://hub.docker.com/explore/" target="_blank" rel="external">Docker Hub Official Repositories</a></p>
-</blockquote>
-<p>The Docker Hub houses most of the more familiar and popular software and services you’re accustomed to. We will look one or two of these later.</p>
-<p>For now pull a second example image from Docker Hub by typing into the search-bar <code>whalesay</code> on the Docker Hub website, and then finding the official <code>docker/whalesay</code> image.</p>
-<p>The page for it looks like this:</p>
-<p><img src="http://i.imgur.com/fHOBrlp.png" alt="Whalesay Dock Hub Page"></p>
-<p>Image descriptions, pull commands, instructions, and owners are always listed here for any type of image.</p>
-<p>Run the command as shown by the page:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run docker/whalesay cowsay boo</span><br></pre></td></tr></table></figure>
-<p>Which runs the image in a container resulting in:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Unable to find image <span class="string">'docker/whalesay:latest'</span> locally</span><br><span class="line">latest: Pulling from docker/whalesay</span><br><span class="line"></span><br><span class="line">2880a3395ede: Pull complete</span><br><span class="line">515565c29c94: Pull complete</span><br><span class="line">98b15185dba7: Pull complete</span><br><span class="line">2ce633e3e9c9: Pull complete</span><br><span class="line">35217eff2e30: Pull complete</span><br><span class="line">326bddfde6c0: Pull complete</span><br><span class="line">3a2e7fe79da7: Pull complete</span><br><span class="line">517de05c9075: Pull complete</span><br><span class="line">8f17e9411cf6: Pull complete</span><br><span class="line">ded5e192a685: Pull complete</span><br><span class="line">Digest: sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> docker/whalesay:latest</span><br><span class="line"> _____</span><br><span class="line">&lt; boo &gt;</span><br><span class="line"> -----</span><br><span class="line">    \</span><br><span class="line">     \</span><br><span class="line">      \     </span><br><span class="line">                    <span class="comment">##        .            </span></span><br><span class="line">              <span class="comment">## ## ##       ==            </span></span><br><span class="line">           <span class="comment">## ## ## ##      ===            </span></span><br><span class="line">       /<span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span>___/ ===        </span><br><span class="line">  ~~~ &#123;~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~   </span><br><span class="line">       \______ o          __/            </span><br><span class="line">        \    \        __/             </span><br><span class="line">          \____\______/</span><br></pre></td></tr></table></figure>
-<p>Furthermore here’s the <em>dockerfile</em> (configuration file) for the whalesay image we just ran:</p>
-<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install cowsay, and move the "default.cow" out of the way so we can overwrite it with "docker.cow"</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y cowsay --no-install-recommends &amp;&amp; rm -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; mv /usr/share/cowsay/cows/default.cow /usr/share/cowsay/cows/orig-default.cow</span><br><span class="line"></span><br><span class="line"><span class="comment"># "cowsay" installs to /usr/games</span></span><br><span class="line">ENV PATH <span class="variable">$PATH</span>:/usr/games</span><br><span class="line"></span><br><span class="line">COPY docker.cow /usr/share/cowsay/cows/</span><br><span class="line">RUN ln -sv /usr/share/cowsay/cows/docker.cow /usr/share/cowsay/cows/default.cow</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"cowsay"</span>]</span><br></pre></td></tr></table></figure>
-<p>it’s also possible to search for images by keyword from the command line:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker search ubuntu</span><br></pre></td></tr></table></figure>
-<p>This like the website search shows you a list of the currently available public repositories on the Docker Hub which match the provided keyword.</p>
-<p>Some final considerations for Docker Hub are:</p>
-<ul>
-<li><p>You can sign up for a free Docker Hub account to upload your own Docker images. Private repositories for organisation wide images also exist.  </p>
-</li>
-<li><p>Automated Builds allow you to auto-create new images when you make changes to a targeted source, GitHub repo, or Bitbucket repo.</p>
-</li>
-<li><p>Inbuilt webhooks let you trigger actions after a successful push to a repository (or successful automated build).</p>
-</li>
-<li><p>General GitHub and Bitbucket integration adds the Hub and Docker images to your current workflows.</p>
-</li>
-</ul>
-<hr>
-<h1 id="5-–-Running-Docker-Containers"><a href="#5-–-Running-Docker-Containers" class="headerlink" title="5 – Running Docker Containers"></a>5 – Running Docker Containers</h1><p>In this step there’s more containers to be run alongside the specifics of how Docker command structures work.</p>
-<p>To start with run yet another example command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run ubuntu:14.04 /bin/<span class="built_in">echo</span> <span class="string">'Hello world'</span></span><br></pre></td></tr></table></figure>
-<p>In this last command <code>docker run</code> starts us off by creating a brand new container, just like before. Then the image we asked for is this time not just a program/service but <code>ubuntu:14.04</code> - an entire Linux OS environment. Bear in mind the quote from earlier!</p>
-<p>As we don’t have this Docker image (it’s still classed and used as an image by Docker) it must be downloaded from Docker Hub.</p>
-<p>After this we asked Docker to run a shell command inside the new container’s environment, which was:</p>
-<p><code>/bin/echo &quot;Hello World&quot;</code></p>
-<p>We then saw the result of this whole sequence as output on the command line.</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello world</span><br></pre></td></tr></table></figure>
-<p>Docker containers only run as long as the command you specify is active. So as soon as Hello World was <em>echoed</em>, the container stopped.</p>
-<p>Try this new command that has some options and calls a shell.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -t -i ubuntu:14.04 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>The <code>-t</code> option assigns/begins a pseudo-tty or terminal inside the new container.</p>
-<p>The <code>-i</code> option allows us to make an interactive connection by grabbing the standard in (STDIN) of the container.</p>
-<p>Which as we’ve called <code>bash</code> shell will take us to a bash command prompt inside of the container.</p>
-<p>The usual commands will work in this shell and file-system. It’s just a contained version of a regular Ubuntu OS environment.</p>
-<p>Use <code>exit</code> or <code>CTRL</code> + <code>D</code> to end the session, thereby also ending and stopping this container.</p>
-<p>Although these are useful examples most of the time it’s more likely and common you’ll use Docker with “daemonised” programs or services.</p>
-<p>Here’s how this looks with the “Hello World” example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> ubuntu:14.04 /bin/sh -c <span class="string">"while true; do echo hello world; sleep 1; done"</span></span><br></pre></td></tr></table></figure>
-<p>The differences here are the command line options and <em>do while</em> loop.</p>
-<p>The <code>-d</code> option tells Docker to run the container but put it in the background, to “daemonise” it. The loop contains a command that permanently echoes “hello world” into the container with a short delay in between.</p>
-<p>You will have noticed that as it’s been daemonised, instead of seeing any output, a long string comprised of digits and numbers has been returned:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f54eb8a426307e63684040eee69e0a6cf43859bee08c3f6a9086b195213df052</span><br></pre></td></tr></table></figure>
-<p>This is known as a container ID; it uniquely identifies a container instance so we can work with it.</p>
-<p>This next step shows how you can monitor, examine, and find out what’s going on inside of  daemonised containers.</p>
-<hr>
-<h1 id="6-–-Docker-CLI-Client"><a href="#6-–-Docker-CLI-Client" class="headerlink" title="6 – Docker CLI Client"></a>6 – Docker CLI Client</h1><p>We can use the container ID to see what’s happening inside of our daemonised hello world container.</p>
-<p>First let’s list all of the currently running containers and their details:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
-<p>The <code>docker ps</code> command queries the Docker daemon for information about all the containers it has tied to it.</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">f54eb8a42630        ubuntu:14.04        <span class="string">"/bin/sh -c 'while tr"</span>   11 minutes ago      Up 10 minutes                           amazing_jepsen</span><br></pre></td></tr></table></figure>
-<p>Note the shortened container ID in the first column, and the auto-assigned name in the end column.</p>
-<p>To check on the inner workings of the container and see if our earlier “hello world” loop is still running use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker logs amazing_jepsen</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> You can use either the container ID or name as a parameter.</p>
-</blockquote>
-<p>The output confirms it’s working as intended:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
-<p>Lastly for this, stopping and ending a container is achieved by using:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop amazing_jepsen</span><br></pre></td></tr></table></figure>
-<p>Autocomplete works for this last command too when entering the name.</p>
-<p>To start the container again simply replace <code>stop</code> in the last command with <code>start</code> . Or to delete the container entirely use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm amazing_jepsen</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> Removing a container is permanent, once it’s deleted it’s gone.</p>
-</blockquote>
-<p>So the container from before is now gone. The Ubuntu image we have been using is still present on the system however.</p>
-<p>To see images that have been downloaded and still present enter:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
-<p>Which will give a similar output to:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">ubuntu              14.04               89d5d8e8bafb        13 days ago         187.9 MB</span><br><span class="line">hello-world         latest              0a6ba66e537a        9 weeks ago         960 B</span><br><span class="line">docker/whalesay     latest              ded5e192a685        7 months ago        247 MB</span><br></pre></td></tr></table></figure>
-<p>To delete and remove images use this command with the image name as a parameter e.g.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi ubuntu:14.04</span><br></pre></td></tr></table></figure>
-<p>Autocomplete works for the image names and multiple names can be passed as parameters.</p>
-<p>A successful deletion gives output similar to:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Untagged: ubuntu:14.04</span><br><span class="line">Deleted: 89d5d8e8bafb6e279fa70ea444260fa61cc7c5c7d93eff51002005c54a49c918</span><br><span class="line">Deleted: e24428725dd6f8e354a0c6080570f90d40e9e963c6878144291c6ba9fd39b25f</span><br><span class="line">Deleted: 1796d1c62d0c3bad665cc4fbe4b6a051e26c22f14aa5e0e2490e528783764ca0</span><br><span class="line">Deleted: 0bf0561619131d3dc0432a2b40a9438bd48f4a84e89ff128cc5147a089c114e4</span><br></pre></td></tr></table></figure>
-<p>If an error message is returned claiming another container is using the image as a reference <strong>and</strong> you know this is not true.</p>
-<p>Try using the <code>-f</code> force option with the <code>rmi</code> removal command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi <span class="_">-f</span> ubuntu:14.04</span><br></pre></td></tr></table></figure>
-<p>With this we complete the cycle of downloading, creating, and removing an image and its containers.</p>
-<hr>
-<p>Docker is an amazing step forward in the world of virtualisation and resource efficiency, but these examples here are for demonstration purposes only, and are meant to teach the basics. As much as possible try to to think of how this concept could benefit a large hosting provider, or business that serves web applications to many.</p>
-<p>Post number two on Docker goes into more detail on administering and handling containers. With some examples of real services and apps running under Docker. </p>
-<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://docs.docker.com/" target="_blank" rel="external">Official Docker Documentation</a> – Is updated and maintained pretty well.</li>
-<li><a href="https://docs.docker.com/engine/userguide/" target="_blank" rel="external">Official Docker User Guide</a> – The main source of inspiration and command content for this post.</li>
-<li><a href="https://github.com/docker/docker" target="_blank" rel="external">Docker GitHub Project Page</a> – The Readme contains some very clear explanations of why Docker is such an asset.</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;img src=&quot;http://i.imgur.com/poo8Rai.png&quot; alt=&quot;Docker Logo&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a &lt;em&gt;container&lt;/em&gt;. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.&lt;/p&gt;
-&lt;p&gt;This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.&lt;/p&gt;
     
     </summary>
     

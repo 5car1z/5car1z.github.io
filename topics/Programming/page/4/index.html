@@ -1,4 +1,119 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-02-24T00:00:00.000Z" class="post__time">February 24, 2016</time><h1 class="post__title"><a href="/2016/02/24/bowtie-static-site-service/">BowTie Static Web Hosting Service</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/ZIQzKNY.png" alt="BowTie Banner Image"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-03-14T00:00:00.000Z" class="post__time">March 14, 2016</time><h1 class="post__title"><a href="/2016/03/14/docker-data-volumes/">Docker - Data Volumes and Data Containers (4)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><blockquote>
+<p><strong><a href="https://docs.docker.com/engine/admin/volumes/volumes/" target="_blank" rel="external">This blog post is becoming more and more outdated as time goes on, it would be better to consult the official Docker documentation for this kind of thing!</a></strong></p>
+</blockquote>
+<p>Docker containers are a lot more scalable and modular once they have the links in place that allow them to share data. How these links are created and arranged depends upon the arranger, who will choose either to create a file-system data volume or a dedicated data volume container. </p>
+<p>This post works through these two common choices; data volumes and data volume containers. With consideration of the commands involved in backing up, restoring, and migrating said data volumes.</p>
+<p>This is post four on Docker following on from <a href="http://www.tricksofthetrades.net/2016/01/27/docker-further-administration-networking/">Docker - Daemon Administration and Networking (3)</a>. Go back and read the latter half of that post to see how to network containers together so they can properly communicate back and forth - if you need to. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Creating-Data-Volumes"><a href="#1-–-Creating-Data-Volumes" class="headerlink" title="1 – Creating Data Volumes"></a>1 – Creating Data Volumes</h1><p>A “data volume” is a marked directory inside of a container that exists to hold persistent or commonly shared data. Assigning these volumes is done when creating a new container. </p>
+<p>Any data already present as part of the Docker image in a targeted volume directory is carried forward into the new container and not lost. This however is not true when mounting a local host directory (covered later) as the data is temporarily covered by the new volume. </p>
+<iframe width="1080" height="500" src="https://www.youtube.com/embed/e1yXmc7-mU4" frameborder="1" allowfullscreen><br></iframe> 
+
+<p>You can add a data volume to a container using the <code>-v</code> flag in conjunction with the <code>create</code> or <code>run</code> command. You can use the -<code>v</code> multiple times to mount multiple data volumes.</p>
+<p>This next command will create a data volume inside a new container in the <code>/webapp</code> directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name <span class="built_in">test</span>-container -v /webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>Data volumes are very useful as once designated and created they can be shared and included as part of other containers. It’s also important to note that any changes to data volumes are not included when you update an image, but conversely data volumes will persist even if the container itself is deleted.</p>
+<blockquote>
+<p><strong>Note:</strong> The <code>VOLUME</code> instruction in a <code>Dockerfile</code> will add one or more new volumes to any containers created from the image.</p>
+</blockquote>
+<p>This preservation is due to the fact that data volumes are meant to persist independent of a container’s life cycle. In turn this also means Docker never <em>garbage collects</em> volumes that are no longer in use by a container. </p>
+<hr>
+<h1 id="2-–-Creating-Host-Data-Volumes"><a href="#2-–-Creating-Host-Data-Volumes" class="headerlink" title="2 – Creating Host Data Volumes"></a>2 – Creating Host Data Volumes</h1><p>You can instead mount a directory from your Docker daemon’s <strong>host</strong> into a container; you may have seen this used once or twice in the previous posts. </p>
+<p>Mounting a host directory can be useful for testing. For example, you can mount source code inside a container. Then, change the source code and see its effect on the application in real time. The directory on the host must be specified as an absolute path and if the directory doesn’t exist Docker will automatically create it for you. </p>
+<p>The next example command mounts the host directory <code>/src/webapp</code> into the container at the <code>/opt/webapp</code> directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name <span class="built_in">test</span>-container -v /src/webapp:/opt/webapp training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>Some internal rules and behaviours for this process are:</p>
+<ul>
+<li><p>The targeted container directory must always take an absolute full file-system path.</p>
+</li>
+<li><p>The host source directory can be either an absolute path or a name value. </p>
+</li>
+<li><p>If the targeted container path already exists inside the container’s image, the host directory mount overlays but does not remove the destination content. Once the mount is removed, the destination content is accessible again. </p>
+</li>
+</ul>
+<p>Docker volumes default to mounting as both a dual read-write mode, but you can set them to mount as read-only if you like.</p>
+<p>Here the same <code>/src/webapp</code> directory is linked again but the extra <code>:ro</code> option makes the mount read-only.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P --name web -v /src/webapp:/opt/webapp:ro training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> It’s not possible to mount a host directory using a <code>Dockerfile</code> because by convention images should be portable and flexible, and a specific host directory might not be available on all potential hosts.</p>
+</blockquote>
+<hr>
+<h1 id="3-–-Mounting-Individual-Host-Files"><a href="#3-–-Mounting-Individual-Host-Files" class="headerlink" title="3 – Mounting Individual Host Files"></a>3 – Mounting Individual Host Files</h1><p>The <code>-v</code> flag used so far can target a single file instead of entire directories from the host machine. This is done by mapping the specific file on each side of the container. </p>
+<p>A great interactive example of this that creates a new container and drops you into a bash shell with your bash history from the host, is as follows:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm -it -v ~/.bash_history:/root/.bash_history ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<p>Furthermore when you exit the container, the host version of the file will have the the commands typed from the inside of the container - written to the the <code>.bash_history</code> file. </p>
+<hr>
+<h1 id="4-–-Creating-Dedicated-Data-Volume-Containers"><a href="#4-–-Creating-Dedicated-Data-Volume-Containers" class="headerlink" title="4 – Creating Dedicated Data Volume Containers"></a>4 – Creating Dedicated Data Volume Containers</h1><p>A popular practice with Docker data sharing is to create a dedicated container that holds all of your persistent shareable data resources, mounting the data inside of it into other containers once created and setup. </p>
+<p>This example taken from the Docker documentation uses the <code>postgres</code> SQL training image as a base for the data volume container. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker create -v /data-store --name data-store training/postgres /bin/<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> <code>/bin/true</code> - returns a <code>0</code> and does nothing if the command was successful. </p>
+</blockquote>
+<p>The <code>--volumes-from</code> flag is then used to mount the <code>/data-store</code> volume inside of other containers:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --volumes-from data-store --name database-container-1 training/postgres</span><br></pre></td></tr></table></figure>
+<p>This process is repeated for additional new containers:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --volumes-from data-store --name database-container-2  training/postgres</span><br></pre></td></tr></table></figure>
+<p>Be aware that you can use multiple <code>--volumes-from</code> flags in one command to combine data volumes from multiple other dedicated data containers. </p>
+<p>An alternative idea is to mount the volumes from each subsequent container to the next, instead of the original dedicated container linking to new ones. </p>
+<p>This forms a chain that would begin by using: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> --name database-container-3 --volumes-from database-container-2  training/postgres</span><br></pre></td></tr></table></figure>
+<p>Remember that If you remove containers that mount volumes, the volume store and its data will not be deleted. Docker preserves it. </p>
+<p>To fully delete a volume from the file-system you must run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm -v &lt;container name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where <code>&lt;container name&gt;</code> is “the last container with a reference to the volume.”</p>
+<blockquote>
+<p><strong>Note:</strong> There is no cautionary Docker warning provided when removing a container without  the <code>-v</code> option.  So if a container has volumes mounted the <code>-v</code> must be passed to fully remov them. </p>
+</blockquote>
+<h2 id="Dangling-Volumes"><a href="#Dangling-Volumes" class="headerlink" title="Dangling Volumes"></a>Dangling Volumes</h2><p>“Dangling volumes” refers to container volumes that are no longer referenced by a container.</p>
+<p>Fortunately there is a command to list out all the stray volumes on a system.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume ls <span class="_">-f</span> dangling=<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>To remove a volume that’s no longer needed use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker volume rm &lt;volume name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where <code>&lt;volume name&gt;</code> is substituted for the dangling volume name shown in the previous <code>ls</code> output. </p>
+<hr>
+<h1 id="5-–-Backing-Up-and-Restoring-Data-Volumes"><a href="#5-–-Backing-Up-and-Restoring-Data-Volumes" class="headerlink" title="5 – Backing Up and Restoring Data Volumes"></a>5 – Backing Up and Restoring Data Volumes</h1><p>How are data volumes maintained when it comes to things like backups, restoration, and migration? Well here is one solution that takes care of these necessities by showing how you can achieve this with a dedicated data container. </p>
+<p>To backup a volume:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container -v $(<span class="built_in">pwd</span>):/backup ubuntu tar cvf /backup/backup.tar /data-store</span><br></pre></td></tr></table></figure>
+<p>Here’s how the previous command works:</p>
+<ol>
+<li>The <code>--volumes-from</code> flag creates a new nameless container that mounts the data volume inside <code>data-container</code> you wish to backup. </li>
+<li>A localhost directory is mounted as <code>/backup</code> . Then <code>tar</code> archives the contents of the <code>/data-store</code> volume to a <code>backup.tar</code> file inside the local <code>/backup</code> directory. </li>
+<li>The container will be <code>--rm</code> removed once it eventually ends and exits. </li>
+</ol>
+<p>We are left with a backup of the <code>/data-store</code> volume on the localhost. </p>
+<p>From here you could restore the volume in whatever way you wish.</p>
+<p>To restore into a new container run: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -v /data-store --name data-container-2 ubuntu /bin/bash</span><br></pre></td></tr></table></figure>
+<p>Then extract the backup file contents into the the new container’s data volume:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --rm --volumes-from data-container-2 -v $(<span class="built_in">pwd</span>):/backup ubuntu bash -c <span class="string">"cd /data-store &amp;&amp; tar -xvf /backup/backup.tar"</span></span><br></pre></td></tr></table></figure>
+<p>Now the new container is up and running with the files from the original <code>/data-store</code> volume. </p>
+<hr>
+<h1 id="6-–-Volume-and-Data-Container-Issues"><a href="#6-–-Volume-and-Data-Container-Issues" class="headerlink" title="6 – Volume and Data Container Issues"></a>6 – Volume and Data Container Issues</h1><ul>
+<li><p><strong>Orphan Volumes</strong> – Referred to as dangling volumes earlier on. These are the leftover untracked volumes that aren’t removed from the system once a container is removed/deleted. </p>
+</li>
+<li><p><strong>Security</strong> – Other than the usual Unix file permissions and the ability to set read-only or read-write privileges. Docker volumes or data containers have no additional security placed on them. </p>
+</li>
+<li><p><strong>Data Integrity</strong> – Sharing data using volumes and data containers provides no level of data integrity protection. Data protection features are not yet built into Docker i.e. data snapshot, automatic data replication, automatic backups, etc. So data management has to be handled by the administrator or the container itself. </p>
+</li>
+<li><p><strong>External Storage</strong> –  The current design does not take into account the ability to use a Docker volume spanning from one host to another. They must be on the same host. </p>
+</li>
+</ul>
+<hr>
+<p>It seems like a large amount of information has been covered here but really only two ideas have been explored. That of singular data volumes and that of the preferred independent data container. There are also new updates to Docker on the horizon as always so some of the issues raised here are hopefully soon to be resolved. The next post on Docker covers building images using Dockerfiles, and likewise with Docker Compose. </p>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/engine/userguide/dockervolumes/" target="_blank" rel="external">Official Docker Documentation – Manage Data in Containers</a> – Main source material used for this post. </li>
+<li><a href="https://www.digitalocean.com/community/tutorials/how-to-work-with-docker-data-volumes-on-ubuntu-14-04" target="_blank" rel="external">Digital Ocean - How To Work with Docker Data Volumes on Ubuntu 14.04</a> – Breaks down the topic further and has some Nginx logging volume mount examples. </li>
+<li><a href="http://www.computerweekly.com/feature/Docker-storage-101-How-storage-works-in-Docker" target="_blank" rel="external">Docker storage 101: How storage works in Docker</a> – Article from April 2015 that goes over the general ideas and practices discussed here. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/03/14/docker-data-volumes/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2016-02-24T00:00:00.000Z" class="post__time">February 24, 2016</time><h1 class="post__title"><a href="/2016/02/24/bowtie-static-site-service/">BowTie Static Web Hosting Service</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/ZIQzKNY.png" alt="BowTie Banner Image"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Static sites continue to surge in popularity and show no sign of falling out of favour anytime soon. It’s only natural then that content management platforms centered around static websites make an appearance. Thus comes BowTie!</p>
 <p><a href="https://bowtie.io/" target="_blank" rel="external">https://bowtie.io/</a></p>
 <blockquote>
@@ -615,192 +730,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/01/07/docker-administration-applications/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-12-23T00:00:00.000Z" class="post__time">December 23, 2015</time><h1 class="post__title"><a href="/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a <em>container</em>. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.</p>
-<p>This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.</p>
-<a id="more"></a>
-<hr>
-<h1 id="1-–-Installing-Docker"><a href="#1-–-Installing-Docker" class="headerlink" title="1 – Installing Docker"></a>1 – Installing Docker</h1><p>The first “main method” in this step should always ensure you have an up to date version of Docker installed on your system, and is the recommended route to installing Docker. It uses an install script from one of their official domains, and is suggested by the developers.</p>
-<h2 id="Main-Method"><a href="#Main-Method" class="headerlink" title="Main Method"></a>Main Method</h2><blockquote>
-<p><strong>“Docker requires a 64-bit installation regardless of your Debian/Ubuntu version. Additionally, your kernel must be 3.10 at minimum. The latest 3.10 minor version or a newer maintained version is also acceptable.”</strong></p>
-</blockquote>
-<p>Install using ether:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget -qO- https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-<p>Or:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>SL https://get.docker.com/ | sh</span><br></pre></td></tr></table></figure>
-<p>Then start the <code>docker</code> service:</p>
-<h2 id="Arch-Linux"><a href="#Arch-Linux" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
-<h2 id="Debian-Ubuntu"><a href="#Debian-Ubuntu" class="headerlink" title="Debian / Ubuntu"></a>Debian / Ubuntu</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="Package-Managers-Method"><a href="#Package-Managers-Method" class="headerlink" title="Package Managers Method"></a>Package Managers Method</h2><p>It’s advised to use the first “main method” of installing Docker in order to always install the latest version, and not to use the build packages included in your Linux system’s package manager.</p>
-<p>Here’s how to use up to date package versions manually if you do wish to do so however.</p>
-<h2 id="Arch-Linux-1"><a href="#Arch-Linux-1" class="headerlink" title="Arch Linux"></a>Arch Linux</h2><p>Using <code>pacman</code> package manager:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S docker</span><br></pre></td></tr></table></figure>
-<p>Using an Aurum helper like Yaourt you can get access to another package that is built off of the Docker Git <em>master</em> branch:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yaourt -S docker-git</span><br></pre></td></tr></table></figure>
-<p>Remember to start the <code>docker</code> service:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo systemctl start docker</span><br><span class="line">$ sudo systemctl <span class="built_in">enable</span> docker</span><br></pre></td></tr></table></figure>
-<p>More information can be found at:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/archlinux/" target="_blank" rel="external">Docker Installation Documentation - Arch Linux</a></p>
-</blockquote>
-<h2 id="Debian"><a href="#Debian" class="headerlink" title="Debian"></a>Debian</h2><p>For Debian to get an up to date version of Docker you must add and update the <em>apt</em> repository by following the steps here:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/debian/" target="_blank" rel="external">Docker Installation Documentation - Debian</a></p>
-</blockquote>
-<p>Then run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<h2 id="Ubuntu"><a href="#Ubuntu" class="headerlink" title="Ubuntu"></a>Ubuntu</h2><p>For Ubuntu to get an up to date version of Docker you must add and update the <em>apt</em> repository, and set up any of the relevant “prerequisites” by following the steps here:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/installation/ubuntulinux/" target="_blank" rel="external">Docker Installation Documentation - Ubuntu</a></p>
-</blockquote>
-<p>Then run:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install docker-engine</span><br><span class="line">$ sudo service docker start</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="2-–-Docker-User-Group"><a href="#2-–-Docker-User-Group" class="headerlink" title="2 – Docker User Group"></a>2 – Docker User Group</h1><p>After installing Docker a message is returned that reads:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">If you would like to use Docker as a non-root user, you should now consider</span><br><span class="line">adding your user to the <span class="string">"docker"</span> group with something like:</span><br><span class="line"></span><br><span class="line">  sudo usermod <span class="_">-a</span>G docker &lt;username&gt;</span><br><span class="line"></span><br><span class="line">Remember that you will have to <span class="built_in">log</span> out and back <span class="keyword">in</span> <span class="keyword">for</span> this to take effect!</span><br></pre></td></tr></table></figure>
-<p>This if followed allows you to run Docker as a non-root user; with the user you add to the group. While this may seem like a great idea, be aware of the potential implications involved in adding users to this group.</p>
-<p>The Docker daemon requires root privileges to carry it out its work, so only trusted users and user accounts should be added to this group, and given control of the Docker daemon.</p>
-<p>Read this page on Docker security for reasoning and a better explanation of why this is potentially a security risk:</p>
-<blockquote>
-<p><a href="https://docs.docker.com/engine/articles/security/#docker-daemon-attack-surface" target="_blank" rel="external">Docker Daemon Attack Surface</a></p>
-</blockquote>
-<p>Once you understand this if you want to add your Linux user to the Docker group use the next command.</p>
-<p>Where <code>scarlz</code> is replaced by the username you wish to add.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo usermod <span class="_">-a</span>G docker scarlz</span><br></pre></td></tr></table></figure>
-<ul>
-<li>Now log out and back into your Linux system.</li>
-</ul>
-<p>The rest of this tutorial assumes your are entering the commands in each step as a user that has been added to the <code>docker</code> group. IF you did not do this simply append <code>sudo</code> to each Docker command where necessary.</p>
-<hr>
-<h1 id="3-–-Containers-amp-Images"><a href="#3-–-Containers-amp-Images" class="headerlink" title="3 – Containers &amp; Images"></a>3 – Containers &amp; Images</h1><iframe width="1080" height="500" src="https://www.youtube.com/embed/klzLdzpPcQw" frameborder="1" allowfullscreen><br></iframe>
-
-<p>Docker uses the concept of <em>containers</em> to provide the benefits and functionality mentioned in the preamble. A container is a very lightweight bare-bones stripped version of an operating system (Linux OS). Only containing the necessary essential parts for whatever purpose it needs to server.</p>
-<p><em>Images</em> are loaded into a container and are the service or program you want to be run as a docker process. This could be anything from personally created custom images to official web servers, databases, etc. The official images of these are held by “Docker Hub” which is explained more in an upcoming section.</p>
-<p>Enter this command to run an example “hello world” image in a Docker container:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run hello-world</span><br></pre></td></tr></table></figure>
-<p>This is what the <code>hello-world</code> image should have output:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Hello from Docker.</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line"></span><br><span class="line">To generate this message, Docker took the following steps:</span><br><span class="line"> 1. The Docker client contacted the Docker daemon.</span><br><span class="line"> 2. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</span><br><span class="line"> 3. The Docker daemon created a new container from that image <span class="built_in">which</span> runs the</span><br><span class="line">    executable that produces the output you are currently reading.</span><br><span class="line"> 4. The Docker daemon streamed that output to the Docker client, <span class="built_in">which</span> sent it</span><br><span class="line">    to your terminal.</span><br><span class="line"></span><br><span class="line">To try something more ambitious, you can run an Ubuntu container with:</span><br><span class="line"> $ docker run -it ubuntu bash</span><br><span class="line"></span><br><span class="line">Share images, automate workflows, and more with a free Docker Hub account:</span><br><span class="line"> https://hub.docker.com</span><br><span class="line"></span><br><span class="line">For more examples and ideas, visit:</span><br><span class="line"> https://docs.docker.com/userguide/</span><br></pre></td></tr></table></figure>
-<p>Here’s also what happened internally with the previous command:</p>
-<p><img src="http://i.imgur.com/mSdE5yh.png?1" alt="hello-world Docker Image"></p>
-<ul>
-<li>Docker checked to see if the <code>hello-world</code> software image was present on the host machine’s local file-system.</li>
-<li>The <code>hello-world</code> image was not found so Docker downloaded the image from Docker Hub.</li>
-<li>After it finished downloading it was then loaded as an image into a container and “run” successfully.</li>
-</ul>
-<p>Images can be very simple (like this one) or can be designed to carry out more complex high-level tasks.</p>
-<p>It can also be tempting to think of containers as “lightweight” virtual machines, and although this is generally a good analogy to some small degree, it does not account for and explain everything Docker containers are about.</p>
-<p><blockquote align="center" class="twitter-tweet" data-partner="tweetdeck"><p lang="en" dir="ltr">&quot;Containers are not lightweight VMs, there is much more to it&quot;, says Arnaud Porterie. <a href="https://twitter.com/hashtag/DockerCon?src=hash" target="_blank" rel="external">#DockerCon</a></p>&mdash; sushan ghimire (@sixev) <a href="https://twitter.com/sixev/status/666246458333622272" target="_blank" rel="external">November 16, 2015</a></blockquote></p>
-<script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<hr>
-<h1 id="4-–-Docker-Hub"><a href="#4-–-Docker-Hub" class="headerlink" title="4 – Docker Hub"></a>4 – Docker Hub</h1><p>Who built the “hello-world” software image? Docker did, but anyone can and is welcome to contribute to the online catalogue of Docker images known colloquially as Docker Hub.</p>
-<blockquote>
-<p><a href="https://hub.docker.com/explore/" target="_blank" rel="external">Docker Hub Official Repositories</a></p>
-</blockquote>
-<p>The Docker Hub houses most of the more familiar and popular software and services you’re accustomed to. We will look one or two of these later.</p>
-<p>For now pull a second example image from Docker Hub by typing into the search-bar <code>whalesay</code> on the Docker Hub website, and then finding the official <code>docker/whalesay</code> image.</p>
-<p>The page for it looks like this:</p>
-<p><img src="http://i.imgur.com/fHOBrlp.png" alt="Whalesay Dock Hub Page"></p>
-<p>Image descriptions, pull commands, instructions, and owners are always listed here for any type of image.</p>
-<p>Run the command as shown by the page:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run docker/whalesay cowsay boo</span><br></pre></td></tr></table></figure>
-<p>Which runs the image in a container resulting in:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">Unable to find image <span class="string">'docker/whalesay:latest'</span> locally</span><br><span class="line">latest: Pulling from docker/whalesay</span><br><span class="line"></span><br><span class="line">2880a3395ede: Pull complete</span><br><span class="line">515565c29c94: Pull complete</span><br><span class="line">98b15185dba7: Pull complete</span><br><span class="line">2ce633e3e9c9: Pull complete</span><br><span class="line">35217eff2e30: Pull complete</span><br><span class="line">326bddfde6c0: Pull complete</span><br><span class="line">3a2e7fe79da7: Pull complete</span><br><span class="line">517de05c9075: Pull complete</span><br><span class="line">8f17e9411cf6: Pull complete</span><br><span class="line">ded5e192a685: Pull complete</span><br><span class="line">Digest: sha256:178598e51a26abbc958b8a2e48825c90bc22e641de3d31e18aaf55f3258ba93b</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> docker/whalesay:latest</span><br><span class="line"> _____</span><br><span class="line">&lt; boo &gt;</span><br><span class="line"> -----</span><br><span class="line">    \</span><br><span class="line">     \</span><br><span class="line">      \     </span><br><span class="line">                    <span class="comment">##        .            </span></span><br><span class="line">              <span class="comment">## ## ##       ==            </span></span><br><span class="line">           <span class="comment">## ## ## ##      ===            </span></span><br><span class="line">       /<span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span><span class="string">""</span>___/ ===        </span><br><span class="line">  ~~~ &#123;~~ ~~~~ ~~~ ~~~~ ~~ ~ /  ===- ~~~   </span><br><span class="line">       \______ o          __/            </span><br><span class="line">        \    \        __/             </span><br><span class="line">          \____\______/</span><br></pre></td></tr></table></figure>
-<p>Furthermore here’s the <em>dockerfile</em> (configuration file) for the whalesay image we just ran:</p>
-<figure class="highlight bash"><figcaption><span>Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">FROM ubuntu:14.04</span><br><span class="line"></span><br><span class="line"><span class="comment"># install cowsay, and move the "default.cow" out of the way so we can overwrite it with "docker.cow"</span></span><br><span class="line">RUN apt-get update &amp;&amp; apt-get install -y cowsay --no-install-recommends &amp;&amp; rm -rf /var/lib/apt/lists/* \</span><br><span class="line">    &amp;&amp; mv /usr/share/cowsay/cows/default.cow /usr/share/cowsay/cows/orig-default.cow</span><br><span class="line"></span><br><span class="line"><span class="comment"># "cowsay" installs to /usr/games</span></span><br><span class="line">ENV PATH <span class="variable">$PATH</span>:/usr/games</span><br><span class="line"></span><br><span class="line">COPY docker.cow /usr/share/cowsay/cows/</span><br><span class="line">RUN ln -sv /usr/share/cowsay/cows/docker.cow /usr/share/cowsay/cows/default.cow</span><br><span class="line"></span><br><span class="line">CMD [<span class="string">"cowsay"</span>]</span><br></pre></td></tr></table></figure>
-<p>it’s also possible to search for images by keyword from the command line:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker search ubuntu</span><br></pre></td></tr></table></figure>
-<p>This like the website search shows you a list of the currently available public repositories on the Docker Hub which match the provided keyword.</p>
-<p>Some final considerations for Docker Hub are:</p>
-<ul>
-<li><p>You can sign up for a free Docker Hub account to upload your own Docker images. Private repositories for organisation wide images also exist.  </p>
-</li>
-<li><p>Automated Builds allow you to auto-create new images when you make changes to a targeted source, GitHub repo, or Bitbucket repo.</p>
-</li>
-<li><p>Inbuilt webhooks let you trigger actions after a successful push to a repository (or successful automated build).</p>
-</li>
-<li><p>General GitHub and Bitbucket integration adds the Hub and Docker images to your current workflows.</p>
-</li>
-</ul>
-<hr>
-<h1 id="5-–-Running-Docker-Containers"><a href="#5-–-Running-Docker-Containers" class="headerlink" title="5 – Running Docker Containers"></a>5 – Running Docker Containers</h1><p>In this step there’s more containers to be run alongside the specifics of how Docker command structures work.</p>
-<p>To start with run yet another example command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run ubuntu:14.04 /bin/<span class="built_in">echo</span> <span class="string">'Hello world'</span></span><br></pre></td></tr></table></figure>
-<p>In this last command <code>docker run</code> starts us off by creating a brand new container, just like before. Then the image we asked for is this time not just a program/service but <code>ubuntu:14.04</code> - an entire Linux OS environment. Bear in mind the quote from earlier!</p>
-<p>As we don’t have this Docker image (it’s still classed and used as an image by Docker) it must be downloaded from Docker Hub.</p>
-<p>After this we asked Docker to run a shell command inside the new container’s environment, which was:</p>
-<p><code>/bin/echo &quot;Hello World&quot;</code></p>
-<p>We then saw the result of this whole sequence as output on the command line.</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Hello world</span><br></pre></td></tr></table></figure>
-<p>Docker containers only run as long as the command you specify is active. So as soon as Hello World was <em>echoed</em>, the container stopped.</p>
-<p>Try this new command that has some options and calls a shell.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -t -i ubuntu:14.04 /bin/bash</span><br></pre></td></tr></table></figure>
-<p>The <code>-t</code> option assigns/begins a pseudo-tty or terminal inside the new container.</p>
-<p>The <code>-i</code> option allows us to make an interactive connection by grabbing the standard in (STDIN) of the container.</p>
-<p>Which as we’ve called <code>bash</code> shell will take us to a bash command prompt inside of the container.</p>
-<p>The usual commands will work in this shell and file-system. It’s just a contained version of a regular Ubuntu OS environment.</p>
-<p>Use <code>exit</code> or <code>CTRL</code> + <code>D</code> to end the session, thereby also ending and stopping this container.</p>
-<p>Although these are useful examples most of the time it’s more likely and common you’ll use Docker with “daemonised” programs or services.</p>
-<p>Here’s how this looks with the “Hello World” example:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> ubuntu:14.04 /bin/sh -c <span class="string">"while true; do echo hello world; sleep 1; done"</span></span><br></pre></td></tr></table></figure>
-<p>The differences here are the command line options and <em>do while</em> loop.</p>
-<p>The <code>-d</code> option tells Docker to run the container but put it in the background, to “daemonise” it. The loop contains a command that permanently echoes “hello world” into the container with a short delay in between.</p>
-<p>You will have noticed that as it’s been daemonised, instead of seeing any output, a long string comprised of digits and numbers has been returned:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">f54eb8a426307e63684040eee69e0a6cf43859bee08c3f6a9086b195213df052</span><br></pre></td></tr></table></figure>
-<p>This is known as a container ID; it uniquely identifies a container instance so we can work with it.</p>
-<p>This next step shows how you can monitor, examine, and find out what’s going on inside of  daemonised containers.</p>
-<hr>
-<h1 id="6-–-Docker-CLI-Client"><a href="#6-–-Docker-CLI-Client" class="headerlink" title="6 – Docker CLI Client"></a>6 – Docker CLI Client</h1><p>We can use the container ID to see what’s happening inside of our daemonised hello world container.</p>
-<p>First let’s list all of the currently running containers and their details:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
-<p>The <code>docker ps</code> command queries the Docker daemon for information about all the containers it has tied to it.</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS               NAMES</span><br><span class="line">f54eb8a42630        ubuntu:14.04        <span class="string">"/bin/sh -c 'while tr"</span>   11 minutes ago      Up 10 minutes                           amazing_jepsen</span><br></pre></td></tr></table></figure>
-<p>Note the shortened container ID in the first column, and the auto-assigned name in the end column.</p>
-<p>To check on the inner workings of the container and see if our earlier “hello world” loop is still running use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker logs amazing_jepsen</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> You can use either the container ID or name as a parameter.</p>
-</blockquote>
-<p>The output confirms it’s working as intended:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br><span class="line">hello world</span><br></pre></td></tr></table></figure>
-<p>Lastly for this, stopping and ending a container is achieved by using:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stop amazing_jepsen</span><br></pre></td></tr></table></figure>
-<p>Autocomplete works for this last command too when entering the name.</p>
-<p>To start the container again simply replace <code>stop</code> in the last command with <code>start</code> . Or to delete the container entirely use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rm amazing_jepsen</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Note:</strong> Removing a container is permanent, once it’s deleted it’s gone.</p>
-</blockquote>
-<p>So the container from before is now gone. The Ubuntu image we have been using is still present on the system however.</p>
-<p>To see images that have been downloaded and still present enter:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker images</span><br></pre></td></tr></table></figure>
-<p>Which will give a similar output to:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</span><br><span class="line">ubuntu              14.04               89d5d8e8bafb        13 days ago         187.9 MB</span><br><span class="line">hello-world         latest              0a6ba66e537a        9 weeks ago         960 B</span><br><span class="line">docker/whalesay     latest              ded5e192a685        7 months ago        247 MB</span><br></pre></td></tr></table></figure>
-<p>To delete and remove images use this command with the image name as a parameter e.g.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi ubuntu:14.04</span><br></pre></td></tr></table></figure>
-<p>Autocomplete works for the image names and multiple names can be passed as parameters.</p>
-<p>A successful deletion gives output similar to:</p>
-<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Untagged: ubuntu:14.04</span><br><span class="line">Deleted: 89d5d8e8bafb6e279fa70ea444260fa61cc7c5c7d93eff51002005c54a49c918</span><br><span class="line">Deleted: e24428725dd6f8e354a0c6080570f90d40e9e963c6878144291c6ba9fd39b25f</span><br><span class="line">Deleted: 1796d1c62d0c3bad665cc4fbe4b6a051e26c22f14aa5e0e2490e528783764ca0</span><br><span class="line">Deleted: 0bf0561619131d3dc0432a2b40a9438bd48f4a84e89ff128cc5147a089c114e4</span><br></pre></td></tr></table></figure>
-<p>If an error message is returned claiming another container is using the image as a reference <strong>and</strong> you know this is not true.</p>
-<p>Try using the <code>-f</code> force option with the <code>rmi</code> removal command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rmi <span class="_">-f</span> ubuntu:14.04</span><br></pre></td></tr></table></figure>
-<p>With this we complete the cycle of downloading, creating, and removing an image and its containers.</p>
-<hr>
-<p>Docker is an amazing step forward in the world of virtualisation and resource efficiency, but these examples here are for demonstration purposes only, and are meant to teach the basics. As much as possible try to to think of how this concept could benefit a large hosting provider, or business that serves web applications to many.</p>
-<p>Post number two on Docker goes into more detail on administering and handling containers. With some examples of real services and apps running under Docker. </p>
-<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="https://docs.docker.com/" target="_blank" rel="external">Official Docker Documentation</a> – Is updated and maintained pretty well.</li>
-<li><a href="https://docs.docker.com/engine/userguide/" target="_blank" rel="external">Official Docker User Guide</a> – The main source of inspiration and command content for this post.</li>
-<li><a href="https://github.com/docker/docker" target="_blank" rel="external">Docker GitHub Project Page</a> – The Readme contains some very clear explanations of why Docker is such an asset.</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2015/12/23/installing-running-docker/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/01/07/docker-administration-applications/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/3/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/5/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

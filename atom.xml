@@ -146,7 +146,7 @@
     <link href="http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/"/>
     <id>http://www.tricksofthetrades.net/2018/05/19/ansible-fail2ban-playbook/</id>
     <published>2018-05-18T23:00:00.000Z</published>
-    <updated>2018-05-21T15:16:03.263Z</updated>
+    <updated>2018-05-31T12:11:25.424Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.imgur.com/klPwJ5E.png" alt="Fail2ban Logo with Ansible Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>This is a very short post covering a rudimentary Ansible playbook (if you can even call it one) that contains tasks for installing Fail2ban in a straightforward manner. It’s intended as a follow on from the manual set of instructions/commands most people are familiar with, which I covered in this other post: </p>
@@ -190,6 +190,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ansible-playbook -u scarlz -K fail2ban-playbook.yml</span><br></pre></td></tr></table></figure>
 <p>These few steps are for all intents and purposes everything that’s needed in a basic working install. For a less simplistic approach to installing Fail2ban, take a look at it again through the perspective of a more complex Ansible role instead:</p>
 <blockquote>
+<p><a href="https://www.tricksofthetrades.net/2018/05/23/ansible-fail2ban-role/">Installing Fail2ban with an Ansible Role on Ubuntu 18.04 (Bionic Beaver)</a> </p>
 </blockquote>
 <p>This was very short and terse due to its simplicity, but thanks for reading. </p>
 <hr>
@@ -1917,9 +1918,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
-    
       <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
+    
+      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
     
   </entry>
   

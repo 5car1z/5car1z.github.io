@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T15:56:58.846Z</updated>
+  <updated>2018-08-31T16:15:30.349Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T15:56:58.846Z</updated>
+    <updated>2018-08-31T16:15:30.349Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
@@ -67,7 +67,7 @@
 <h2 id="b-—-Arch-Linux"><a href="#b-—-Arch-Linux" class="headerlink" title="b) — Arch Linux"></a>b) — Arch Linux</h2><p>This is simpler than some of the other options as it’s available through ‘Pacman’.</p>
 <p>Here it is on the Arch Linux website’s package index, if you want to take a look at it:</p>
 <blockquote>
-<p><a href="https://www.archlinux.org/packages/community/x86_64/exa/" target="_blank" rel="external">https://www.archlinux.org/ - Exa Package</a></p>
+<p><strong>Note:</strong> <a href="https://www.archlinux.org/packages/community/x86_64/exa/" target="_blank" rel="external">https://www.archlinux.org/ - Exa Package</a></p>
 </blockquote>
 <p>Ensure your Pacman package database is synced and up to date.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -Syy</span><br></pre></td></tr></table></figure>

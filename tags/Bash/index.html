@@ -9,16 +9,16 @@
 <p><img src="https://i.gyazo.com/f9454f36a26d7bb1469bdff9b7d8e121.png" alt="Features Screenshot"></p>
 <p>There are a fair few other plus points not encapsulated here, but hopefully this gives you an impression of what Exa provides, and hopefully even the incentive to try it out.  </p>
 <hr>
-<h1 id="1-—-How-to-Install-Exa"><a href="#1-—-How-to-Install-Exa" class="headerlink" title="1 — How to Install Exa"></a>1 — How to Install Exa</h1><p>There are three methods covered: Debian and Ubuntu based binary installation, Arch Linux package installation incl. a helper recommendation, and then a walk-through for the native ‘Rust/Cargo’ package manger. </p>
+<h1 id="1-—-How-to-Install-Exa"><a href="#1-—-How-to-Install-Exa" class="headerlink" title="1 — How to Install Exa"></a>1 — How to Install Exa</h1><p>There are three methods covered: Debian and Ubuntu based binary installation, Arch Linux package installation incl. a helper recommendation, and then a walk-through for the native ‘Rust/Cargo’ package manager. </p>
 <p>Methods not included are <a href="https://the.exa.website/install/source" target="_blank" rel="external">compiling from source using the Git repository</a> and the various <a href="https://the.exa.website/install/linux" target="_blank" rel="external">other OS package managers in use like Fedora, Gentoo, OpenSUSE, etc.</a> </p>
 <h2 id="a-—-Debian-Ubuntu"><a href="#a-—-Debian-Ubuntu" class="headerlink" title="a) — Debian/Ubuntu"></a>a) — Debian/Ubuntu</h2><blockquote>
 <p><strong>Note:</strong> “Support for more package managers (including .debs and Snaps) is coming soon!”</p>
 </blockquote>
-<p>There’s no official package manager support in this case, so the method here in this section is mostly manual. It’s probably the easiest and quickest in the circumstance. </p>
+<p>There’s no official package manager support in this case, so the method here in this section is mostly manual. It’s probably the easiest and quickest however given the circumstances. </p>
 <p>Should this option not appeal to your sensibilities try the ‘Rust/Cargo’ route lower down instead. </p>
 <p>Start off by making your user’s home directory the active directory. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
-<p><a href="https://github.com/ogham/exa/releases" target="_blank" rel="external">Grab the latest version of the Exa binary from GitHub</a>, the numbers in the link below may differ as newer versions are released, so you may want to update the numbers and or filename below.</p>
+<p><a href="https://github.com/ogham/exa/releases" target="_blank" rel="external">Grab the latest version of the Exa binary from GitHub</a>, the URL link below may differ as newer versions of Exa are released, so you may want to update the numbers and or filename below before executing it.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/ogham/exa/releases/download/v0.8.0/exa-linux-x86_64-0.8.0.zip</span><br></pre></td></tr></table></figure>
 <p>Install the <code>unzip</code> program if you don’t have it already. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>

@@ -28,15 +28,15 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv exa-linux-x86_64 /usr/<span class="built_in">local</span>/bin/exa</span><br></pre></td></tr></table></figure>
 <p>Remove the zipped archive file we downloaded as it’s from here on largely redundant. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rm exa-linux-x86_64-0.8.0.zip</span><br></pre></td></tr></table></figure>
-<p>Exa will run and work as intended now. </p>
+<p>Exa will run and work as intended from here on out!</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ exa --long --header</span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
-<p>Due to the fact we’re doing this manually it’s necessary to add the <em>manpage</em> for Exa too, which is definitely worth the extra effort. </p>
-<p>Acquire the manpage in question.</p>
+<p>Due to the fact we’re doing this ‘manually’ it’s necessary to add the <em>manpage</em> for Exa too, which is definitely worth the extra effort. </p>
+<p>Acquire the page in question from here:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://raw.githubusercontent.com/ogham/exa/master/contrib/man/exa.1</span><br></pre></td></tr></table></figure>
 <p>Move the manpage file into the system directory for application manpages. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv exa.1 /usr/share/man/man1/</span><br></pre></td></tr></table></figure>
-<p>See the manpage and verify it’s accessible like you would normally:</p>
+<p>View the manpage and verify it’s accessible, like you would any other manpage:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ man exa</span><br></pre></td></tr></table></figure>
 <p>We’re all done! </p>
 <p>Examine the information in this manual to your heart’s content before jumping down to section <strong>2 — Installing Exa Bash Auto-completion</strong>.</p>

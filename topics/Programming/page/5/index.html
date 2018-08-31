@@ -1,4 +1,202 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-12-23T00:00:00.000Z" class="post__time">December 23, 2015</time><h1 class="post__title"><a href="/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Programming - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2016-01-07T00:00:00.000Z" class="post__time">January 7, 2016</time><h1 class="post__title"><a href="/2016/01/07/docker-administration-applications/">Docker - Administration and Container Applications (2)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo Image"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>In this post we run a python program in a Docker container sourced from the user guide. Look at the various commands that come into play when administering containers, and then briefly setup some real world applications with Docker. </p>
+<p>This will be the second post on Docker following on from <a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a>. If you’re brand new to Docker then the first post linked helps to introduce some of its concepts and theory to better understand the utilities it can provide. </p>
+<a id="more"></a>
+<hr>
+<h1 id="1-–-Example-Container-Application"><a href="#1-–-Example-Container-Application" class="headerlink" title="1 – Example Container Application"></a>1 – Example Container Application</h1><p>Pull this training image from the Docker user guide:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -P training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>The <code>-d</code> option tells Docker to daemonise and run the container in the background. <code>-P</code> maps any required network ports inside the container to your host, and the Python application inside is also executed at the end. </p>
+<p>Run the Docker process command to see running container details:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker ps</span><br></pre></td></tr></table></figure>
+<p>The “webapp” image container shows network ports that have been mapped as part of the image configuration:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                     NAMES</span><br><span class="line">b8a16d8e94cc        training/webapp     <span class="string">"python app.py"</span>     2 minutes ago      Up 2 minutes       0.0.0.0:32768-&gt;5000/tcp   nostalgic_knuth</span><br></pre></td></tr></table></figure>
+<p>In my example here port <code>5000</code> (the default Python Flask port) inside the container has been exposed on the host ephemeral TCP port <code>32768</code> . <em>Ephemeral</em> port ranges are temporary short lived port numbers which typically range anywhere from 32768 to 61000. These are dynamically used and are never set in stone. </p>
+<p>The Docker image decides all this for us, but as an aside it’s also possible to manually sets the ports to use by a container. </p>
+<p>This command assigns port <code>80</code> on the local host to port <code>5000</code> inside the container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run <span class="_">-d</span> -p 80:5000 training/webapp python app.py</span><br></pre></td></tr></table></figure>
+<p>It’s important never to map ports in a 1:1 fashion i.e. <code>5000-&gt;5000/tcp</code> as if we needed multiple containers running the same image, the traffic will use the same host port (<code>5000</code>) and only be accessible one instance at a time. </p>
+<p>If you like you can check the original Python docker container’s port is working by accessing:</p>
+<p><a href="http://localhost:32768" target="_blank" rel="external">http://localhost:32768</a> or <a href="http://your.hosts.ip.address:32768" target="_blank" rel="external">http://your.hosts.ip.address:32768</a> in a browser.</p>
+<p>Where the port number <code>32768</code> is set to your own example container’s ephemeral port. </p>
+<p>Another way to see this example containers image’s port configuration is:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Showing:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">32768-&gt;5000/tcp</span><br></pre></td></tr></table></figure>
+<p>To see the front facing host machine’s mapped ports individually add the number of the internal port to the end of the command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt; 5000</span><br></pre></td></tr></table></figure>
+<p>Which shows:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0.0.0.0:32768</span><br></pre></td></tr></table></figure>
+<p>Now we have this example container up and running we’ll go through multiple administrative commands that are important for when working with containers. These commands if you wish can be tested with the example container, or even better with multiple instances of it. Each and ever command shown may not be completely applicable however. </p>
+<hr>
+<h1 id="2-–-Administrative-Commands"><a href="#2-–-Administrative-Commands" class="headerlink" title="2 – Administrative Commands"></a>2 – Administrative Commands</h1><p>Here’s a list of select Docker commands to refer to when playing around with or monitoring containers. There are even more to check out as this list is by no means exhaustive.</p>
+<p>A few core commands were already mentioned in <a href="http://www.tricksofthetrades.net/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a>  so won’t appear here. </p>
+<p>The first command allows you to <a href="https://docs.docker.com/engine/reference/commandline/attach/" target="_blank" rel="external">attach</a> to a running container interactively using the container’s ID or name:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker attach &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>You can detach again from the container and leave it running with <code>CTRL</code> + <code>P</code> or <code>CTRL</code> + <code>Q</code> for a quiet exit.</p>
+<p>To list the changed files and directories in a container᾿s filesystem use <a href="https://docs.docker.com/engine/reference/commandline/diff/" target="_blank" rel="external">diff</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker diff &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Where in the output the three “event types” are tagged as either:</p>
+<ul>
+<li><code>A</code> - Add</li>
+<li><code>D</code> - Delete</li>
+<li><code>C</code> - Change</li>
+</ul>
+<p>For real-time container and image activity begin a feed of <a href="https://docs.docker.com/engine/reference/commandline/events/" target="_blank" rel="external">event</a> output with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker events</span><br></pre></td></tr></table></figure>
+<p>The <a href="https://docs.docker.com/engine/reference/commandline/exec/" target="_blank" rel="external">exec</a> command runs a command of your choosing inside a container without dropping you down into a shell inside the container.</p>
+<p>This example creates a container named <code>ubuntu_bash</code> and starts a Bash session that runs the <code>touch</code> command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">exec</span> <span class="_">-d</span> ubuntu_bash touch /tmp/<span class="built_in">exec</span>Works</span><br></pre></td></tr></table></figure>
+<p>Backing up a containers <strong>internal</strong> file-system as a tar archive is carried out using the “<a href="https://docs.docker.com/engine/reference/commandline/export/" target="_blank" rel="external">export</a>“ command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">export</span> &lt;container-name&gt; &gt; backup-archive.tar</span><br></pre></td></tr></table></figure>
+<p>Show the internal <a href="https://docs.docker.com/engine/reference/commandline/history/" target="_blank" rel="external">history</a> of an image with human readable <code>-H</code> values:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">history</span> -H &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>To display system wide Docker <a href="https://docs.docker.com/engine/reference/commandline/info/" target="_blank" rel="external">info</a> and statistics use: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker -D info</span><br></pre></td></tr></table></figure>
+<p>Return low-level information on a container or image using <a href="https://docs.docker.com/engine/reference/commandline/inspect/" target="_blank" rel="external">inspect</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect</span><br></pre></td></tr></table></figure>
+<p>You can filter with the <code>inspect</code> command by adding the parameters described on the previously linked page.</p>
+<p>Use <code>SIGKILL</code> to <a href="https://docs.docker.com/engine/reference/commandline/kill/" target="_blank" rel="external">kill</a> a running container, caution as usual is advised with this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker <span class="built_in">kill</span> &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p><a href="https://docs.docker.com/engine/reference/commandline/pause/" target="_blank" rel="external">Pause</a> and <a href="https://docs.docker.com/engine/reference/commandline/unpause/" target="_blank" rel="external">unpause</a> all running processes in a Docker container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ docker pause</span><br><span class="line">$ docker unpause</span><br></pre></td></tr></table></figure>
+<p>If the auto-generated names are not to your taste rename containers like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker rename &lt;container-name&gt; &lt;new-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Alternatively when first creating/running a container <code>--name</code> sets the name from the onset:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; <span class="_">-d</span> &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Enter a real-time live feed of one or more containers resource usage <a href="https://docs.docker.com/engine/reference/commandline/stats/" target="_blank" rel="external">stats</a>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker stats &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Docker has its own <a href="https://docs.docker.com/engine/reference/commandline/top/" target="_blank" rel="external">top</a> command for containers, to see the running processes inside:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker top &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>That’s all for these. Some real world examples of running images from the official Docker Hub repositories are now covered briefly to serve as realistic examples for how you might want to use Docker and its containerisation. </p>
+<p>Be mindful that these are not walk-throughs on fully setting up each service, but general starting points for each.</p>
+<hr>
+<h1 id="3-–-Ghost-Image-Container"><a href="#3-–-Ghost-Image-Container" class="headerlink" title="3 – Ghost Image Container"></a>3 – Ghost Image Container</h1><blockquote>
+<p><strong>“Ghost is a free and open source blogging platform written in JavaScript.”</strong></p>
+</blockquote>
+<p>To pull the image itself:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull ghost</span><br></pre></td></tr></table></figure>
+<p>To run a basic Ghost instance named <code>ghost-blog-name</code> on the mapped port <code>2368</code> use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -p 8080:2368 <span class="_">-d</span> ghost</span><br></pre></td></tr></table></figure>
+<p>Then access the blog via <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> or <a href="http://your.hosts.ip.address:8080" target="_blank" rel="external">http://your.hosts.ip.address:8080</a> in a browser.</p>
+<p><img src="http://i.imgur.com/1umv5BN.png" alt="Ghost Default Blog Image"></p>
+<p>The image can also be pointed to existing Ghost content on your local host:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -v /path/to/ghost/blog:/var/lib/ghost ghost</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://hub.docker.com/_/ghost/" target="_blank" rel="external">Docker Hub - Ghost</a></p>
+</blockquote>
+<hr>
+<h1 id="4-–-irssi-Image-Container"><a href="#4-–-irssi-Image-Container" class="headerlink" title="4 – irssi Image Container"></a>4 – irssi Image Container</h1><blockquote>
+<p><strong>“irssi is a terminal based IRC client for UNIX systems.”</strong></p>
+</blockquote>
+<p>I’m not sure about the benefits of running your irssi client through Docker but to serve as another example we’ll go through the Docker Hub provided setup process:</p>
+<p>Create an interactive shell session in a new container named whatever you choose whilst setting an environment variable named <code>TERM</code> that is retrieved from the host. The user ID is set with <code>-u</code> and group ID is set with the <code>-g</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; <span class="_">-e</span> TERM -u $(id -u):$(id -g) \</span><br></pre></td></tr></table></figure>
+<p>Then stop the log driver to avoid storing “useless interactive terminal data”:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; --log-driver=none \</span><br></pre></td></tr></table></figure>
+<p>Mount and bind the hosts <code>/.irssi</code> config home directory to the internal container equivalent: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; -v <span class="variable">$HOME</span>/.irssi:/home/user/.irssi:ro \</span><br></pre></td></tr></table></figure>
+<p>Mount and bind the hosts <code>/localtime</code> directory to the internal container equivalent: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; -v /etc/localtime:/etc/localtime:ro \</span><br></pre></td></tr></table></figure>
+<p>Pull down and apply all the previous commands to the <code>irssi</code> image from Docker Hub:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&gt; irssi</span><br></pre></td></tr></table></figure>
+<p>As everyone who uses irssi has their own configuration for the program this image does not come with any provided pre-sets. So you have to set this up yourself. Other than this you are dropped into the irssi session within the new container.</p>
+<p><img src="http://i.imgur.com/phsQdD0.png" alt="irssi Containerised Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/irssi/" target="_blank" rel="external">Docker Hub - irssi</a></p>
+</blockquote>
+<hr>
+<h1 id="5-–-MongoDB-Image-Container"><a href="#5-–-MongoDB-Image-Container" class="headerlink" title="5 – MongoDB Image Container"></a>5 – MongoDB Image Container</h1><blockquote>
+<p><strong>“MongoDB document databases provide high availability and easy scalability.”</strong></p>
+</blockquote>
+<p>The standard command to pull the image and container is one we’re familiar with by now:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;mongo-container-name&gt; <span class="_">-d</span> mongo</span><br></pre></td></tr></table></figure>
+<p>This image is configured to expose port <strong>27017</strong> (Mongo’s default port), so linking other containers to it will make it automatically available. </p>
+<p>In brief this is how to link a new container to a Mongo container named <code>mongo-container-name</code>. The image at the end is the application/service the new container will run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;new-container-name&gt; --link &lt;mongo-container-name&gt;:mongo <span class="_">-d</span> &lt;image-name&gt;</span><br></pre></td></tr></table></figure>
+<p>Using <code>inspect</code> with <code>grep</code> shows the link:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker inspect nginx-container | grep -i -A1 <span class="string">"links"</span></span><br></pre></td></tr></table></figure>
+<p>With the output in my case being:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"Links"</span>: [</span><br><span class="line">            <span class="string">"/mongo-container:/nginx-container/mongo"</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><a href="https://hub.docker.com/_/mongo/" target="_blank" rel="external">Docker Hub - MongoDB</a></p>
+</blockquote>
+<hr>
+<h1 id="6-–-NGINX-Image-Container"><a href="#6-–-NGINX-Image-Container" class="headerlink" title="6 – NGINX Image Container"></a>6 – NGINX Image Container</h1><blockquote>
+<p><strong>“Nginx (pronounced “engine-x”) is an open source reverse proxy server for HTTP, HTTPS, SMTP, POP3, and IMAP protocols, as well as a load balancer, HTTP cache, and a web server (origin server).”</strong></p>
+</blockquote>
+<p>As usual like with all these images to download/pull:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker pull nginx</span><br></pre></td></tr></table></figure>
+<p>A basic example is given of some static HTML content served from a directory (<code>~/static-content-dir</code>) that has been mounted onto the NGINX hosting directory within the new container: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -v ~/static-content-dir:/usr/share/nginx/html:ro -P <span class="_">-d</span> nginx</span><br></pre></td></tr></table></figure>
+<p>Whichever port is auto-assigned to the NGINX container can be used to access the static HTML content.</p>
+<p>Find out the port number using either <code>docker ps</code> or:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker port &lt;container-name&gt;</span><br></pre></td></tr></table></figure>
+<p>For our purpose here we want the second line’s port which in my case is <code>327773</code> - as shown:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">443/tcp -&gt; 0.0.0.0:32772</span><br><span class="line">80/tcp -&gt; 0.0.0.0:32773</span><br></pre></td></tr></table></figure>
+<p><a href="http://localhost:32773" target="_blank" rel="external">http://localhost:32773</a> or <a href="http://your.hosts.ip.address:32773" target="_blank" rel="external">http://your.hosts.ip.address:32773</a> in a browser on the localhost now returns:</p>
+<p><img src="http://i.imgur.com/eB7yWCi.png" alt="32773 Port Image"></p>
+<p>The same idea but with a <code>Dockerfile</code> is better, one that is located in the directory containing our static HTML content: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/static-content-dir/Dockerfile</span><br></pre></td></tr></table></figure>
+<p>Type in:</p>
+<figure class="highlight bash"><figcaption><span>~/static-content-dir/Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM nginx</span><br><span class="line">COPY . /usr/share/nginx/html</span><br></pre></td></tr></table></figure>
+<p>Then build a new image with the <code>Dockerfile</code> and give it a suitable name; <code>nginx-custom-image</code> is what I’m using for this example:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t nginx-custom-image ~/static-content-dir/</span><br></pre></td></tr></table></figure>
+<p>If this is successful output in this form is given:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Sending build context to Docker daemon 6.372 MB</span><br><span class="line">Step 1 : FROM nginx</span><br><span class="line"> ---&gt; 5328fdfe9b8e</span><br><span class="line">Step 2 : COPY . /usr/share/nginx/html</span><br><span class="line"> ---&gt; a4bf297e4dcc</span><br><span class="line">Removing intermediate container 7a213493723d</span><br><span class="line">Successfully built a4bf297e4dcc</span><br></pre></td></tr></table></figure>
+<p>All that’s left is to run the custom built image, this time with a more typical, user provided port number:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -p 8080:80 <span class="_">-d</span> nginx-custom-image</span><br></pre></td></tr></table></figure>
+<p>Again accessing <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a> or <a href="http://your.hosts.ip.address:8080" target="_blank" rel="external">http://your.hosts.ip.address:8080</a> in a browser on the localhost shows the static HTML web pages:</p>
+<p><img src="http://i.imgur.com/KOwae6N.png" alt="8080 Port Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/nginx/" target="_blank" rel="external">Docker Hub - NGINX</a></p>
+</blockquote>
+<hr>
+<h1 id="7-–-Apache-httpd-2-4-Image-Container"><a href="#7-–-Apache-httpd-2-4-Image-Container" class="headerlink" title="7 – Apache httpd (2.4) Image Container"></a>7 – Apache httpd (2.4) Image Container</h1><p>To serve static HTML content in a directory named <code>static-content-dir</code> on port <code>32775</code> of the local host machine we can use:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -v ~/static-content-dir:/usr/<span class="built_in">local</span>/apache2/htdocs/ -p 32755:80 <span class="_">-d</span> httpd:2.4</span><br></pre></td></tr></table></figure>
+<p>Visiting <a href="http://localhost:32755" target="_blank" rel="external">http://localhost:32755</a> or <a href="http://your.hosts.ip.address:32755" target="_blank" rel="external">http://your.hosts.ip.address:32755</a> in a browser on the localhost then returns:</p>
+<p><img src="http://i.imgur.com/2TuGYPe.png" alt="Port 32755 Image"></p>
+<p>With a Dockerfile for configuration, custom setups can be applied. Create the <code>Dockerfile</code> in the project directory where the static content is hosted from:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/static-content-dir/Dockerfile</span><br></pre></td></tr></table></figure>
+<p>Add lines like the below, where line 2 copies a httpd config file from the current working directory, to the internal container’s version. And line 3 copies the entirety of the current working directory (the static HTML files) to the Apache container’s web hosting directory:</p>
+<figure class="highlight bash"><figcaption><span>~/static-content-dir/Dockerfile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">FROM httpd:2.4</span><br><span class="line">COPY ./my-httpd.conf /usr/<span class="built_in">local</span>/apache2/conf/httpd.conf</span><br><span class="line">COPY . /usr/<span class="built_in">local</span>/apache2/htdocs/</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>Note:</strong> If the <code>my-httpd:2.4</code> configuration file is missing, the next command to build the image will fail. </p>
+</blockquote>
+<p>Build the new custom Apache image defined in the <code>Dockerfile</code> and give it the name <code>custom-apache-image</code> which you can of course change if you like:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker build -t custom-apache-image ~/static-content-dir/</span><br></pre></td></tr></table></figure>
+<p>Successful output for the image build sequence looks like this (or similar): </p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Sending build context to Docker daemon 6.372 MB</span><br><span class="line">Step 1 : FROM httpd:2.4</span><br><span class="line"> ---&gt; 1a49ac676c05</span><br><span class="line">Step 2 : COPY . /usr/<span class="built_in">local</span>/apache2/htdocs/</span><br><span class="line"> ---&gt; f7052ffe8190</span><br><span class="line">Removing intermediate container 53311d3ac0a5</span><br><span class="line">Successfully built f7052ffe8190</span><br></pre></td></tr></table></figure>
+<p>Lastly, start and run a new container using the custom generated image on port <code>32756</code> of the localhost machine:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run -it --name &lt;container-name&gt; -p 32756:80 <span class="_">-d</span> custom-apache-image</span><br></pre></td></tr></table></figure>
+<p>Visiting <a href="http://localhost:32756" target="_blank" rel="external">http://localhost:32756</a> or <a href="http://your.hosts.ip.address:32756" target="_blank" rel="external">http://your.hosts.ip.address:32756</a> in a browser on the localhost now returns:</p>
+<p><img src="http://i.imgur.com/92R7BYV.png" alt="Port 32756 Image"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/httpd/" target="_blank" rel="external">Docker Hub - httpd</a></p>
+</blockquote>
+<hr>
+<h1 id="8-–-Jenkins-Image-Container"><a href="#8-–-Jenkins-Image-Container" class="headerlink" title="8 – Jenkins Image Container"></a>8 – Jenkins Image Container</h1><p>Create a new directory in your user’s home directory for the Jenkins config files. This will be mounted and mapped to the container’s equivalent configuration space: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir ~/jenkins_home</span><br></pre></td></tr></table></figure>
+<p>Run the Jenkins image mapping the two internal ports to ephermal ports on the host side, whilst syncing the config directory we just created to the new container:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker run --name &lt;container-name&gt; -p 32790:8080 -p 32791:50000 -v ~/jenkins_home:/var/jenkins_home <span class="_">-d</span> jenkins</span><br></pre></td></tr></table></figure>
+<p>Jenkins can be seen at the first port number we mapped. In my example it was  <code>32790</code> meaning a URL of  <a href="http://localhost:32790" target="_blank" rel="external">http://localhost:32790</a> or <a href="http://your.hosts.ip.address:32790" target="_blank" rel="external">http://your.hosts.ip.address:32790</a> in a browser takes us to the Jenkins application page:</p>
+<p><img src="http://i.imgur.com/KMy5xOK.png" alt="Jenkins on Port 32790"></p>
+<blockquote>
+<p><a href="https://hub.docker.com/_/jenkins/" target="_blank" rel="external">Docker Hub - Jenkins</a></p>
+</blockquote>
+<hr>
+<p>Remember that there are unofficial image repositories to be found on Docker Hub too, and potentially elsewhere when made available. </p>
+<p>The third post on Docker talks a bit more about administration with Docker. As well as details based around how to network containers together. </p>
+<p><a href="http://www.tricksofthetrades.net/trades/">Links to subsequent Docker posts can be found on the Trades page.</a></p>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://docs.docker.com/engine/userguide/usingdocker/" target="_blank" rel="external">Docker Docs - Run a Simple Application</a> – This is where the example of the Python program containerised comes from.  </li>
+<li><a href="https://docs.docker.com/engine/reference/commandline/cli/" target="_blank" rel="external">Docker Docs - Use the Docker Command Line</a> – The administrative commands in their entirety are found here on the left of the page. </li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Docker/" class="post__tag__link">Docker</a></li><li class="post__tag__item"><a href="/tags/Virtualisation/" class="post__tag__link">Virtualisation</a></li><li class="post__tag__item"><a href="/tags/Containers/" class="post__tag__link">Containers</a></li></ul><a href="/2016/01/07/docker-administration-applications/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-12-23T00:00:00.000Z" class="post__time">December 23, 2015</time><h1 class="post__title"><a href="/2015/12/23/installing-running-docker/">Docker - Installing and Running (1)</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/poo8Rai.png" alt="Docker Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Docker is an open-source project that enables a Linux application along with its dependencies to be packaged as a <em>container</em>. This helps enable flexibility and portability around where an application can be run and served. These dedicated low level “containers” also improve performance and overhead through using resource isolation features of the Linux kernel. On a large scale level its strength comes from the automation and deployment of software applications and services.</p>
 <p>This post covers the fundamentals of Docker and aims to demonstrate how to understand and work with the basics using the Linux command line.</p>
 <a id="more"></a>
@@ -621,151 +819,7 @@
 <p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
 </blockquote>
 <p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/Java/" class="post__tag__link">Java</a></li></ul><a href="/2015/10/05/minecraft-server-debian/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-10-01T23:00:00.000Z" class="post__time">October 2, 2015</time><h1 class="post__title"><a href="/2015/10/02/terraria-tdsm-server/">Installing TDSM Terraria Server Mod on Debian 8</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/eHeujd5.png" alt="Debian Logo"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>TDSM is one of several open-source server mods available for the online action-adventure game Terraria. This modification is developed to allow the Terraria server software to be run on Linux like operating systems, and opens up many other potential benefits for players using the server. </p>
-<ul>
-<li>External plugin support. </li>
-<li>Administrative permissions system. </li>
-<li>MySQL &amp; SQLite databases.</li>
-<li>New &amp; custom in-game commands.</li>
-<li>Remote console administration. </li>
-</ul>
-<p>It’s also updated relatively quickly by the maintainers after a new Terraria client version is released.</p>
-<blockquote>
-<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod" target="_blank" rel="external">TDSM Github Project Page</a></p>
-</blockquote>
-<a id="more"></a>
-<hr>
-<h1 id="Requirements"><a href="#Requirements" class="headerlink" title="Requirements"></a>Requirements</h1><ul>
-<li><p>A Terraria game client for connection to the server after installation. </p>
-</li>
-<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM. </p>
-</li>
-<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM. </p>
-</li>
-<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM. </p>
-</li>
-</ul>
-<hr>
-<h1 id="1-–-Update-System-Packages"><a href="#1-–-Update-System-Packages" class="headerlink" title="1 – Update System Packages"></a>1 – Update System Packages</h1><p>Ensure the packages are up to date on the system with the command: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update &amp;&amp; sudo apt-get upgrade</span><br></pre></td></tr></table></figure>
-<p>Confirm the action by entering <code>y</code> for any prompts in this step. </p>
-<hr>
-<h1 id="2-–-Install-Screen"><a href="#2-–-Install-Screen" class="headerlink" title="2 – Install Screen"></a>2 – Install Screen</h1><p>Screen will be used to keep the TDSM server running in a persistent shell session, and allows us to disconnect or re-attach to the session when needed. </p>
-<p>Install Screen with the command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install screen</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="3-–-Install-Mono"><a href="#3-–-Install-Mono" class="headerlink" title="3 – Install Mono"></a>3 – Install Mono</h1><p>Mono is the open source implementation of Microsoft’s .NET Framework, and we need it to successfully run and start the TDSM server later on.</p>
-<p>Install Mono and all its packages with the command: </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install mono-complete</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="4-–-Install-Unzip"><a href="#4-–-Install-Unzip" class="headerlink" title="4 – Install Unzip"></a>4 – Install Unzip</h1><p>The server software comes packaged in a <code>.zip</code> file. So install the <em>unzip</em> package which we’ll use in the next step, to extract the files. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="5-–-Add-Swap-Space"><a href="#5-–-Add-Swap-Space" class="headerlink" title="5 – Add Swap Space"></a>5 – Add Swap Space</h1><p>The server mod requires adequate swap space to be allocated by the system. Otherwise this can result in crashing and instability with TDSM whilst it is running. </p>
-<p>Create the base swap file:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo fallocate <span class="_">-l</span> &lt;^&gt;4G&lt;^&gt; /swapfile</span><br></pre></td></tr></table></figure>
-<p>Give it the correct permissions it needs:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod 600 /swapfile</span><br></pre></td></tr></table></figure>
-<p>Have the system build the file:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mkswap /swapfile</span><br></pre></td></tr></table></figure>
-<p>Then enable it with the <code>swapon</code> command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo swapon /swapfile</span><br></pre></td></tr></table></figure>
-<p>To automate the mounting of the swap file on boot we need to include its details into the <code>/etc/fstab</code> file.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo nano /etc/fstab</span><br></pre></td></tr></table></figure>
-<p>Insert this top line show in the next code snippet into the file.</p>
-<figure class="highlight bash"><figcaption><span>/etc/fstab</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/swapfile   none    swap    sw    0   0</span><br></pre></td></tr></table></figure>
-<hr>
-<h1 id="6-–-Download-the-TDSM-Server-Software"><a href="#6-–-Download-the-TDSM-Server-Software" class="headerlink" title="6 – Download the TDSM Server Software"></a>6 – Download the TDSM Server Software</h1><p>The TDSM server software that we’ll download in this step will be stored and run from your user’s home directory.</p>
-<p>Make sure this is your current working directory by entering:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
-<p>As of writing this tutorial the current TDSM server build release is number: <code>005</code></p>
-<p>For newer versions than the current <code>005</code> release, and to download the most up to date version.<br>You’ll need to change the URL passed to <code>wget</code> in the next code snippet. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/DeathCradle/Terraria<span class="_">-s</span>-Dedicated-Server-Mod/releases/download/Build-5/tdsm-b5.zip</span><br></pre></td></tr></table></figure>
-<p>The TDSM server releases and their file URL’s can be found on the project’s GitHub page:</p>
-<blockquote>
-<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/releases" target="_blank" rel="external">TDSM Releases on Github</a></p>
-</blockquote>
-<hr>
-<h1 id="7-–-Run-the-Terraria-Server-Binary"><a href="#7-–-Run-the-Terraria-Server-Binary" class="headerlink" title="7 – Run the Terraria Server Binary"></a>7 – Run the Terraria Server Binary</h1><p>Next unzip the downloaded archive file and extract the contents into a new folder named <code>tdsm-terraria-server</code> using the <code>-d</code> option:</p>
-<blockquote>
-<p><strong>Note:</strong> The downloaded <code>.zip</code> file name will differ for future release downloads.</p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ unzip tdsm-b5.zip <span class="_">-d</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
-<p>Change into the unpacked <code>tdsm-terraria-server</code> directory with:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> tdsm-terraria-server</span><br></pre></td></tr></table></figure>
-<p>Now to run the server software in it’s most basic form without any arguments or parameters, enter the following command:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ screen mono tdsm.exe</span><br></pre></td></tr></table></figure>
-<p>Note the inclusion of Screen in the last command. This runs the Mono program and server in a separate shell session to our original one.</p>
-<hr>
-<h1 id="8-–-Create-a-New-World"><a href="#8-–-Create-a-New-World" class="headerlink" title="8 – Create a New World"></a>8 – Create a New World</h1><p>The below output (or similar) is seen upon successfully running the server binary in “<strong>Step 7 – Run the Terraria Server Binary</strong>“.</p>
-<p>Type <code>n</code>  and press <code>ENTER</code> to create a new world.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind API build 5lr running on Mono                                                                                                                                                                            ﻿10/2/2015 2:05:20 PM Run&gt; Logging started to file <span class="string">"/home/&lt;username&gt;/src/tdsm-terraria-server/Data/server_20151002_1405.log"</span>.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; Loading plugin from TDSM.Core.dll.</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core build 5lr</span><br><span class="line">10/2/2015 2:05:20 PM Run&gt; TDSM Rebind core enabled</span><br><span class="line">10/2/2015 2:05:21 PM Run&gt; Server state changed to: Initialising</span><br><span class="line">10/2/2015 2:05:23 PM Run&gt; Server state changed to: Starting</span><br><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
-<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> depending upon your preference and suitability of world size. </p>
-<p>The requirements section at the start of this article indicates what world size is suitable for your VPS. </p>
-<p>Here it is again:</p>
-<ul>
-<li><p>For a <strong>small</strong> sized world, a VPS that has at least 1GB RAM.   </p>
-</li>
-<li><p>For a <strong>medium</strong> sized world, a VPS that has at least 1GB RAM.   </p>
-</li>
-<li><p>For a <strong>large</strong> sized world, a VPS that has at least 2GB RAM.   </p>
-</li>
-</ul>
-<blockquote>
-<p><strong>Warning:</strong> Be aware that the larger the world the more memory and CPU your server will need to consume whilst the server is up and running, so be sure to select a suitable world size. </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Small</span><br><span class="line">2       Medium</span><br><span class="line">3       Large</span><br><span class="line"></span><br><span class="line">Choose size:</span><br></pre></td></tr></table></figure>
-<p>Enter <code>1</code> , <code>2</code> , or <code>3</code> again once more depending upon your desired level of in-game difficulty.  </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">1       Normal</span><br><span class="line">2       Expert</span><br><span class="line"></span><br><span class="line">Choose difficulty:</span><br></pre></td></tr></table></figure>
-<p>Now give the new world a suitable name. </p>
-<p>For example purposes we’re calling ours <code>test-tdsm-server</code> in this guide. </p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Enter world name:</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p><strong>Wait for the new world to be generated as it outputs its progress and percentage completion.</strong></p>
-</blockquote>
-<hr>
-<h1 id="9-–-Set-World-Details"><a href="#9-–-Set-World-Details" class="headerlink" title="9 – Set World Details"></a>9 – Set World Details</h1><p>Once the world is created and has finished generating, choose your previously created world by entering <code>1</code> into the prompt:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1   <span class="built_in">test</span>-tdsm-server      norm, crim, exp   Last used: 10/02/2015 10:27 AM</span><br><span class="line"></span><br><span class="line">n               New World</span><br><span class="line">d   &lt;number&gt;    Delete World</span><br><span class="line"></span><br><span class="line">Choose World:</span><br></pre></td></tr></table></figure>
-<p>Provide the world with a <strong>max</strong> number of players that can join the server at any one time. If you are unsure on a value, the default of <code>8</code> is a sensible choice. </p>
-<blockquote>
-<p><strong>Warning:</strong> Once again be aware that the more players the world has connected the more memory and CPU your server will need to consume whilst running. </p>
-</blockquote>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Max players (press enter <span class="keyword">for</span> 8):</span><br></pre></td></tr></table></figure>
-<p>Enter a suitable port the server can transmit on, go for the default choice of <code>7777</code> if you don’t have a specific port you want to use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Terraria Server v1.3.0.8</span><br><span class="line"></span><br><span class="line">Server port (press enter <span class="keyword">for</span> 7777):</span><br></pre></td></tr></table></figure>
-<p>The final two questions are up to you (forwarding and password). Forwarding with <code>iptables</code> is covered in this next section however. </p>
-<blockquote>
-<p><strong>Wait for the server to load as it outputs its progress.</strong></p>
-</blockquote>
-<hr>
-<h1 id="10-–-iptables-Firewall"><a href="#10-–-iptables-Firewall" class="headerlink" title="10 – iptables Firewall"></a>10 – iptables Firewall</h1><p>Now the server is up running you’ll need to de-attach from the currently active screen session with:</p>
-<p><code>CTRL</code> + <code>a</code> then <code>c</code></p>
-<p>If using <code>iptables</code> (or you intend to use it) as a firewall solution on the VPS, then open up the port number you chose in <strong>“ 9 – Set World Details”</strong></p>
-<p>To do this use:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo iptables -A INPUT -p tcp --dport 7777 -j ACCEPT -m comment --comment <span class="string">"allow connections on port 7777 Terraria server"</span></span><br></pre></td></tr></table></figure>
-<p>Replacing <code>7777</code> for your own chosen port number.</p>
-<p>For any other firewall program you may use in its place perform the equivalent port forwarding/opening actions. </p>
-<p>To now connect back to the previous screen session press: </p>
-<p><code>CTRL</code> + <code>a</code> then <code>n</code></p>
-<hr>
-<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>The server itself is now ready and should be open for connections via the Terraria client.</p>
-<p>To learn how to administer, run, and configure the server properly alongside what configuration files it uses, see the Github wiki:</p>
-<blockquote>
-<p><a href="https://github.com/DeathCradle/Terraria-s-Dedicated-Server-Mod/wiki/Installation-and-Running-The-Server" target="_blank" rel="external">TDSM Project Github Wiki</a></p>
-</blockquote>
-<hr>
-<p><strong>More Information</strong></p>
-<ul>
-<li><a href="http://store.steampowered.com/app/105600/" target="_blank" rel="external">Terraria Client on Steam</a> – The client is very small in size and available through Steam. </li>
-<li><a href="http://terraria.gamepedia.com/Mods" target="_blank" rel="external">Terraria Mod Information</a> – Brief explanation of mods for Terraria. </li>
-<li><a href="https://github.com/NyxStudios/TShock" target="_blank" rel="external">TShock Terraria Server Mod</a> – Another mod that may function on Linux/Unix OS, but not one hundred percent supported.</li>
-</ul>
-<blockquote>
-<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
-</blockquote>
-<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
-</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/TDSM/" class="post__tag__link">TDSM</a></li></ul><a href="/2015/10/02/terraria-tdsm-server/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/4/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/6/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Debian/" class="post__tag__link">Debian</a></li><li class="post__tag__item"><a href="/tags/Screen/" class="post__tag__link">Screen</a></li><li class="post__tag__item"><a href="/tags/Java/" class="post__tag__link">Java</a></li></ul><a href="/2015/10/05/minecraft-server-debian/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article></main><footer class="foot"><div class="foot-copy u-fl">&copy; 2018 Scarlz</div><menu class="page-menu u-fr"><li class="page-menu__item"><a title="Previous" href="/topics/Programming/page/4/" class="page-menu__link icon-arrow-left"></a></li><li class="page-menu__item"><a title="Next" href="/topics/Programming/page/6/" class="page-menu__link icon-arrow-right"></a></li></menu></footer><script>(function(h,g,l,k,j,i){j=h.createElement(g),i=h.getElementsByTagName(g)[0],
 j.src="//"+l+".disqus.com/"+k+".js",i.parentNode.insertBefore(j,i)})
 (document,"script","totts","count");
 </script></body></html>

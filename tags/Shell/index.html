@@ -1,4 +1,132 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Shell - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2015-06-13T23:00:00.000Z" class="post__time">June 14, 2015</time><h1 class="post__title"><a href="/2015/06/14/notes-bash-env-variables/">BASH Environment and Shell Variables</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qthCSsn.png" alt="Shell Logo"></p>
+<!DOCTYPE html><html><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="description" content="Linux System Administration"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="alternative" href="/atom.xml" title="C.J. Scarlett" type="application/atom+xml"><link rel="icon" href="/favicon.png"><title>Shell - C.J. Scarlett</title><link rel="stylesheet" href="/css/main.css"><!--[if lt IE 9]><script>(function(a,b){a="abbr article aside audio bdi canvas data datalist details dialog figcaption figure footer header hgroup main mark meter nav output progress section summary template time video".split(" ");for(b=a.length-1;b>=0;b--)document.createElement(a[b])})()</script><![endif]--></head><body><header class="head"><h1 class="head-title u-fl"><a href="/">C.J. Scarlett</a></h1><nav class="head-nav u-fr"><ul class="head-nav__list"><li class="head-nav__item"><a href="/" class="head-nav__link">Home</a></li><li class="head-nav__item"><a href="/topics" class="head-nav__link">Topics</a></li><li class="head-nav__item"><a href="/archives" class="head-nav__link">Archives</a></li><li class="head-nav__item"><a href="/misc" class="head-nav__link">Misc</a></li><li class="head-nav__item"><a href="/about" class="head-nav__link">About</a></li><li class="head-nav__item"><a href="/contact" class="head-nav__link">Contact</a></li></ul></nav></header><main class="main"><article class="post"><header class="post__head"><time datetime="2018-08-29T23:00:00.000Z" class="post__time">August 30, 2018</time><h1 class="post__title"><a href="/2018/08/30/exa-getting-started/">Switching to Exa — &quot;A modern replacement for ls.&quot;</a></h1></header><div class="post__main echo"><p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with  <code>ls</code> on the commandline — aka <em>“list”</em> — but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
+<p>Exa is a modern successor to the list command, designed with modernity in mind and an emphasis on better defaults, native colour support, and awareness of things like metadata, symlinking, and even Git version control. Not to mention it’s lightweight, pretty fast, and comes in one singular binary file. </p>
+<p>This post shows how to install Exa on Debian/Ubuntu and Arch Linux but is primarily for the former. I’m also providing a few aliases you can use to make it more familiar and easier to transition to Exa — should you decide to do so. </p>
+<a id="more"></a>
+<hr>
+<h1 id="What’s-on-Offer"><a href="#What’s-on-Offer" class="headerlink" title="What’s on Offer"></a>What’s on Offer</h1><p>The image at the start of this post shows what Exa looks like, even with minimal to no configuration. As long as you have colour support for your terminal/terminal emulator, all you need to do is install the program and decide which ‘ls-like’ options you want to make use of to display file-system objects. </p>
+<p>The main advantages or “features” that Exa offers over the longstanding <code>ls</code> program are conferred best in these descriptions, <a href="https://the.exa.website/" target="_blank" rel="external">taken from the website</a>:</p>
+<p><img src="https://i.gyazo.com/f9454f36a26d7bb1469bdff9b7d8e121.png" alt="Features Screenshot"></p>
+<p>There are a fair few other plus points not encapsulated here, but hopefully this gives you an impression of how Exa works and appears visually, and hopefully even the incentive the try it out.  </p>
+<hr>
+<h1 id="1-—-How-to-Install-Exa"><a href="#1-—-How-to-Install-Exa" class="headerlink" title="1 — How to Install Exa"></a>1 — How to Install Exa</h1><p>There are three methods covered: Debian and Ubuntu based binary installation, Arch Linux package installation incl. a helper recommendation, and then a walk-through for the native ‘Rust/Cargo’ package manger. </p>
+<p>Methods not included are <a href="https://the.exa.website/install/source" target="_blank" rel="external">compiling from source using the GIt repository</a> and the various <a href="https://the.exa.website/install/linux" target="_blank" rel="external">other OS package managers in use like Fedora, Gentoo, OpenSUSE, etc.</a> </p>
+<h2 id="a-—-Debian-Ubuntu"><a href="#a-—-Debian-Ubuntu" class="headerlink" title="a) — Debian/Ubuntu"></a>a) — Debian/Ubuntu</h2><blockquote>
+<p><strong>Note:</strong> “Support for more package managers (including .debs and Snaps) is coming soon!”</p>
+</blockquote>
+<p>There’s no official package manager support in this case, so the method here in this section is mostly manual. It’s probably the easiest and quickest in the circumstance. </p>
+<p>Should this option not appeal to your sensibilities try the ‘Rust/Cargo’ route lower down instead. </p>
+<p>Start off by making your user’s home directory the active directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~</span><br></pre></td></tr></table></figure>
+<p><a href="https://github.com/ogham/exa/releases" target="_blank" rel="external">Grab the latest version of the Exa binary from GitHub</a>, the numbers in the link below may differ as newer versions are released, so you may want to update the numbers and or filename below.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://github.com/ogham/exa/releases/download/v0.8.0/exa-linux-x86_64-0.8.0.zip</span><br></pre></td></tr></table></figure>
+<p>Install the <code>unzip</code> program if you don’t have it already. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install unzip</span><br></pre></td></tr></table></figure>
+<p>Unzip the downloaded compressed file (remember your filename may differ in the next command).  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ unzip exa-linux-x86_64-0.8.0.zip</span><br></pre></td></tr></table></figure>
+<p>Place this new binary file into an appropriate system location e.g. <code>/usr/local/bin/</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv exa-linux-x86_64 /usr/<span class="built_in">local</span>/bin/exa</span><br></pre></td></tr></table></figure>
+<p>Remove the zipped archive file we downloaded as it’s from here on largely redundant. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ rm exa-linux-x86_64-0.8.0.zip</span><br></pre></td></tr></table></figure>
+<p>Exa will run and work as intended now. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ exa --long --header</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
+<p>Due to the fact we’re doing this manually it’s necessary to add the <em>manpage</em> for Exa too, which is definitely worth the extra effort. </p>
+<p>Acquire the manpage in question.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ wget https://raw.githubusercontent.com/ogham/exa/master/contrib/man/exa.1</span><br></pre></td></tr></table></figure>
+<p>Move the manpage file into the system directory for application manpages. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo mv exa.1 /usr/share/man/man1/</span><br></pre></td></tr></table></figure>
+<p>See the manpage and verify it’s accessible like you would normally:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ man exa</span><br></pre></td></tr></table></figure>
+<p>We’re all done! </p>
+<p>Examine the information in this manual to your heart’s content before jumping down to section <strong>2 — Installing Exa Bash Auto-completion</strong>.</p>
+<h2 id="b-—-Arch-Linux"><a href="#b-—-Arch-Linux" class="headerlink" title="b) — Arch Linux"></a>b) — Arch Linux</h2><p>This is simpler than some of the other options as it’s available through ‘Pacman’.</p>
+<p>Here it is on the Arch User Repository if you want to take a look at it:</p>
+<blockquote>
+<p><a href="https://www.archlinux.org/packages/community/x86_64/exa/" target="_blank" rel="external">Arch User Repository (AUR) - Exa Package</a></p>
+</blockquote>
+<p>Ensure your package database indexes are synced and up to date.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -Syy</span><br></pre></td></tr></table></figure>
+<p>Then update the actual system package repositories. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -Syu</span><br></pre></td></tr></table></figure>
+<p>Now download and install the <code>exa</code> package alongside all of its required dependencies. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pacman -S exa</span><br></pre></td></tr></table></figure>
+<p>Exa will run and work as intended now. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ exa --long --header</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
+<p>For anyone interested in using an <em>AUR helper</em> in place of the regular <code>pacman</code>. I’d recommend <a href="https://github.com/trizen/trizen" target="_blank" rel="external">Trizen</a> as a popular lightweight solution.  </p>
+<p> Jump down to section <strong>“2 — Installing Exa Bash Auto-completion”</strong>.</p>
+<h2 id="c-—-Cargo-Package-Installation"><a href="#c-—-Cargo-Package-Installation" class="headerlink" title="c) — Cargo Package Installation"></a>c) — Cargo Package Installation</h2><p>Start by adding <a href="https://doc.rust-lang.org/cargo/getting-started/installation.html" target="_blank" rel="external"><em>Rust</em></a> and its libraries to your system; the programming language Exa’s written in. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>Sf https://static.rust-lang.org/rustup.sh | sh</span><br></pre></td></tr></table></figure>
+<p>If all goes well (as it should) you’ll receive this confirmation output:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Rust is ready to roll.</span><br></pre></td></tr></table></figure>
+<p>Bring in the following packages if they’re not already present. </p>
+<p>“Cargo” — Rust’s package manager — needs them to successfully compile and install Exa. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install build-essential cmake zlib1g-dev</span><br></pre></td></tr></table></figure>
+<p>It’s now safe to actually install Exa with <code>cargo</code>. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install exa</span><br></pre></td></tr></table></figure>
+<p>In the event of any errors not anticipated here, check the Cargo installation output on your own setup and download/compile any missing packages before running the previous command again.</p>
+<blockquote>
+<p><strong>Note:</strong> Appending <code>--verbose</code> to <code>cargo install exa</code> reveals compilation issues in more detail. </p>
+</blockquote>
+<p>Be aware of this portion of the output messaging, after a successful installation:</p>
+<figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">warning: be sure to add /home/scarlz/.cargo/bin to your PATH to be able to run the installed binaries</span><br></pre></td></tr></table></figure>
+<p>Let’s do this now so we can access and run Exa properly as your Linux user:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.profile</span><br></pre></td></tr></table></figure>
+<p>Add this entire new block of code to the bottom of the file:</p>
+<figure class="highlight bash"><figcaption><span>~/.profile</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># set PATH so it includes user's private cargo bin if it exists</span></span><br><span class="line"><span class="keyword">if</span> [ <span class="_">-d</span> <span class="string">"<span class="variable">$HOME</span>/.cargo/bin"</span> ] ; <span class="keyword">then</span></span><br><span class="line">    PATH=<span class="string">"<span class="variable">$HOME</span>/.cargo/bin:<span class="variable">$PATH</span>"</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+<p>Save the new additions and exit out of the file. </p>
+<p>Once you start a new shell session the Exa binary is now included in your system’s <code>$PATH</code> variable. Meaning Exa can be run from anywhere in the file-system as this user. </p>
+<p>Do this now by running <code>source ~./profile</code> or alternatively by opening a new terminal.</p>
+<p> Exa will run and work as intended from here onward: </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ exa --long --header</span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
+<p>Move straight on to the next section. </p>
+<hr>
+<h1 id="2-—-Installing-Exa-Bash-Auto-completion"><a href="#2-—-Installing-Exa-Bash-Auto-completion" class="headerlink" title="2 — Installing Exa Bash Auto-completion"></a>2 — Installing Exa Bash Auto-completion</h1><p>Bash completion itself should be already in place on most Linux systems but if not can be found (on Debian/Ubuntu) by installing this aptly named package.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install bash-completion</span><br></pre></td></tr></table></figure>
+<p>All that’s required is to download and place the Exa auto-completion file into the global <code>/etc/bash_completion.d</code> directory:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget https://raw.githubusercontent.com/ogham/exa/master/contrib/completions.bash -O /etc/bash_completion.d/exa-completions.bash</span><br></pre></td></tr></table></figure>
+<p>For other shells there’s <a href="https://the.exa.website/install/linux" target="_blank" rel="external">some terse information on where to place autocompletion on the Exa site</a> that may help (lower down on that page). </p>
+<hr>
+<h1 id="3-—-Adapting-Shell-Aliases-for-Exa"><a href="#3-—-Adapting-Shell-Aliases-for-Exa" class="headerlink" title="3 — Adapting Shell Aliases for Exa"></a>3 — Adapting Shell Aliases for Exa</h1><p>If like me you’re attached to <code>ls</code> then my suggestion would be the following approach. Which is to convert your existing aliases to Exa equivalents whilst retaining the use of “ls” and its combinations of shorthand alias options e.g. <code>l</code>, <code>la</code>, <code>ll</code>, etc.</p>
+<p>The most basic example to use would be <code>ls</code>, except aliased to <code>exa</code>, to show a basic output of existing files in the current directory. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> ls=<span class="string">"exa"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/4e595bcee17d04ca2b576dd0e40a245d.png" alt="ls"></p>
+<p>To show hidden files and <em>dotfiles</em> in the same directory — and this is where these further <code>ls</code> aliasing conventions come in — duse Exa with the <code>-a</code> switch, plus my original <code>l</code> alias.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> l=<span class="string">"exa -a"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/b75b2a5fed98d9bb6848fd95e4d0ed19.png" alt="l"></p>
+<p>This one uses <code>-lgh</code> from Exa and my old <code>ll</code> alias from <code>ls</code> to show (in a longer listing format) each file’s group complete with some nice headers for the columns. As with the images from the start of this post. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> ll=<span class="string">"exa -lgh"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/49334155f7091ef0bd6bdb3217c56185.png" alt="ll"></p>
+<p>The same again applies here except it includes hidden files and ‘dotfiles’. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> la=<span class="string">"exa -lagh"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/05497d6b31d001c3160e8646fb2b6a79.png" alt="la"></p>
+<p><code>-T</code> produces a ‘tree’ style output of the file-system, in the same way the <code>tree</code> program does; except it’s not required as a package.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> lt=<span class="string">"exa -T"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/145c3801db79b9fe116e0a5870b18782.png" alt="lt"></p>
+<p>A final example adds a column to the listing output shown earlier, which displays the file’s current version control status (see column) in a Git repository — assuming it’s tracked by Git and Git is thereby installed.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> lg=<span class="string">"exa -lagh --git"</span></span><br></pre></td></tr></table></figure>
+<p><img src="https://i.gyazo.com/01d9c72885202958e0fdbad6f86a42a8.png" alt="lg"></p>
+<p>Consult the manual for Exa to see how the corresponding flags and options function, so you can create your own. <a href="https://the.exa.website/docs/command-line-options" target="_blank" rel="external">This page on the website is also very useful for such purpose.</a></p>
+<p>Lastly, these aliases for Exa traditionally go together in your <code>.alias</code> or <code>.bashrc</code> files to make them persistent and permanent between sessions (most will already know this!). </p>
+<p>Usually in a manner similar to:</p>
+<figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exa aliasing</span></span><br><span class="line"><span class="built_in">alias</span> ls=<span class="string">"exa"</span></span><br><span class="line"><span class="built_in">alias</span> l=<span class="string">"exa -a"</span></span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">"exa -lgh"</span></span><br><span class="line"><span class="built_in">alias</span> la=<span class="string">"exa -lagh"</span></span><br><span class="line"><span class="built_in">alias</span> lt=<span class="string">"exa -T"</span></span><br><span class="line"><span class="built_in">alias</span> lg=<span class="string">"exa -lagh --git"</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>Learning the wider range of command line options in Exa could be the next step to take, or even tweaking the colours through <a href="https://the.exa.website/docs/colour-themes" target="_blank" rel="external">global environment variables</a> might be appealing. Either way what’s covered here is enough to at least get yourself started. </p>
+<p>Any and all missing information you may need is indexed on <a href="https://the.exa.website/introduction" target="_blank" rel="external">the official website’s documentation.</a></p>
+<hr>
+<p><strong>More Information</strong></p>
+<ul>
+<li><a href="https://the.exa.website/" target="_blank" rel="external">The Official Exa Website</a></li>
+<li><a href="https://www.rust-lang.org/en-US/install.html" target="_blank" rel="external">Official Rust Website - Install Rust</a></li>
+<li><a href="https://doc.rust-lang.org/cargo/getting-started/installation.html" target="_blank" rel="external">The Cargo Book - Installation</a></li>
+</ul>
+<blockquote>
+<p>Easily deploy an SSD cloud server on <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">Digital Ocean</a> in 55 seconds. Sign up using my link and receive $10.00 in free credit: <a href="https://www.digitalocean.com/?refcode=e91058dbfc7b" target="_blank" rel="external">https://www.digitalocean.com/?refcode=e91058dbfc7b</a></p>
+</blockquote>
+<p>– Scarlz: <a href="https://twitter.com/5car1z" target="_blank" rel="external">@5car1z</a></p>
+</div><footer class="post__foot u-cf"><ul class="post__tag u-fl"><li class="post__tag__item"><a href="/tags/Shell/" class="post__tag__link">Shell</a></li><li class="post__tag__item"><a href="/tags/Linux/" class="post__tag__link">Linux</a></li><li class="post__tag__item"><a href="/tags/Bash/" class="post__tag__link">Bash</a></li></ul><a href="/2018/08/30/exa-getting-started/#disqus_thread" class="post__foot-link u-fr">COMMENTS</a></footer></article><article class="post"><header class="post__head"><time datetime="2015-06-13T23:00:00.000Z" class="post__time">June 14, 2015</time><h1 class="post__title"><a href="/2015/06/14/notes-bash-env-variables/">BASH Environment and Shell Variables</a></h1></header><div class="post__main echo"><p><img src="http://i.imgur.com/qthCSsn.png" alt="Shell Logo"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Variables provide a simple way to share configuration settings between multiple applications and processes in Linux, and are mainly set in either a terminal or shell configuration file upon start up. </p>
 <p>They are either environmental or shell variables by convention. Both of which are usually defined using all capital letters. This helps users distinguish environmental variables from within other contexts.</p>
 <a id="more"></a>

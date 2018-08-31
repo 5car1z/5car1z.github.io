@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T15:54:45.402Z</updated>
+  <updated>2018-08-31T15:56:58.846Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T15:54:45.402Z</updated>
+    <updated>2018-08-31T15:56:58.846Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
@@ -139,7 +139,7 @@
 <figure class="highlight bash"><figcaption><span>~/.alias</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># exa aliasing</span></span><br><span class="line"><span class="built_in">alias</span> ls=<span class="string">"exa"</span></span><br><span class="line"><span class="built_in">alias</span> l=<span class="string">"exa -a"</span></span><br><span class="line"><span class="built_in">alias</span> ll=<span class="string">"exa -lgh"</span></span><br><span class="line"><span class="built_in">alias</span> la=<span class="string">"exa -lagh"</span></span><br><span class="line"><span class="built_in">alias</span> lt=<span class="string">"exa -T"</span></span><br><span class="line"><span class="built_in">alias</span> lg=<span class="string">"exa -lagh --git"</span></span><br></pre></td></tr></table></figure>
 <hr>
 <p>Learning the wider range of command line options in Exa could be the next step to take, or even tweaking the colours through <a href="https://the.exa.website/docs/colour-themes" target="_blank" rel="external">global environment variables</a> might be appealing. Either way what’s covered here is enough to at least get yourself started. </p>
-<p>Any and all missing information you may need is indexed on <a href="https://the.exa.website/introduction" target="_blank" rel="external">the official website’s documentation.</a></p>
+<p>Any and all missing information you may need is likely divulged on <a href="https://the.exa.website/introduction" target="_blank" rel="external">the official website’s documentation.</a></p>
 <hr>
 <p><strong>More Information</strong></p>
 <ul>
@@ -683,11 +683,11 @@
     
       <category term="Ansible" scheme="http://www.tricksofthetrades.net/tags/Ansible/"/>
     
-      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
-    
       <category term="CM" scheme="http://www.tricksofthetrades.net/tags/CM/"/>
     
       <category term="Python" scheme="http://www.tricksofthetrades.net/tags/Python/"/>
+    
+      <category term="Ubuntu" scheme="http://www.tricksofthetrades.net/tags/Ubuntu/"/>
     
       <category term="Debian" scheme="http://www.tricksofthetrades.net/tags/Debian/"/>
     
@@ -2076,9 +2076,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
-    
       <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
+    
+      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
     
   </entry>
   

@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T15:48:43.736Z</updated>
+  <updated>2018-08-31T15:53:09.443Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T15:48:43.736Z</updated>
+    <updated>2018-08-31T15:53:09.443Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
@@ -112,7 +112,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install bash-completion</span><br></pre></td></tr></table></figure>
 <p>All that’s required is to download and place the Exa auto-completion file into the global <code>/etc/bash_completion.d</code> directory:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget https://raw.githubusercontent.com/ogham/exa/master/contrib/completions.bash -O /etc/bash_completion.d/exa-completions.bash</span><br></pre></td></tr></table></figure>
-<p>For other shells there’s <a href="https://the.exa.website/install/linux" target="_blank" rel="external">some terse information on where to place autocompletion on the Exa site</a> that may help (lower down on that page). </p>
+<p>For other shells there’s <a href="https://the.exa.website/install/linux" target="_blank" rel="external">some terse information on where to place the autocompletion on the Exa site</a> that may help (lower down on that page). </p>
 <hr>
 <h1 id="3-—-Adapting-Shell-Aliases-for-Exa"><a href="#3-—-Adapting-Shell-Aliases-for-Exa" class="headerlink" title="3 — Adapting Shell Aliases for Exa"></a>3 — Adapting Shell Aliases for Exa</h1><p>If like me you’re attached to <code>ls</code> then my suggestion would be the following approach. Which is to convert your existing aliases to Exa equivalents whilst retaining the use of “ls” and its combinations of shorthand alias options e.g. <code>l</code>, <code>la</code>, <code>ll</code>, etc.</p>
 <p>The most basic example to use would be <code>ls</code>, except aliased to <code>exa</code>, to show a basic output of existing files in the current directory. </p>
@@ -121,13 +121,13 @@
 <p>To show hidden files and <em>dotfiles</em> in the same directory — and this is where these further <code>ls</code> aliasing conventions come in — use Exa with the <code>-a</code> switch, plus my original <code>l</code> alias.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> l=<span class="string">"exa -a"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/b75b2a5fed98d9bb6848fd95e4d0ed19.png" alt="l"></p>
-<p>This one uses <code>-lgh</code> from Exa and my old <code>ll</code> alias from <code>ls</code> to show (in a longer listing format) each file’s group complete with some nice headers for the columns. As with the images from the start of this post. </p>
+<p>This one uses <code>-lgh</code> from Exa and my old <code>ll</code> alias from <code>ls</code> to show (in a longer listing format) each file’s group complete with some nice headers for the columns.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> ll=<span class="string">"exa -lgh"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/49334155f7091ef0bd6bdb3217c56185.png" alt="ll"></p>
-<p>The same again applies here except it includes hidden files and ‘dotfiles’. </p>
+<p>The same applies here, except it includes hidden files and ‘dotfiles’. <code>la</code> was the alias variation I chose. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> la=<span class="string">"exa -lagh"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/05497d6b31d001c3160e8646fb2b6a79.png" alt="la"></p>
-<p><code>-T</code> produces a ‘tree’ style output of the file-system, in the same way the <code>tree</code> program does; except it’s not required as a package.</p>
+<p>Here I’ve taken <code>lt</code> for the <code>-T</code> Exa option, which produces a ‘tree’ style output of the file-system, in the same way the <code>tree</code> program does; except it’s not required as a package with Exa, due to it being built-in already.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> lt=<span class="string">"exa -T"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/145c3801db79b9fe116e0a5870b18782.png" alt="lt"></p>
 <p>A final example adds a column to the listing output shown earlier, which displays the file’s current version control status (see column) in a Git repository — assuming it’s tracked by Git and Git is thereby installed.</p>

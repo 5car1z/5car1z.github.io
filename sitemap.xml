@@ -4,7 +4,7 @@
   <url>
     <loc>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</loc>
     
-    <lastmod>2018-08-31T14:46:38.137Z</lastmod>
+    <lastmod>2018-08-31T14:51:48.431Z</lastmod>
     
   </url>
   
@@ -121,14 +121,14 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/</loc>
     
     <lastmod>2017-08-29T20:07:50.393Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/08/18/notes-git-version-control/</loc>
+    <loc>http://www.tricksofthetrades.net/2016/04/26/github-flow/</loc>
     
     <lastmod>2017-08-29T20:07:50.393Z</lastmod>
     
@@ -198,35 +198,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/07/14/notes-arch-system-install/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/21/summer-in-space-3/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/10/02/terraria-tdsm-server/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/02/05/zsh-basic-configuration/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -240,14 +212,35 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/06/14/notes-bash-env-variables/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/10/02/terraria-tdsm-server/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/02/05/zsh-basic-configuration/</loc>
+    <loc>http://www.tricksofthetrades.net/2014/11/21/summer-in-space-3/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/06/09/notes-arch-gyazo/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/11/03/summer-in-space-2/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2015/06/14/notes-bash-env-variables/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
@@ -282,16 +275,37 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/06/09/notes-arch-gyazo/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/09/10/slack-irssi-connection/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/07/14/notes-arch-system-install/</loc>
     
     <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/10/25/summer-in-space-1/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.559Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/11/07/html-media-code-snippets/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2016/02/24/bowtie-static-site-service/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
   </url>
   
@@ -310,14 +324,28 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2015/02/18/arch-vm-main/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2016/02/24/bowtie-static-site-service/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/</loc>
+    
+    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     
@@ -338,34 +366,6 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/07/html-media-code-snippets/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2017/02/14/installing-using-ufw/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/11/30/django-modwsgi-apache/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://www.tricksofthetrades.net/2015/05/18/iptables-ipv4/</loc>
-    
-    <lastmod>2017-05-26T17:54:37.555Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://www.tricksofthetrades.net/2015/04/23/eve-has-sound/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
@@ -373,7 +373,7 @@
   </url>
   
   <url>
-    <loc>http://www.tricksofthetrades.net/2014/11/26/murmur-server-installation/</loc>
+    <loc>http://www.tricksofthetrades.net/2015/02/18/arch-vm-main/</loc>
     
     <lastmod>2017-05-26T17:54:37.555Z</lastmod>
     

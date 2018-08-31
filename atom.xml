@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T14:51:48.431Z</updated>
+  <updated>2018-08-31T15:10:37.003Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,10 +20,10 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T14:51:48.431Z</updated>
+    <updated>2018-08-31T15:10:37.003Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
-<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with  <code>ls</code> on the commandline — aka <em>“list”</em> — but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
+<h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
 <p>Exa is a modern successor to the list command, designed with modernity in mind and an emphasis on better defaults, native colour support, and awareness of things like metadata, symlinking, and even Git version control. Not to mention it’s lightweight, pretty fast, and comes in one singular binary file. </p>
 <p>This post shows how to install Exa on Debian/Ubuntu and Arch Linux but is primarily for the former. I’m also providing a few aliases you can use to make it more familiar and easier to transition to Exa — should you decide to do so. </p>
 <a id="more"></a>
@@ -155,7 +155,7 @@
     <summary type="html">
     
       &lt;p&gt;&lt;img src=&quot;https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png&quot; alt=&quot;Exa Screenshot&quot;&gt;&lt;/p&gt;
-&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;Everyone’s familiar with  &lt;code&gt;ls&lt;/code&gt; on the commandline — aka &lt;em&gt;“list”&lt;/em&gt; — but have you heard of &lt;a href=&quot;https://github.com/ogham/exa&quot;&gt;‘Exa’&lt;/a&gt; &lt;/p&gt;
+&lt;h1 id=&quot;Preamble&quot;&gt;&lt;a href=&quot;#Preamble&quot; class=&quot;headerlink&quot; title=&quot;Preamble&quot;&gt;&lt;/a&gt;Preamble&lt;/h1&gt;&lt;p&gt;Everyone’s familiar with &lt;code&gt;ls&lt;/code&gt; on the commandline, but have you heard of &lt;a href=&quot;https://github.com/ogham/exa&quot;&gt;‘Exa’&lt;/a&gt; &lt;/p&gt;
 &lt;p&gt;Exa is a modern successor to the list command, designed with modernity in mind and an emphasis on better defaults, native colour support, and awareness of things like metadata, symlinking, and even Git version control. Not to mention it’s lightweight, pretty fast, and comes in one singular binary file. &lt;/p&gt;
 &lt;p&gt;This post shows how to install Exa on Debian/Ubuntu and Arch Linux but is primarily for the former. I’m also providing a few aliases you can use to make it more familiar and easier to transition to Exa — should you decide to do so. &lt;/p&gt;
     
@@ -2075,9 +2075,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
-    
       <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
+    
+      <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
     
   </entry>
   

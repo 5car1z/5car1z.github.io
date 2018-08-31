@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T15:10:37.003Z</updated>
+  <updated>2018-08-31T15:16:22.379Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T15:10:37.003Z</updated>
+    <updated>2018-08-31T15:16:22.379Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
@@ -117,7 +117,7 @@
 <p>The most basic example to use would be <code>ls</code>, except aliased to <code>exa</code>, to show a basic output of existing files in the current directory. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> ls=<span class="string">"exa"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/4e595bcee17d04ca2b576dd0e40a245d.png" alt="ls"></p>
-<p>To show hidden files and <em>dotfiles</em> in the same directory — and this is where these further <code>ls</code> aliasing conventions come in — duse Exa with the <code>-a</code> switch, plus my original <code>l</code> alias.</p>
+<p>To show hidden files and <em>dotfiles</em> in the same directory — and this is where these further <code>ls</code> aliasing conventions come in — use Exa with the <code>-a</code> switch, plus my original <code>l</code> alias.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">alias</span> l=<span class="string">"exa -a"</span></span><br></pre></td></tr></table></figure>
 <p><img src="https://i.gyazo.com/b75b2a5fed98d9bb6848fd95e4d0ed19.png" alt="l"></p>
 <p>This one uses <code>-lgh</code> from Exa and my old <code>ll</code> alias from <code>ls</code> to show (in a longer listing format) each file’s group complete with some nice headers for the columns. As with the images from the start of this post. </p>
@@ -2075,9 +2075,9 @@
     
       <category term="Git" scheme="http://www.tricksofthetrades.net/tags/Git/"/>
     
-      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
-    
       <category term="VCS" scheme="http://www.tricksofthetrades.net/tags/VCS/"/>
+    
+      <category term="GitHub" scheme="http://www.tricksofthetrades.net/tags/GitHub/"/>
     
   </entry>
   

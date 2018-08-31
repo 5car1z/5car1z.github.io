@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://www.tricksofthetrades.net/"/>
-  <updated>2018-08-31T15:38:52.127Z</updated>
+  <updated>2018-08-31T15:48:43.736Z</updated>
   <id>http://www.tricksofthetrades.net/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/"/>
     <id>http://www.tricksofthetrades.net/2018/08/30/exa-getting-started/</id>
     <published>2018-08-29T23:00:00.000Z</published>
-    <updated>2018-08-31T15:38:52.127Z</updated>
+    <updated>2018-08-31T15:48:43.736Z</updated>
     
     <content type="html"><![CDATA[<p><img src="https://i.gyazo.com/599eceada0e2a52d18a59b2cc3707798.png" alt="Exa Screenshot"></p>
 <h1 id="Preamble"><a href="#Preamble" class="headerlink" title="Preamble"></a>Preamble</h1><p>Everyone’s familiar with <code>ls</code> on the commandline, but have you heard of <a href="https://github.com/ogham/exa" target="_blank" rel="external">‘Exa’</a> </p>
@@ -80,20 +80,21 @@
 <p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
 <p>For anyone interested in using an <em>AUR helper</em> in place of the regular <code>pacman</code>. I’d recommend <a href="https://github.com/trizen/trizen" target="_blank" rel="external">Trizen</a> as a popular lightweight solution.  </p>
 <p> Jump down to section <strong>“2 — Installing Exa Bash Auto-completion”</strong>.</p>
-<h2 id="c-—-Cargo-Package-Installation"><a href="#c-—-Cargo-Package-Installation" class="headerlink" title="c) — Cargo Package Installation"></a>c) — Cargo Package Installation</h2><p>Start by adding <a href="https://doc.rust-lang.org/cargo/getting-started/installation.html" target="_blank" rel="external"><em>Rust</em></a> and its libraries to your system; the programming language Exa’s written in. </p>
+<h2 id="c-—-Cargo-Package-Installation"><a href="#c-—-Cargo-Package-Installation" class="headerlink" title="c) — Cargo Package Installation"></a>c) — Cargo Package Installation</h2><p>This is from the perspective of a Debian based system.</p>
+<p>Start by adding <a href="https://www.rust-lang.org/en-US/install.html" target="_blank" rel="external"><em>Rust</em></a> and its libraries to your system; the programming language Exa’s written in. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ curl <span class="_">-s</span>Sf https://static.rust-lang.org/rustup.sh | sh</span><br></pre></td></tr></table></figure>
 <p>If all goes well (as it should) you’ll receive this confirmation output:</p>
 <figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Rust is ready to roll.</span><br></pre></td></tr></table></figure>
 <p>Bring in the following packages if they’re not already present. </p>
 <p>“Cargo” — Rust’s package manager — needs them to successfully compile and install Exa. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install build-essential cmake zlib1g-dev</span><br></pre></td></tr></table></figure>
-<p>It’s now safe to actually install Exa with <code>cargo</code>. </p>
+<p>It’s now possible to actually install Exa with <code>cargo</code>. </p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cargo install exa</span><br></pre></td></tr></table></figure>
 <p>In the event of any errors not anticipated here, check the Cargo installation output on your own setup and download/compile any missing packages before running the previous command again.</p>
 <blockquote>
-<p><strong>Note:</strong> Appending <code>--verbose</code> to <code>cargo install exa</code> reveals compilation issues in more detail. </p>
+<p><strong>Note:</strong> Appending <code>--verbose</code> to the end of <code>cargo install exa</code> reveals compilation issues in more detail. </p>
 </blockquote>
-<p>Be aware of this portion of the output messaging, after a successful installation:</p>
+<p>After a successful installation, note this portion of the output messaging:</p>
 <figure class="highlight bash"><figcaption><span>Output</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">warning: be sure to add /home/scarlz/.cargo/bin to your PATH to be able to run the installed binaries</span><br></pre></td></tr></table></figure>
 <p>Let’s do this now so we can access and run Exa properly as your Linux user:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim ~/.profile</span><br></pre></td></tr></table></figure>
@@ -107,7 +108,7 @@
 <p><img src="https://i.gyazo.com/454cb79f601d4e187b3d2ccce2308f68.png" alt="Exa Long &amp; Header"></p>
 <p>Move straight on to the next section. </p>
 <hr>
-<h1 id="2-—-Installing-Exa-Bash-Auto-completion"><a href="#2-—-Installing-Exa-Bash-Auto-completion" class="headerlink" title="2 — Installing Exa Bash Auto-completion"></a>2 — Installing Exa Bash Auto-completion</h1><p>Bash completion itself should be already in place on most Linux systems but if not can be found (on Debian/Ubuntu) by installing this aptly named package.</p>
+<h1 id="2-—-Installing-Exa-Bash-Auto-completion"><a href="#2-—-Installing-Exa-Bash-Auto-completion" class="headerlink" title="2 — Installing Exa Bash Auto-completion"></a>2 — Installing Exa Bash Auto-completion</h1><p>Bash completion itself should be already in place on most Linux systems but if for some reason it isn’t, it can be found (on Debian/Ubuntu) by installing this aptly named package.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install bash-completion</span><br></pre></td></tr></table></figure>
 <p>All that’s required is to download and place the Exa auto-completion file into the global <code>/etc/bash_completion.d</code> directory:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo wget https://raw.githubusercontent.com/ogham/exa/master/contrib/completions.bash -O /etc/bash_completion.d/exa-completions.bash</span><br></pre></td></tr></table></figure>
